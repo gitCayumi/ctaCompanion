@@ -177,3 +177,11 @@ def test(username):
     user = User.query.filter_by(username=username).first_or_404()
     heroes = Hero.query.filter_by(player=user)
     return render_template('test.html', user=user, heroes=heroes, title='TEST AREA')
+
+
+@app.route('/Hero/<heroid>')
+@login_required
+def hero(heroid):
+    user = User.query.join(Hero).filter(Hero.id==heroid)
+    selectedHero = Hero.query.get(heroid)
+    return render_template('hero.html',  selectedHero=selectedHero, title='Hero', user=user)
