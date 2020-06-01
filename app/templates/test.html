@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+ <div class="row pt-3">
+    <div class="col-lg-12">
+      <h1 class="display-4">TEST AREA</h1>
+      <hr>
+      <p class="instructions">Used to test various stuff</p>
+      <hr>
+    </div>
+ </div>
+
+  <div class="row">
+    <div class="col-lg-12 pt-3">
+    {{ heroes[48] }} - {{ heroes[48].medals }}<br>
+        Progress: {{ heroes[48].progress() }}<br><br>
+
+        <ul>
+        {% for i in heroes %}
+        <li>{{ i }}</li>
+            {% endfor %}
+            </ul>
+
+
+
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,123 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+  <script src="{{ url_for('static', filename='jquery.js') }}"></script>
+  <script>
+
+$(document).ready(function() {
+    $('#ctac').DataTable( {
+    responsive: true,
+    "order": [[ 5, 'desc' ], [ 6, 'desc' ], [ 7, 'desc'], [ 1, 'asc']],
+	paging: false,
+	searching: true,
+	"orderClasses": false,
+	language: {
+        search: "Filter: ",
+        searchPlaceholder: "search..",
+        "info": ""
+    }
+} );
+} );
+
+$(document).ready(function() {
+    $('#ctac2').DataTable( {
+    "order": [[ 1, 'asc' ]],
+	paging: false,
+	searching: false,
+	"orderClasses": false,
+	language: {
+        "info": ""
+    }
+} );
+} );
+
+</script>
+
+ <div class="row pt-3">
+    <div class="col-lg-12">
+      <h1 class="display-4">Hero Collection</h1>
+      <hr>
+      <p class="instructions">Sort and filter your heroes below. Click on any hero to see even more details. Your heroes can be input in the <a href="{{ url_for('heroSetup', username=current_user.username) }}">Hero Setup</a>.</p>
+        <hr>
+    </div>
+ </div>
+
+  <div class="row">
+    <div class="col-lg-12">
+<table id="ctac" class="table table-borderless" style="width:100%">
+        <thead class="thead-dark">
+            <tr>
+                <th data-priority="1">&nbsp;</th>
+                <th data-priority="2">Hero</th>
+                <th data-priority="12">Element</th>
+                <th data-priority="11">Rarity</th>
+                <th data-priority="10">Class</th>
+                <th data-priority="3" class="text-center"><img src="{{ url_for('static', filename='star.png') }}" width="25" alt="Star Level"></th>
+                <th data-priority="4" class="text-center"><img src="{{ url_for('static', filename='awaken.png') }}" width="25" alt="Awaken"></th>
+                <th data-priority="5" class="text-center"><img src="{{ url_for('static', filename='wpn.png') }}" width="25" alt="Weapon"></th>
+                <th data-priority="6" class="text-center">%</th>
+                <th data-priority="7">ATK</th>
+                <th data-priority="8">HP</th>
+                <th data-priority="9">Def</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for i in heroes %}
+        {% if i.level > 0 %}
+        <tr>
+            <td class="{{i.baseStats.element}}{{i.baseStats.rarity}}" width="25"><img class="img-fluid" src="/static/{{i.baseStats.nameSafe}}.png" alt="{{i.baseStats.name}}"></td>
+            <td class="{{i.baseStats.element}}{{i.baseStats.rarity}}"><b>{{ i.baseStats.name }}</b></td>
+            <td class="{{i.baseStats.element}}{{i.baseStats.rarity}}">{{ i.baseStats.element }}</td>
+            <td class="{{i.baseStats.element}}{{i.baseStats.rarity}}">{{ i.baseStats.rarity }}</td>
+            <td class="{{i.baseStats.element}}{{i.baseStats.rarity}}">{{ i.baseStats.job }}</td>
+            <td class="text-center {{i.baseStats.element}}{{i.baseStats.rarity}}">{{ i.level }}</td>
+            <td class="text-center {{i.baseStats.element}}{{i.baseStats.rarity}}">{{ i.awaken }}</td>
+            <td class="text-center {{i.baseStats.element}}{{i.baseStats.rarity}}">{{ i.wpn }}</td>
+            <td class="text center {{i.baseStats.element}}{{i.baseStats.rarity}}">{{ i.progress() }}</td>
+            <td class="{{i.baseStats.element}}{{i.baseStats.rarity}}">{{ i.atk() }}</td>
+            <td class="{{i.baseStats.element}}{{i.baseStats.rarity}}">{{ i.hp() }}</td>
+            <td class="{{i.baseStats.element}}{{i.baseStats.rarity}}">{{ i.defense() }}</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+        </tbody>
+</table>
+        <hr>
+<table id="ctac2" class="table table-borderless" style="width:100%">
+        <thead class="thead-dark">
+            <tr>
+                <th>&nbsp;</th>
+                <th>Hero</th>
+                <th>Element</th>
+                <th>Rarity</th>
+                <th>Class</th>
+                <th class="text-center">Base ATK</th>
+                <th class="text-center">Base HP</th>
+                <th class="text-center">Base Def</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for i in heroes %}
+        {% if i.level == 0 %}
+        <tr>
+            <td class="uncollected" width="25"><img class="img-fluid" src="/static/{{i.baseStats.nameSafe}}.png" alt="{{i.baseStats.name}}"></td>
+            <td class="uncollected">{{ i.baseStats.name }}</td>
+            <td class="uncollected">{{ i.baseStats.element }}</td>
+            <td class="uncollected">{{ i.baseStats.rarity }}</td>
+            <td class="uncollected">{{ i.baseStats.job }}</td>
+            <td class="uncollected text-center">{{ i.baseStats.atk }}</td>
+            <td class="uncollected text-center">{{ i.baseStats.hp }}</td>
+            <td class="uncollected text-center">{{ i.baseStats.defense }}</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+        </tbody>
+</table>
+    </div>
+  </div>
+
+
+
+{% endblock %}

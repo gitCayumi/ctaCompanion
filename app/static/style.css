@@ -1,0 +1,197 @@
+
+.uncollected {
+    color: #777777;
+    background-color: #eeeeee;
+    padding: 8px;
+}
+
+.WaterCommon {
+    background-color: #CFE2F3;
+    padding: 8px;
+}
+.WaterRare {
+    background-color: #9FC5E8;
+    padding: 8px;
+}
+.WaterEpic {
+    background-color: #6FA8DC;
+    padding: 8px;
+}
+.WaterHead {
+    background-color: #FFFFFF;
+    padding: 8px;
+    border-bottom: 3px solid #6FA8DC;
+}
+
+.FireCommon {
+    background-color: #F4CCCC;
+    padding: 8px;
+}
+.FireRare {
+    background-color: #EA9999;
+    padding: 8px;
+}
+.FireEpic {
+    background-color: #E06666;
+    padding: 8px;
+}
+.FireHead {
+    background-color: #FFFFFF;
+    padding: 8px;
+    border-bottom: 3px solid #E06666;
+}
+
+.EarthCommon {
+    background-color: #D9EAD3;
+    padding: 8px;
+}
+.EarthRare {
+    background-color: #B6D7A8;
+    padding: 8px;
+}
+.EarthEpic {
+    background-color: #93C47D;
+    padding: 8px;
+}
+.EarthHead {
+    background-color: #FFFFFF;
+    padding: 8px;
+    border-bottom: 3px solid #93C47D;
+}
+
+.LightCommon {
+    background-color: #FFF2CC;
+    padding: 8px;
+}
+.LightRare {
+    background-color: #FFE599;
+    padding: 8px;
+}
+.LightEpic {
+    background-color: #FFD966;
+    padding: 8px;
+}
+.LightLegendary {
+    background-color: #F1C232;
+    padding: 8px;
+}
+.LightHead {
+    background-color: #FFFFFF;
+    padding: 8px;
+    border-bottom: 3px solid #FFD966;
+}
+
+.DarkCommon {
+    background-color: #D9D2E9;
+    padding: 8px;
+}
+.DarkRare {
+    background-color: #B4A7D6;
+    padding: 8px;
+}
+.DarkEpic {
+    background-color: #8E7CC3;
+    padding: 8px;
+}
+.DarkLegendary {
+    background-color: #674EA7;
+    padding: 8px;
+}
+.DarkHead {
+    background-color: #FFFFFF;
+    padding: 8px;
+    border-bottom: 3px solid #8E7CC3;
+}
+
+.DarkBar {
+    background-color: #6f42c1;
+}
+
+.infoHead {
+    background-color: #FFFFFF;
+    padding: 8px;
+    border-bottom: 3px solid #343A40;
+}
+.infoCommon {
+    background-color: #FFFFFF;
+    padding: 8px;
+}
+
+main > .container {
+    padding: 60px 15px 0;
+}
+
+.footer {
+    background-color: #f5f5f5;
+}
+
+.footer > .container {
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.instructions {
+    padding-left: 15px;
+}
+
+
+
+
+.WaterCommonProgress {
+    background-color: #CFE2F3;
+}
+.WaterRareProgress {
+    background-color: #9FC5E8;
+}
+.WaterEpicProgress {
+    background-color: #6FA8DC;
+}
+
+.FireCommonProgress {
+    background-color: #F4CCCC;
+}
+.FireRareProgress {
+    background-color: #EA9999;
+}
+.FireEpicProgress {
+    background-color: #E06666;
+}
+
+.EarthCommonProgress {
+    background-color: #D9EAD3;
+}
+.EarthRareProgress {
+    background-color: #B6D7A8;
+}
+.EarthEpicProgress {
+    background-color: #93C47D;
+}
+.LightCommonProgress {
+    background-color: #FFF2CC;
+}
+.LightRareProgress {
+    background-color: #FFE599;
+}
+.LightEpicProgress {
+    background-color: #FFD966;
+}
+.LightLegendaryProgress {
+    background-color: #F1C232;
+}
+
+
+.DarkCommonProgress {
+    background-color: #D9D2E9;
+}
+.DarkRareProgress {
+    background-color: #B4A7D6;
+}
+.DarkEpicProgress {
+    background-color: #8E7CC3;
+}
+.DarkLegendaryProgress {
+    background-color: #674EA7;
+}
+.OverallRareProgress {
+    background-color: #D6D8DB;
+}

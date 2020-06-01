@@ -1,0 +1,20 @@
+        <tr>
+          <td class="align-middle {{i.baseStats.element}}{{i.baseStats.rarity}}" width="70"><img class="img-fluid" src="/static/{{i.baseStats.nameSafe}}.png" alt="{{i.baseStats.name}}"></td>
+          <td class="align-middle {{i.baseStats.element}}{{i.baseStats.rarity}}" width="200"><b>{{ i.baseStats.name }}</b></td>
+          <td class="align-middle {{i.baseStats.element}}{{i.baseStats.rarity}}" width="90"><input type="text" maxlength="1" class="form-control" id="{{ i.id }}level" value="{{ i.level }}" name="{{ i.id }}level" onkeypress="return isNumber7(event)"></td>
+          <td class="align-middle {{i.baseStats.element}}{{i.baseStats.rarity}}" width="90"><input type="text" maxlength="1" class="form-control" id="{{ i.id }}awaken" value="{{ i.awaken }}" name="{{ i.id }}awaken" onkeypress="return isNumber7(event)"></td>
+          <td class="align-middle {{i.baseStats.element}}{{i.baseStats.rarity}}" width="90"><input type="text" maxlength="1" class="form-control" id="{{ i.id }}wpn" value="{{ i.wpn }}" name="{{ i.id }}wpn" onkeypress="return isNumber9(event)"></td>
+          <td class="align-middle {{i.baseStats.element}}{{i.baseStats.rarity}}" width="90"><input type="text" maxlength="4" class="form-control" id="{{ i.id }}medal" value="{{ i.medals }}" name="{{ i.id }}medal" onkeypress="return isNumber9(event)"></td>
+        </tr>
+
+        <!--
+
+        function isNumber7(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 55)) {
+                return false;
+            }
+        return true;
+        }
+        -->

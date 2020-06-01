@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  <div class="row pt-3">
+    <div class="col-lg-12">
+      <h1 class="display-4">Hero Progress</h1>
+      <hr>
+      <p class="instructions">Account progress by rarity, element and maxed heroes. Based on Star Level and Medals in <a href="{{ url_for('heroSetup', username=current_user.username) }}">Hero Setup</a>.</p>
+        <hr>
+    </div>
+  </div>
+{% set overallWater = (waterMedals[0] / waterMedals[1])*100 %}
+{% set overallFire = (fireMedals[0] / fireMedals[1])*100 %}
+{% set overallEarth = (earthMedals[0] / earthMedals[1])*100 %}
+{% set overallLight = (lightMedals[0] / lightMedals[1])*100 %}
+{% set overallDark = (darkMedals[0] / darkMedals[1])*100 %}
+{% set overallAll = ((waterMedals[0]+fireMedals[0]+earthMedals[0]+lightMedals[0]+darkMedals[0])/(waterMedals[1]+fireMedals[1]+earthMedals[1]+lightMedals[1]+darkMedals[1]))*100 %}
+
+{% set commonWater = (waterCommonMedals / waterMedals[1])*100 %}
+{% set rareWater = (waterRareMedals / waterMedals[1])*100 %}
+{% set epicWater = (waterEpicMedals / waterMedals[1])*100 %}
+{% set commonFire = (fireCommonMedals / ((fireCommon[2]*4880)+(fireRare[2]*4880)+(fireEpic[2]*4880)))*100 %}
+{% set rareFire = (fireRareMedals / ((fireCommon[2]*4880)+(fireRare[2]*4880)+(fireEpic[2]*4880)))*100 %}
+{% set epicFire = (fireEpicMedals / ((fireCommon[2]*4880)+(fireRare[2]*4880)+(fireEpic[2]*4880)))*100 %}
+{% set commonEarth = (earthCommonMedals / ((earthCommon[2]*4880)+(earthRare[2]*4880)+(earthEpic[2]*4880)))*100 %}
+{% set rareEarth = (earthRareMedals / ((earthCommon[2]*4880)+(earthRare[2]*4880)+(earthEpic[2]*4880)))*100 %}
+{% set epicEarth = (earthEpicMedals / ((earthCommon[2]*4880)+(earthRare[2]*4880)+(earthEpic[2]*4880)))*100 %}
+{% set commonLight = (lightCommonMedals / ((lightCommon[2]*4880)+(lightRare[2]*4880)+(lightEpic[2]*4880)))*100 %}
+{% set rareLight = (lightRareMedals / ((lightCommon[2]*4880)+(lightRare[2]*4880)+(lightEpic[2]*4880)))*100 %}
+{% set epicLight = (lightEpicMedals / ((lightCommon[2]*4880)+(lightRare[2]*4880)+(lightEpic[2]*4880)))*100 %}
+{% set legendaryLight = (lightLegendaryMedals / ((lightCommon[2]*4880)+(lightRare[2]*4880)+(lightEpic[2]*4880)+(lightLegendary[2]*4880)))*100 %}
+{% set commonDark = (darkCommonMedals / ((darkCommon[2]*4880)+(darkRare[2]*4880)+(darkEpic[2]*4880)))*100 %}
+{% set rareDark = (darkRareMedals / ((darkCommon[2]*4880)+(darkRare[2]*4880)+(darkEpic[2]*4880)))*100 %}
+{% set epicDark = (darkEpicMedals / ((darkCommon[2]*4880)+(darkRare[2]*4880)+(darkEpic[2]*4880)))*100 %}
+{% set legendaryDark = (darkLegendaryMedals / ((darkCommon[2]*4880)+(darkRare[2]*4880)+(darkEpic[2]*4880)+(darkLegendary[2]*4880)))*100 %}
+
+{% set overallCommon = ((waterCommonMedals+fireCommonMedals+earthCommonMedals+lightCommonMedals+darkCommonMedals)/(waterMedals[1]+fireMedals[1]+earthMedals[1]+lightMedals[1]+darkMedals[1]))*100 %}
+{% set overallRare = ((waterRareMedals+fireRareMedals+earthRareMedals+lightRareMedals+darkRareMedals)/(waterMedals[1]+fireMedals[1]+earthMedals[1]+lightMedals[1]+darkMedals[1]))*100 %}
+{% set overallEpic = ((waterEpicMedals+fireEpicMedals+earthEpicMedals+lightEpicMedals+darkEpicMedals)/(waterMedals[1]+fireMedals[1]+earthMedals[1]+lightMedals[1]+darkMedals[1]))*100 %}
+{% set overallLegendary = ((lightLegendaryMedals+darkLegendaryMedals)/(lightMedals[1]+darkMedals[1]))*100 %}
+
+  <div class="row">
+    <div class="col-lg-12 pt-3">
+<div class="progress" style="height:40px">
+  <div class="progress-bar WaterCommonProgress" style="width:{{commonWater}}%;height:40px"></div>
+    <div class="progress-bar WaterRareProgress" style="width:{{rareWater}}%;height:40px"></div>
+    <div class="progress-bar WaterEpicProgress" style="width:{{epicWater}}%;height:40px"></div>
+</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12 pt-3">
+<div class="progress" style="height:40px">
+  <div class="progress-bar FireCommonProgress" style="width:{{commonFire}}%;height:40px"></div>
+    <div class="progress-bar FireRareProgress" style="width:{{rareFire}}%;height:40px"></div>
+    <div class="progress-bar FireEpicProgress" style="width:{{epicFire}}%;height:40px"></div>
+</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12 pt-3">
+<div class="progress" style="height:40px">
+  <div class="progress-bar EarthCommonProgress" style="width:{{commonEarth}}%;height:40px"></div>
+    <div class="progress-bar EarthRareProgress" style="width:{{rareEarth}}%;height:40px"></div>
+    <div class="progress-bar EarthEpicProgress" style="width:{{epicEarth}}%;height:40px"></div>
+</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12 pt-3">
+<div class="progress" style="height:40px">
+  <div class="progress-bar LightCommonProgress" style="width:{{commonLight}}%;height:40px"></div>
+    <div class="progress-bar LightRareProgress" style="width:{{rareLight}}%;height:40px"></div>
+    <div class="progress-bar LightEpicProgress" style="width:{{epicLight}}%;height:40px"></div>
+    <div class="progress-bar LightLegendaryProgress" style="width:{{legendaryLight}}%;height:40px"></div>
+</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12 pt-3">
+<div class="progress" style="height:40px">
+  <div class="progress-bar DarkCommonProgress" style="width:{{commonDark}}%;height:40px"></div>
+    <div class="progress-bar DarkRareProgress" style="width:{{rareDark}}%;height:40px"></div>
+    <div class="progress-bar DarkEpicProgress" style="width:{{epicDark}}%;height:40px"></div>
+    <div class="progress-bar DarkLegendaryProgress" style="width:{{legendaryDark}}%;height:40px"></div>
+
+
+
+
+</div>
+    </div>
+  </div>
+
+<div class="row">
+    <div class="col-lg-12 pt-3">
+<div class="progress" style="height:40px">
+  <div class="progress-bar bg-light" style="width:{{overallCommon}}%;height:40px"></div>
+    <div class="progress-bar OverallRareProgress" style="width:{{overallRare}}%;height:40px"></div>
+    <div class="progress-bar bg-secondary" style="width:{{overallEpic}}%;height:40px"></div>
+    <div class="progress-bar bg-dark" style="width:{{overallLegendary}}%;height:40px"></div>
+</div>
+    </div>
+  </div>
+
+      <!-- INFO PANEL -->
+  <div class="row pt-3">
+    <div class="col-lg-12 pt-3">
+
+      <table class="table table-borderless" cellspacing="0" cellpadding="0">
+    <thead class="thead-dark">
+      <tr>
+        <th>&nbsp;</th>
+        <th class="text-center" colspan="2"><img src="{{ url_for('static', filename='water.png') }}" width="40" alt="Water"></th>
+        <th class="text-center" colspan="2"><img src="{{ url_for('static', filename='fire.png') }}" width="40" alt="Fire"></th>
+        <th class="text-center" colspan="2"><img src="{{ url_for('static', filename='earth.png') }}" width="40" alt="Earth"></th>
+        <th class="text-center" colspan="2"><img src="{{ url_for('static', filename='light.png') }}" width="40" alt="Light"></th>
+        <th class="text-center" colspan="2"><img src="{{ url_for('static', filename='dark.png') }}" width="40" alt="Dark"></th>
+        <th class="align-middle text-center" colspan="2">Overall</th>
+      </tr>
+    </thead>
+
+        <thead class="thead-light">
+        <th>&nbsp;</th>
+        <th class="text-center">Percent</th>
+        <th class="text-center">Maxed</th>
+        <th class="text-center">Percent</th>
+        <th class="text-center">Maxed</th>
+        <th class="text-center">Percent</th>
+        <th class="text-center">Maxed</th>
+        <th class="text-center">Percent</th>
+        <th class="text-center">Maxed</th>
+        <th class="text-center">Percent</th>
+        <th class="text-center">Maxed</th>
+        <th class="text-center">Percent</th>
+        <th class="text-center">Maxed</th>
+        </thead>
+
+    <tbody>
+      <tr>
+        <td><b>Common</b></td>
+        <td class="align-middle text-center WaterCommon">{{ waterCommon[0] }}%</td>
+        <td class="align-middle text-center WaterCommon">{{ waterCommon[1] }}/{{ waterCommon[2] }}</td>
+        <td class="align-middle text-center FireCommon">{{ fireCommon[0] }}%</td>
+        <td class="align-middle text-center FireCommon">{{ fireCommon[1] }}/{{ fireCommon[2] }}</td>
+        <td class="align-middle text-center EarthCommon">{{ earthCommon[0] }}%</td>
+        <td class="align-middle text-center EarthCommon">{{ earthCommon[1] }}/{{ earthCommon[2] }}</td>
+        <td class="align-middle text-center LightCommon">{{ lightCommon[0] }}%</td>
+        <td class="align-middle text-center LightCommon">{{ lightCommon[1] }}/{{ lightCommon[2] }}</td>
+        <td class="align-middle text-center DarkCommon">{{ darkCommon[0] }}%</td>
+        <td class="align-middle text-center DarkCommon">{{ darkCommon[1] }}/{{ darkCommon[2] }}</td>
+        <td class="align-middle text-center">{% set overallCommon = (waterCommon[0] + fireCommon[0] + earthCommon [0] + lightCommon[0] + darkCommon[0])/5%}
+                                                {{'%0.2f'| format(overallCommon)}}%</td>
+        <td class="align-middle text-center">{{ waterCommon[1] + fireCommon[1] + earthCommon [1] + lightCommon[1] + darkCommon[1] }}/{{ waterCommon[2] + fireCommon[2] + earthCommon[2] + lightCommon[2] + darkCommon[2] }}</td>
+      </tr>
+      <tr>
+        <td><b>Rare</b></td>
+        <td class="align-middle text-center WaterRare">{{ waterRare[0] }}%</td>
+        <td class="align-middle text-center WaterRare">{{ waterRare[1] }}/{{ waterRare[2] }}</td>
+        <td class="align-middle text-center FireRare">{{ fireRare[0] }}%</td>
+        <td class="align-middle text-center FireRare">{{ fireRare[1] }}/{{ fireRare[2] }}</td>
+        <td class="align-middle text-center EarthRare">{{ earthRare[0] }}%</td>
+        <td class="align-middle text-center EarthRare">{{ earthRare[1] }}/{{ earthRare[2] }}</td>
+        <td class="align-middle text-center LightRare">{{ lightRare[0] }}%</td>
+        <td class="align-middle text-center LightRare">{{ lightRare[1] }}/{{ lightRare[2] }}</td>
+        <td class="align-middle text-center DarkRare">{{ darkRare[0] }}%</td>
+        <td class="align-middle text-center DarkRare">{{ darkRare[1] }}/{{ darkRare[2] }}</td>
+        <td class="align-middle text-center">{% set overallRare = (waterRare[0] + fireRare[0] + earthRare [0] + lightRare[0] + darkRare[0])/5%}
+                                                {{'%0.2f'| format(overallRare)}}%</td>
+        <td class="align-middle text-center">{{ waterRare[1] + fireRare[1] + earthRare [1] + lightRare[1] + darkRare[1] }}/{{ waterRare[2] + fireRare[2] + earthRare[2] + lightRare[2] + darkRare[2] }}</td>
+      </tr>
+      <tr>
+        <td><b>Epic</b></td>
+        <td class="align-middle text-center WaterEpic">{{ waterEpic[0] }}%</td>
+        <td class="align-middle text-center WaterEpic">{{ waterEpic[1] }}/{{ waterEpic[2] }}</td>
+        <td class="align-middle text-center FireEpic">{{ fireEpic[0] }}%</td>
+        <td class="align-middle text-center FireEpic">{{ fireEpic[1] }}/{{ fireEpic[2] }}</td>
+        <td class="align-middle text-center EarthEpic">{{ earthEpic[0] }}%</td>
+        <td class="align-middle text-center EarthEpic">{{ earthEpic[1] }}/{{ earthEpic[2] }}</td>
+        <td class="align-middle text-center LightEpic">{{ lightEpic[0] }}%</td>
+        <td class="align-middle text-center LightEpic">{{ lightEpic[1] }}/{{ lightEpic[2] }}</td>
+        <td class="align-middle text-center DarkEpic">{{ darkEpic[0] }}%</td>
+        <td class="align-middle text-center DarkEpic">{{ darkEpic[1] }}/{{ darkEpic[2] }}</td>
+        <td class="align-middle text-center">{% set overallEpic = (waterEpic[0] + fireEpic[0] + earthEpic [0] + lightEpic[0] + darkEpic[0])/5%}
+                                                {{'%0.2f'| format(overallEpic)}}%</td>
+        <td class="align-middle text-center">{{ waterEpic[1] + fireEpic[1] + earthEpic [1] + lightEpic[1] + darkEpic[1] }}/{{ waterEpic[2] + fireEpic[2] + earthEpic[2] + lightEpic[2] + darkEpic[2] }}</td>
+      </tr>
+      <tr>
+        <td><b>Legendary</b></td>
+        <td class="align-middle">&nbsp;</td>
+        <td class="align-middle">&nbsp;</td>
+        <td class="align-middle">&nbsp;</td>
+        <td class="align-middle">&nbsp;</td>
+        <td class="align-middle">&nbsp;</td>
+        <td class="align-middle">&nbsp;</td>
+        <td class="align-middle text-center LightLegendary">{{ lightLegendary[0] }}%</td>
+        <td class="align-middle text-center LightLegendary">{{ lightLegendary[1] }}/{{ lightLegendary[2] }}</td>
+        <td class="align-middle text-center DarkLegendary">{{ darkLegendary[0] }}%</td>
+        <td class="align-middle text-center DarkLegendary">{{ darkLegendary[1] }}/{{ darkLegendary[2] }}</td>
+        <td class="align-middle text-center">{% set overallLegendary = (lightLegendary[0] + darkLegendary[0])/5%}
+                                                {{'%0.2f'| format(overallLegendary)}}%</td>
+        <td class="align-middle text-center">{{ lightLegendary[1] + darkLegendary[1] }}/{{ lightLegendary[2] + darkLegendary[2] }}</td>
+      </tr>
+    <tr class="table-secondary">
+        <td><strong>Total</strong></td>
+        <td class="align-middle text-center"><b>{{'%0.2f'| format(overallWater)}}%</b></td>
+        <td class="align-middle text-center"><b>{{ waterCommon[1]+waterRare[1]+waterEpic[1] }}/{{waterCommon[2]+waterRare[2]+waterEpic[2]}}</b></td>
+        <td class="align-middle text-center"><b>{{'%0.2f'| format(overallFire)}}%</b></td>
+        <td class="align-middle text-center"><b>{{ fireCommon[1]+fireRare[1]+fireEpic[1] }}/{{fireCommon[2]+fireRare[2]+fireEpic[2]}}</b></td>
+        <td class="align-middle text-center"><b>{{'%0.2f'| format(overallEarth)}}%</b></td>
+        <td class="align-middle text-center"><b>{{ earthCommon[1]+earthRare[1]+earthEpic[1] }}/{{earthCommon[2]+earthRare[2]+earthEpic[2]}}</b></td>
+        <td class="align-middle text-center"><b>{{'%0.2f'| format(overallLight)}}%</b></td>
+        <td class="align-middle text-center"><b>{{ lightCommon[1]+lightRare[1]+lightEpic[1]+lightLegendary[1] }}/{{lightCommon[2]+lightRare[2]+lightEpic[2]+lightLegendary[1]}}</b></td>
+        <td class="align-middle text-center"><b>{{'%0.2f'| format(overallDark)}}%</b></td>
+        <td class="align-middle text-center"><b>{{ darkCommon[1]+darkRare[1]+darkEpic[1]+darkLegendary[1] }}/{{darkCommon[2]+darkRare[2]+darkEpic[2]+darkLegendary[2]}}</b></td>
+        <td class="align-middle text-center"><b>{{'%0.2f'| format(overallAll)}}%</b></td>
+        <td class="align-middle text-center"><b>{{ waterCommon[1]+waterRare[1]+waterEpic[1]+fireCommon[1]+fireRare[1]+fireEpic[1]+earthCommon[1]+earthRare[1]+earthEpic[1]+
+            lightCommon[1]+lightRare[1]+lightEpic[1]+lightLegendary[1]+darkCommon[1]+darkRare[1]+darkEpic[1]+darkLegendary[1]}}/{{waterCommon[2]+waterRare[2]+waterEpic[2]+fireCommon[2]+fireRare[2]+fireEpic[2]+earthCommon[2]+earthRare[2]+earthEpic[2]+
+            lightCommon[2]+lightRare[2]+lightEpic[2]+lightLegendary[2]+darkCommon[2]+darkRare[2]+darkEpic[2]+darkLegendary[2]}}</b></td>
+      </tr>
+    </tbody>
+  </table>
+    </div>
+  </div>
+
+{% endblock %}
