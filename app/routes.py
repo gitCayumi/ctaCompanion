@@ -184,4 +184,10 @@ def test(username):
 def hero(heroid):
     user = User.query.join(Hero).filter(Hero.id==heroid)
     selectedHero = Hero.query.get(heroid)
-    return render_template('hero.html',  selectedHero=selectedHero, title='Hero', user=user)
+    return render_template('hero.html',  selectedHero=selectedHero, title=selectedHero.baseStats.name, user=user)
+
+
+@app.route('/contact', methods=["GET", "POST"])
+def contact():
+
+    return render_template('contact.html', title='Contact')

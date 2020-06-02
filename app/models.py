@@ -48,14 +48,20 @@ class Hero(db.Model):
 
     def displayStat(self, stat):
         if stat < 1000:
-            return "("+str(int(round(stat, 0)))+")"
+            return str(int(round(stat, 0)))
         else:
             # an elif for above million
             return str(round(stat/1000, 2))+"K"
 
+    def displayAps(self, aps):
+        return round(aps, 2)
+
+    def displayCritDmg(self, critDmg):
+        return round(critDmg)
+
     def atk(self):
         # Temporary placeholder variable for runed values
-        runedAttack = 335.47
+        runedAttack = 0 #335.47
         base = self.baseStats.atk
         level = self.level
         awaken = self.awaken
@@ -83,6 +89,35 @@ class Hero(db.Model):
         defense = int(base * (2 ** (level - 1)) * (1.5 ** awaken))
         runedDef = defense + (defense * (runedDef / 100))
         return int(runedDef)
+
+    def aps(self):
+        # Temporary placeholder variable for runed values
+        runedAps = 0 #49.5
+        base = self.baseStats.aps
+        runedAps = base + (base * (runedAps / 100))
+        return runedAps
+
+    def crit(self):
+        # Temporary placeholder variable for runed values
+        runedCrit = 0 #16
+        base = self.baseStats.crit
+        return base + runedCrit
+
+    def critDmg(self):
+        # Temporary placeholder variable for runed values
+        runedDmg = 0 #25.75
+        base = self.baseStats.critDmg
+        return base + runedDmg
+
+    def dps(self):
+        # (atk * aps * (1-crit rate)) + (atk  * aps * critRate * critDmg)
+        atk = self.atk()
+        aps = self.aps()
+        crit = self.crit()
+        critDmg = self.critDmg()
+        dps = (atk * aps * (1-crit)) + (atk * aps * crit * critDmg)
+        dps = int(dps)
+        return '{:,}'.format(dps).replace(',', ' ')
 
     def progress(self):
         level = self.level

@@ -23,105 +23,100 @@
   <div class="row align-middle">
     <div class="col-lg-3 text-center align-middle pt-3">
         <img class="img-fluid rounded-circle" src="/static/{{selectedHero.baseStats.nameSafe}}.png" alt="{{selectedHero.baseStats.name}}"><br><br>
-        {{ selectedHero.baseStats.element }} {{ selectedHero.baseStats.rarity }} {{ selectedHero.baseStats.job }}<hr><p class="instructions {{selectedHero.baseStats.element}}{{selectedHero.baseStats.rarity}}"><b>12983471 DPS</b><hr>
+        {{ selectedHero.baseStats.element }} {{ selectedHero.baseStats.rarity }} {{ selectedHero.baseStats.job }}<hr>
 
-      </div>
-    <div class="col lg-9 pt-3">
+        <p class="instructions {{selectedHero.baseStats.element}}{{selectedHero.baseStats.rarity}}"><b>DPS: {{ selectedHero.dps() }}</b>
 
- <table class="table table-striped">
-              <tr class="text-left">
-                  <td width="50%">Attack</td>
-                  <td width="50%">{{ selectedHero.atk() }}</td>
-              </tr>
-              <tr class="text-left">
-                  <td width="50%">HP</td>
-                  <td width="50%">{{ selectedHero.hp() }}</td>
-              </tr>
-              <tr class="text-left">
-                  <td width="50%">Defense</td>
-                  <td width="50%">{{ selectedHero.defense() }}</td>
-              </tr>
-              <tr class="text-left">
-                  <td width="50%">Attack Speed</td>
-                  <td width="50%">{{ selectedHero.hp() }}</td>
-              </tr>
-                <tr class="text-left">
-                  <td width="50%">Crit Chance</td>
-                  <td width="50%">{{ selectedHero.atk() }}</td>
-              </tr>
-              <tr class="text-left">
-                  <td width="50%">Crit Damage</td>
-                  <td width="50%">{{ selectedHero.hp() }}</td>
-              </tr>
-          </table>
-    </div>
 
-      </div>
 
-<div class="row">
-<div class="col-lg-12">
-      <table class="table table-borderless">
-          <thead class="thead-dark">
-          <tr>
-              <th>Input Runed Values</th>
-          </tr>
-          </thead>
+        <table class="table table-bordered">
+        <thead class="thead-dark">
+        <tr>
+            <th colspan="2">How to rune</th>
+        </tr>
+        </thead>
+        <tr>
+            <td width="20%">PVP</td>
+            <td>Swift > Precise > Rage</td>
+        </tr>
+        <tr>
+            <td width="20%">PVE</td>
+            <td>Swift > Precise > Rage</td>
+        </tr>
     </table>
       </div>
-  </div>
 
+
+      <div class="col lg-9 pt-3">
 <form action="/action_page.php">
-<div class="row">
-<div class="col-lg-4">
-      <table class="table table-borderless">
+ <table class="table table-striped">
+     <thead class="thead-dark">
           <tr>
-              <td class="align-middle" width="130">Attack:</td>
-              <td><input type="text" class="form-control"></td>
+              <th>Stat</th>
+              <th>In-game</th>
+              <th>Real</th>
+              <th>Input Rune %</th>
           </tr>
-          <tr>
-              <td class="align-middle" width="130">Attack Speed:</td>
-              <td><input type="text" class="form-control"></td>
-          </tr>
-      </table>
-</div>
+          </thead>
+              <tr class="text-left">
+                  <td>Attack</td>
+                  <td>{{ selectedHero.displayStat(selectedHero.atk()) }}</td>
+                  <td>{{ selectedHero.atk() }}</td>
+                  <td><input type="text" class="form-control form-control-sm"></td>
+              </tr>
+              <tr class="text-left">
+                  <td>HP</td>
+                  <td>{{ selectedHero.displayStat(selectedHero.hp()) }}</td>
+                  <td>{{ selectedHero.hp() }}</td>
+                  <td><input type="text" class="form-control form-control-sm"></td>
+              </tr>
+              <tr class="text-left">
+                  <td>Defense</td>
+                  <td>{{ selectedHero.displayStat(selectedHero.defense()) }}</td>
+                  <td>{{ selectedHero.defense() }}</td>
+                  <td><input type="text" class="form-control form-control-sm"></td>
+              </tr>
+              <tr class="text-left">
+                  <td>Attack per sec</td>
+                  <td>{{ selectedHero.displayAps(selectedHero.aps()) }}</td>
+                  <td>{{ selectedHero.aps() }}</td>
+                  <td><input type="text" class="form-control form-control-sm"></td>
+              </tr>
+                <tr class="text-left">
+                  <td>Crit Chance</td>
+                  <td>{{ selectedHero.crit() }}%</td>
+                    <td>-</td>
+                    <td><input type="text" class="form-control form-control-sm"></td>
+              </tr>
+              <tr class="text-left">
+                  <td>Crit Damage</td>
+                  <td>{{ selectedHero.displayCritDmg(selectedHero.critDmg()) }}%</td>
+                  <td>{{ selectedHero.critDmg() }}</td>
+                  <td><input type="text" class="form-control form-control-sm"></td>
+              </tr>
+     <tr class="text-center">
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td><button class="btn btn-primary btn-lg" type="submit">Save Rune Values</button></td>
+              </tr>
+          </table>
+</form>
+    </div>
 
-<div class="col-lg-4">
-      <table class="table table-borderless">
-          <tr>
-              <td class="align-middle" width="130">HP:</td>
-              <td><input type="text" class="form-control"></td>
-          </tr>
-          <tr>
-              <td class="align-middle" width="130">Crit Chance:</td>
-              <td><input type="text" class="form-control"></td>
-          </tr>
-      </table>
-</div>
 
-<div class="col-lg-4">
-      <table class="table table-borderless">
-          <tr>
-              <td class="align-middle" width="130">Defense:</td>
-              <td><input type="text" class="form-control"></td>
-          </tr>
-          <tr>
-              <td class="align-middle" width="130">Crit Damage:</td>
-              <td><input type="text" class="form-control"></td>
-          </tr>
-      </table>
-</div>
-</div>
+      </div>
+
+
 <div class="row">
     <div class="col-lg-12 text-center">
       <hr>
-      <button class="btn btn-primary btn-lg" type="submit">Save Rune Values</button>
+        <p class="instructions">Short hero information.</p>
+        <hr>
     </div>
 </div>
-      </form>
+
 <br>
-
-
-
 
 
 {% else %}
@@ -133,5 +128,7 @@
       <hr>
     </div>
  </div>
+
+
 {% endif %}
 {% endblock %}
