@@ -12,18 +12,25 @@
  </div>
 
   <div class="row">
-    <div class="col-lg-12 pt-3">
+    <div class="col-lg-6 pt-3">
     {{ heroes[48] }} - {{ heroes[48].medals }}<br>
         Progress: {{ heroes[48].progress() }}<br><br>
 
         <ul>
         {% for i in heroes %}
-        <li>{{ i }}</li>
+        <li>{{i.id }} {{ i.baseStats.name }}: {{ i.dps() }}</li>
             {% endfor %}
             </ul>
+    </div>
+      <div class="col-lg-6 pt-3">
+    {{ heroes[48] }} - {{ heroes[48].medals }}<br>
+        Progress: {{ heroes[48].progress() }}<br><br>
 
-
-
+        <ul>
+        {% for i in heroes %}
+        <li>{{ i.baseStats.name }}: {{ i.dpsSP2() }}</li>
+            {% endfor %}
+            </ul>
     </div>
   </div>
 {% endblock %}

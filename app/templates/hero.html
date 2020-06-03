@@ -2,6 +2,7 @@
 
 {% block content %}
 {% if user[0] == current_user %}
+{% set current = selectedHero.baseStats.nameSafe %}
  <div class="row pt-3">
     <div class="col-lg-12">
       <h1 class="display-4">{{ selectedHero.baseStats.name }} ({{ selectedHero.level }}/{{ selectedHero.awaken }}/{{ selectedHero.wpn }}) </h1>
@@ -25,7 +26,7 @@
         <img class="img-fluid rounded-circle" src="/static/{{selectedHero.baseStats.nameSafe}}.png" alt="{{selectedHero.baseStats.name}}"><br><br>
         {{ selectedHero.baseStats.element }} {{ selectedHero.baseStats.rarity }} {{ selectedHero.baseStats.job }}<hr>
 
-        <p class="instructions {{selectedHero.baseStats.element}}{{selectedHero.baseStats.rarity}}"><b>DPS: {{ selectedHero.dps() }}</b>
+        <p class="instructions {{selectedHero.baseStats.element}}{{selectedHero.baseStats.rarity}}"><b>DPS: {{ selectedHero.dpsSP2() }}</b>
 
 
 
@@ -37,18 +38,19 @@
         </thead>
         <tr>
             <td width="20%">PVP</td>
-            <td>Swift > Precise > Rage</td>
+            <td>{{ heroDict[current][0][0] }} {{ heroDict[current][0][1] }}</td>
         </tr>
         <tr>
             <td width="20%">PVE</td>
-            <td>Swift > Precise > Rage</td>
+            <td>{{ howToRune }}</td>
         </tr>
     </table>
       </div>
 
 
       <div class="col lg-9 pt-3">
-<form action="/action_page.php">
+<form action="/Hero/{{ selectedHero.id }}" method="post" novalidate>
+
  <table class="table table-striped">
      <thead class="thead-dark">
           <tr>
@@ -62,37 +64,37 @@
                   <td>Attack</td>
                   <td>{{ selectedHero.displayStat(selectedHero.atk()) }}</td>
                   <td>{{ selectedHero.atk() }}</td>
-                  <td><input type="text" class="form-control form-control-sm"></td>
+                  <td><input type="text" maxlength="10" class="form-control form-control-sm" id="{{ selectedHero.id }}runedAtk" value="{{ selectedHero.runedAtk }}" name="{{ selectedHero.id }}runedAtk"></td>
               </tr>
               <tr class="text-left">
                   <td>HP</td>
                   <td>{{ selectedHero.displayStat(selectedHero.hp()) }}</td>
                   <td>{{ selectedHero.hp() }}</td>
-                  <td><input type="text" class="form-control form-control-sm"></td>
+                  <td><input type="text" maxlength="10" class="form-control form-control-sm" id="{{ selectedHero.id }}runedHp" value="{{ selectedHero.runedHp }}" name="{{ selectedHero.id }}runedHp" onkeypress="return isNumber9(event)"></td>
               </tr>
               <tr class="text-left">
                   <td>Defense</td>
                   <td>{{ selectedHero.displayStat(selectedHero.defense()) }}</td>
                   <td>{{ selectedHero.defense() }}</td>
-                  <td><input type="text" class="form-control form-control-sm"></td>
+                  <td><input type="text" maxlength="10" class="form-control form-control-sm" id="{{ selectedHero.id }}runedDef" value="{{ selectedHero.runedDef }}" name="{{ selectedHero.id }}runedDef" onkeypress="return isNumber9(event)"></td>
               </tr>
               <tr class="text-left">
                   <td>Attack per sec</td>
-                  <td>{{ selectedHero.displayAps(selectedHero.aps()) }}</td>
+                  <td>{{ selectedHero.aps()|round(2, 'common' ) }}</td>
                   <td>{{ selectedHero.aps() }}</td>
-                  <td><input type="text" class="form-control form-control-sm"></td>
+                  <td><input type="text" maxlength="10" class="form-control form-control-sm" id="{{ selectedHero.id }}runedAps" value="{{ selectedHero.runedAps }}" name="{{ selectedHero.id }}runedAps" onkeypress="return isNumber9(event)"></td>
               </tr>
                 <tr class="text-left">
                   <td>Crit Chance</td>
-                  <td>{{ selectedHero.crit() }}%</td>
-                    <td>-</td>
-                    <td><input type="text" class="form-control form-control-sm"></td>
+                  <td>{{ (selectedHero.crit()*100)|round|int }}%</td>
+                    <td>{{ selectedHero.crit()*100 }}% </td>
+                    <td><input type="text" maxlength="10" class="form-control form-control-sm" id="{{ selectedHero.id }}runedCrit" value="{{ selectedHero.runedCrit }}" name="{{ selectedHero.id }}runedCrit" onkeypress="return isNumber9(event)"></td>
               </tr>
               <tr class="text-left">
                   <td>Crit Damage</td>
-                  <td>{{ selectedHero.displayCritDmg(selectedHero.critDmg()) }}%</td>
-                  <td>{{ selectedHero.critDmg() }}</td>
-                  <td><input type="text" class="form-control form-control-sm"></td>
+                  <td>{{ ((selectedHero.critDmg())*100)|round|int }}%</td>
+                  <td>{{ (selectedHero.critDmg()*100)|round(2, 'common') }}%</td>
+                  <td><input type="text" maxlength="10" class="form-control form-control-sm" id="{{ selectedHero.id }}runedCritDmg" value="{{ selectedHero.runedCritDmg }}" name="{{ selectedHero.id }}runedCritDmg" onkeypress="return isNumber9(event)"></td>
               </tr>
      <tr class="text-center">
                   <td>&nbsp;</td>
@@ -111,7 +113,9 @@
 <div class="row">
     <div class="col-lg-12 text-center">
       <hr>
-        <p class="instructions">Short hero information.</p>
+
+        <p class="instructions">{{heroDict[current][2]}}</p>
+        <p class="instructions"><img class="img-fluid" src="/static/{{heroDict[current][2]}}.png" alt="{{selectedHero.baseStats.name}}"></p>
         <hr>
     </div>
 </div>

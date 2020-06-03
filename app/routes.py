@@ -5,6 +5,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Base, Hero, validateAwaken, validateLevel, validateWeapon, validateMedals, heroProgress, \
     totalMedals, rarityMedals
 from werkzeug.urls import url_parse
+from app.heroDict import heroDict
 
 @app.route('/')
 @app.route('/index')
@@ -53,7 +54,7 @@ def register():
         # Create entries for every hero for the registered user.
         base = Base.query.all()
         for i in base:
-            hero = Hero(level=0, awaken=0, wpn=0, medals=0, player=user, baseStats=i)
+            hero = Hero(level=0, awaken=0, wpn=0, medals=0, runedAtk=0, runedHp=0, runedDef=0, runedAps=0, runedCrit=0, runedCritDmg=0, player=user, baseStats=i)
             db.session.add(hero)
         db.session.commit()
         flash(u'Your account has been created! Login to access the features of this website.', 'info')
@@ -179,12 +180,45 @@ def test(username):
     return render_template('test.html', user=user, heroes=heroes, title='TEST AREA')
 
 
-@app.route('/Hero/<heroid>')
+@app.route('/Hero/<heroid>', methods=["GET", "POST"])
 @login_required
 def hero(heroid):
     user = User.query.join(Hero).filter(Hero.id==heroid)
     selectedHero = Hero.query.get(heroid)
-    return render_template('hero.html',  selectedHero=selectedHero, title=selectedHero.baseStats.name, user=user)
+    howToRune = "<not implemented>"
+    heroInfo = "<placeholder for hero information>"
+    if request.method == "GET":
+        return render_template('hero.html', selectedHero=selectedHero, title=selectedHero.baseStats.name, user=user, howToRune=howToRune, heroInfo=heroInfo, heroDict=heroDict)
+    else:
+        try:
+            float(request.form.get(str(selectedHero.id) + "runedAtk"))
+            float(request.form.get(str(selectedHero.id) + "runedHp"))
+            float(request.form.get(str(selectedHero.id) + "runedDef"))
+            float(request.form.get(str(selectedHero.id) + "runedAps"))
+            float(request.form.get(str(selectedHero.id) + "runedCrit"))
+            float(request.form.get(str(selectedHero.id) + "runedCritDmg"))
+        except:
+            flash(u'Invalid input', 'error')
+            return render_template('hero.html', selectedHero=selectedHero, title=selectedHero.baseStats.name, user=user, howToRune=howToRune, heroInfo=heroInfo)
+
+        runedAtk = float(request.form.get(str(selectedHero.id) + "runedAtk"))
+        runedHp = float(request.form.get(str(selectedHero.id) + "runedHp"))
+        runedDef = float(request.form.get(str(selectedHero.id) + "runedDef"))
+        runedAps = float(request.form.get(str(selectedHero.id) + "runedAps"))
+        runedCrit = float(request.form.get(str(selectedHero.id) + "runedCrit"))
+        runedCritDmg = float(request.form.get(str(selectedHero.id) + "runedCritDmg"))
+
+        selectedHero.runedAtk = runedAtk
+        selectedHero.runedHp = runedHp
+        selectedHero.runedDef = runedDef
+        selectedHero.runedAps = runedAps
+        selectedHero.runedCrit = runedCrit
+        selectedHero.runedCritDmg = runedCritDmg
+        db.session.commit()
+
+        test = request.form.get(str(selectedHero.id) + "runedAtk")
+        flash(u'Rune values updated!', 'info')
+        return render_template('hero.html', selectedHero=selectedHero, title=selectedHero.baseStats.name, user=user, howToRune=howToRune, heroInfo=heroInfo)
 
 
 @app.route('/contact', methods=["GET", "POST"])

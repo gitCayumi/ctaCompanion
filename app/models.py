@@ -3,6 +3,7 @@ from app import db, login
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from hashlib import md5
+from math import ceil
 
 
 @login.user_loader
@@ -43,25 +44,29 @@ class Hero(db.Model):
     awaken = db.Column(db.Integer, index=True)
     wpn = db.Column(db.Integer, index=True)
     medals = db.Column(db.Integer, index=True)
+    runedAtk = db.Column(db.Integer, index=True)
+    runedHp = db.Column(db.Integer, index=True)
+    runedDef = db.Column(db.Integer, index=True)
+    runedAps = db.Column(db.Integer, index=True)
+    runedCrit = db.Column(db.Integer, index=True)
+    runedCritDmg = db.Column(db.Integer, index=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     base_id = db.Column(db.Integer, db.ForeignKey('base.id'))
 
     def displayStat(self, stat):
         if stat < 1000:
             return str(int(round(stat, 0)))
+        elif stat > 1000000:
+            return str(round(stat/1000000, 2))+"M"
         else:
-            # an elif for above million
             return str(round(stat/1000, 2))+"K"
 
     def displayAps(self, aps):
         return round(aps, 2)
 
-    def displayCritDmg(self, critDmg):
-        return round(critDmg)
-
     def atk(self):
         # Temporary placeholder variable for runed values
-        runedAttack = 0 #335.47
+        runedAttack = self.runedAtk
         base = self.baseStats.atk
         level = self.level
         awaken = self.awaken
@@ -72,7 +77,7 @@ class Hero(db.Model):
 
     def hp(self):
         # Temporary placeholder variable for runed values
-        runedHP = 0 #72.14
+        runedHP = self.runedHp
         base = self.baseStats.hp
         level = self.level
         awaken = self.awaken
@@ -82,7 +87,7 @@ class Hero(db.Model):
 
     def defense(self):
         # Temporary placeholder variable for runed values
-        runedDef = 0 #58.59
+        runedDef = self.runedDef
         base = self.baseStats.defense
         level = self.level
         awaken = self.awaken
@@ -92,20 +97,26 @@ class Hero(db.Model):
 
     def aps(self):
         # Temporary placeholder variable for runed values
-        runedAps = 0 #49.5
+        runedAps = self.runedAps
         base = self.baseStats.aps
         runedAps = base + (base * (runedAps / 100))
         return runedAps
 
     def crit(self):
         # Temporary placeholder variable for runed values
-        runedCrit = 0 #16
+        runedCrit = self.runedCrit
         base = self.baseStats.crit
-        return base + runedCrit
+        return (base + runedCrit)/100
 
     def critDmg(self):
         # Temporary placeholder variable for runed values
-        runedDmg = 0 #25.75
+        runedDmg = self.runedCritDmg
+        base = self.baseStats.critDmg
+        return (base + runedDmg)/100
+
+    def critDmgDisplay(self):
+        # Temporary placeholder variable for runed values
+        runedDmg = 25.75
         base = self.baseStats.critDmg
         return base + runedDmg
 
@@ -116,8 +127,23 @@ class Hero(db.Model):
         crit = self.crit()
         critDmg = self.critDmg()
         dps = (atk * aps * (1-crit)) + (atk * aps * crit * critDmg)
-        dps = int(dps)
+        dps = int(round(dps))
         return '{:,}'.format(dps).replace(',', ' ')
+
+    def dpsSP2(self):
+        # (atk * aps * (1-crit rate)) + (atk  * aps * critRate * critDmg)
+        sp2 = 1
+        sp2num = 5
+        atk = self.atk()
+        aps = self.aps()
+        crit = self.crit()
+        critDmg = self.critDmg()
+        dps = ((atk * aps * (1-crit)) + (atk * aps * crit * critDmg)) * (6 + sp2 * sp2num)/7
+        #  x (6 + sp2_damage x sp2_num_attacks)/7
+        dps = int(round(dps))
+        return '{:,}'.format(dps).replace(',', ' ')
+
+
 
     def progress(self):
         level = self.level
@@ -195,6 +221,13 @@ class Base(db.Model):
     poison = db.Column(db.Integer, index=True)
     poisonTime = db.Column(db.Integer, index=True)
     poisonDmg = db.Column(db.Integer, index=True)
+    sp2 = db.Column(db.Integer, index=True)
+    sp2num = db.Column(db.Integer, index=True)
+    buffElement = db.Column(db.String(16), index=True)
+    buffType = db.Column(db.Integer, index=True)
+    buffStat = db.Column(db.String(16), index=True)
+    buff = db.Column(db.Integer, index=True)
+
     heroes = db.relationship('Hero', backref='baseStats', lazy='dynamic')
 
     def __repr__(self):
