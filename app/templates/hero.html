@@ -33,17 +33,20 @@
         <table class="table table-bordered">
         <thead class="thead-dark">
         <tr>
-            <th colspan="2">How to rune</th>
+            <th colspan="2">PVP Tier</th>
         </tr>
         </thead>
         <tr>
-            <td width="20%">PVP</td>
-            <td>{{ heroDict[current][0][0] }} {{ heroDict[current][0][1] }}</td>
+
+            <td><h1>
+                {% if heroDict[current] %}
+                {{ heroDict[current][4] }}
+                {% else %}
+                -
+                {% endif %}
+            </h1></td>
         </tr>
-        <tr>
-            <td width="20%">PVE</td>
-            <td>{{ howToRune }}</td>
-        </tr>
+
     </table>
       </div>
 
@@ -104,21 +107,103 @@
               </tr>
           </table>
 </form>
-    </div>
 
+    </div>
 
       </div>
 
-
+{% if heroDict[current] %}
 <div class="row">
     <div class="col-lg-12 text-center">
-      <hr>
-
-        <p class="instructions">{{heroDict[current][2]}}</p>
-        <p class="instructions"><img class="img-fluid" src="/static/{{heroDict[current][2]}}.png" alt="{{selectedHero.baseStats.name}}"></p>
+        <hr>
+        <p class="instructions">{{ heroDict[current][5] }}</p>
         <hr>
     </div>
 </div>
+
+<div class="row">
+
+    <div class="col-lg-12 text-center">
+      <table class="table table-bordered">
+          <thead class="thead-dark">
+          <tr>
+              <th colspan="5">How to rune</th>
+          </tr>
+          </thead>
+          <tr class="table-secondary">
+              <td>&nbsp;</td>
+              <td>Rune Set</td>
+              <td>Primary</td>
+              <td>Secondary</td>
+              <td>Notes</td>
+          </tr>
+          <tr>
+              <td>PVP</td>
+              <td>
+                  {% for i in heroDict[current][0] %}
+                  <img class="img-fluid" src="/static/{{i}}.png" alt="{{i}}" name="{{i}}" width="25">
+                  {% endfor %}
+              </td>
+              <td>{{ heroDict[current][1] }}</td>
+              <td>{{ heroDict[current][2] }}</td>
+              <td>{{ heroDict[current][3] }}</td>
+          </tr>
+{% if heroDict[current][6] %}
+            <tr>
+              <td>PVE</td>
+              <td>
+                  {% for i in heroDict[current][6] %}
+                  <img class="img-fluid" src="/static/{{i}}.png" alt="{{i}}" name="{{i}}" width="25">
+                  {% endfor %}
+              </td>
+              <td>{{ heroDict[current][7] }}</td>
+              <td>{{ heroDict[current][8] }}</td>
+              <td>{{ heroDict[current][9] }}</td>
+          </tr>
+
+{% endif %}
+      </table>
+
+
+    </div>
+</div>
+
+
+
+{% else %}
+<div class="row">
+    <div class="col-lg-12 text-center">
+        <hr>
+        <p class="instructions"><b>It's not recommended to invest and spend materials on this hero.</b></p>
+        <hr>
+    </div>
+</div>
+{% endif %}
+
+<!--
+<div class="row">
+
+    <div class="col-lg-4 text-center">
+      <table class="table table-bordered">
+          <thead class="thead-dark">
+          <tr>
+              <th colspan="5">Hero Investment</th>
+          </tr>
+          </thead>
+          <tr class="table-secondary">
+              <td>Material</td>
+              <td>Amount</td>
+          </tr>
+          <tr>
+              <td>This</td>
+              <td>Much</td>
+
+          </tr>
+      </table>
+    </div>
+</div>
+-->
+
 
 <br>
 

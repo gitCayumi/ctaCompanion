@@ -185,10 +185,8 @@ def test(username):
 def hero(heroid):
     user = User.query.join(Hero).filter(Hero.id==heroid)
     selectedHero = Hero.query.get(heroid)
-    howToRune = "<not implemented>"
-    heroInfo = "<placeholder for hero information>"
     if request.method == "GET":
-        return render_template('hero.html', selectedHero=selectedHero, title=selectedHero.baseStats.name, user=user, howToRune=howToRune, heroInfo=heroInfo, heroDict=heroDict)
+        return render_template('hero.html', selectedHero=selectedHero, title=selectedHero.baseStats.name, user=user, heroDict=heroDict)
     else:
         try:
             float(request.form.get(str(selectedHero.id) + "runedAtk"))
@@ -199,7 +197,7 @@ def hero(heroid):
             float(request.form.get(str(selectedHero.id) + "runedCritDmg"))
         except:
             flash(u'Invalid input', 'error')
-            return render_template('hero.html', selectedHero=selectedHero, title=selectedHero.baseStats.name, user=user, howToRune=howToRune, heroInfo=heroInfo)
+            return render_template('hero.html', selectedHero=selectedHero, title=selectedHero.baseStats.name, user=user, heroDict=heroDict)
 
         runedAtk = float(request.form.get(str(selectedHero.id) + "runedAtk"))
         runedHp = float(request.form.get(str(selectedHero.id) + "runedHp"))
@@ -218,7 +216,7 @@ def hero(heroid):
 
         test = request.form.get(str(selectedHero.id) + "runedAtk")
         flash(u'Rune values updated!', 'info')
-        return render_template('hero.html', selectedHero=selectedHero, title=selectedHero.baseStats.name, user=user, howToRune=howToRune, heroInfo=heroInfo)
+        return render_template('hero.html', selectedHero=selectedHero, title=selectedHero.baseStats.name, user=user, heroDict=heroDict)
 
 
 @app.route('/contact', methods=["GET", "POST"])
