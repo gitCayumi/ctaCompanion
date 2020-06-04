@@ -61,11 +61,11 @@ $(document).ready(function() {
                 <th data-priority="10">Class</th>
                 <th data-priority="3" class="text-center"><img src="{{ url_for('static', filename='star.png') }}" width="25" alt="Star Level"></th>
                 <th data-priority="4" class="text-center"><img src="{{ url_for('static', filename='awaken.png') }}" width="25" alt="Awaken"></th>
-                <th data-priority="5" class="text-center"><img src="{{ url_for('static', filename='wpn.png') }}" width="25" alt="Weapon"></th>
+                <th data-priority="5" class="text-center">WPN</th>
                 <th data-priority="6" class="text-center">%</th>
-                <th data-priority="7">ATK</th>
-                <th data-priority="8">HP</th>
-                <th data-priority="9">Def</th>
+                <th data-priority="7"><img src="{{ url_for('static', filename='atk.png') }}" width="25" alt="Attack"></th>
+                <th data-priority="8"><img src="{{ url_for('static', filename='hp.png') }}" width="25" alt="HP"></th>
+                <th data-priority="9"><img src="{{ url_for('static', filename='def.png') }}" width="25" alt="Defense"></th>
             </tr>
         </thead>
         <tbody>
@@ -73,7 +73,7 @@ $(document).ready(function() {
         {% if i.level > 0 %}
         <tr>
             <td class="{{i.baseStats.element}}{{i.baseStats.rarity}}" width="25"><img class="img-fluid" src="/static/{{i.baseStats.nameSafe}}.png" alt="{{i.baseStats.name}}"></td>
-            <td class="{{i.baseStats.element}}{{i.baseStats.rarity}}"><b><a class="text-dark" href="{{ url_for('hero', heroid=i.id) }}">{{ i.baseStats.name }}</b></td>
+            <td class="{{i.baseStats.element}}{{i.baseStats.rarity}}"><b><a class="text-dark" href="{{ url_for('hero', heroid=i.id) }}">{{ i.baseStats.name }}</a></b></td>
             <td class="{{i.baseStats.element}}{{i.baseStats.rarity}}">{{ i.baseStats.element }}</td>
             <td class="{{i.baseStats.element}}{{i.baseStats.rarity}}">{{ i.baseStats.rarity }}</td>
             <td class="{{i.baseStats.element}}{{i.baseStats.rarity}}">{{ i.baseStats.job }}</td>
@@ -108,7 +108,7 @@ $(document).ready(function() {
         {% if i.level == 0 %}
         <tr>
             <td class="uncollected" width="25"><img class="img-fluid" src="/static/{{i.baseStats.nameSafe}}.png" alt="{{i.baseStats.name}}"></td>
-            <td class="uncollected">{{ i.baseStats.name }}</td>
+            <td class="uncollected"><a class="text-dark" href="{{ url_for('hero', heroid=i.id) }}">{{ i.baseStats.name }}</a></td>
             <td class="uncollected">{{ i.baseStats.element }}</td>
             <td class="uncollected">{{ i.baseStats.rarity }}</td>
             <td class="uncollected">{{ i.baseStats.job }}</td>

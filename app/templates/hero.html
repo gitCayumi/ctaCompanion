@@ -8,6 +8,7 @@
       <h1 class="display-4">{{ selectedHero.baseStats.name }} ({{ selectedHero.level }}/{{ selectedHero.awaken }}/{{ selectedHero.wpn }}) </h1>
 
       <hr>
+        {% if selectedHero.level > 0 %}
       <p class="instructions">
           {% for i in range(selectedHero.awaken) %}
           <img src="{{ url_for('static', filename='awaken.png') }}" width="30" alt="Awaken">
@@ -17,6 +18,9 @@
           {% endfor %}
 
       </p>
+        {% else %}
+        <p class="instruction">You have not unlocked this hero.</p>
+        {% endif %}
       <hr>
     </div>
  </div>
@@ -25,8 +29,11 @@
     <div class="col-lg-3 text-center align-middle pt-3">
         <img class="img-fluid rounded-circle" src="/static/{{selectedHero.baseStats.nameSafe}}.png" alt="{{selectedHero.baseStats.name}}"><br><br>
         {{ selectedHero.baseStats.element }} {{ selectedHero.baseStats.rarity }} {{ selectedHero.baseStats.job }}<hr>
-
-        <p class="instructions {{selectedHero.baseStats.element}}{{selectedHero.baseStats.rarity}}"><b>DPS: {{ selectedHero.dpsSP2() }}</b>
+        {% if selectedHero.level > 0 %}
+        <p class="instructions {{selectedHero.baseStats.element}}{{selectedHero.baseStats.rarity}}"><b>DPS: {{ selectedHero.dpsSP2() }}</b></p>
+        {% else %}
+        <p class="instructions {{selectedHero.baseStats.element}}{{selectedHero.baseStats.rarity}}">Hero not collected</p>
+        {% endif %}
 
 
 
@@ -46,7 +53,6 @@
                 {% endif %}
             </h1></td>
         </tr>
-
     </table>
       </div>
 
@@ -57,53 +63,101 @@
  <table class="table table-striped">
      <thead class="thead-dark">
           <tr>
+              <th>&nbsp;</th>
               <th>Stat</th>
-              <th>In-game</th>
+              <th>{% if selectedHero.level > 0 %}In-game{% else %}Base stat{% endif %}</th>
               <th>Real</th>
               <th>Input Rune %</th>
           </tr>
           </thead>
               <tr class="text-left">
-                  <td>Attack</td>
-                  <td>{{ selectedHero.displayStat(selectedHero.atk()) }}</td>
-                  <td>{{ selectedHero.atk() }}</td>
+                  <td class="align-middle text-center"><img src="{{ url_for('static', filename='atk.png') }}" width="25" alt="Attack"></td>
+                  <td class="align-middle">Attack</td>
+                  {% if selectedHero.level > 0 %}
+                  <td class="align-middle">{{ selectedHero.displayStat(selectedHero.atk()) }}</td>
+                  <td class="align-middle">{{ selectedHero.atk() }}</td>
                   <td><input type="text" maxlength="10" class="form-control form-control-sm" id="{{ selectedHero.id }}runedAtk" value="{{ selectedHero.runedAtk }}" name="{{ selectedHero.id }}runedAtk"></td>
+                  {% else %}
+                  <td class="align-middle">{{ selectedHero.baseStats.atk }}</td>
+                  <td class="align-middle">-</td>
+                  <td><input type="text" maxlength="10" class="form-control form-control-sm" disabled></td>
+                  {% endif %}
               </tr>
               <tr class="text-left">
-                  <td>HP</td>
-                  <td>{{ selectedHero.displayStat(selectedHero.hp()) }}</td>
-                  <td>{{ selectedHero.hp() }}</td>
+                  <td class="align-middle text-center"><img src="{{ url_for('static', filename='hp.png') }}" width="25" alt="HP"></td>
+                  <td class="align-middle">HP</td>
+                  {% if selectedHero.level > 0 %}
+                  <td class="align-middle">{{ selectedHero.displayStat(selectedHero.hp()) }}</td>
+                  <td class="align-middle">{{ selectedHero.hp() }}</td>
                   <td><input type="text" maxlength="10" class="form-control form-control-sm" id="{{ selectedHero.id }}runedHp" value="{{ selectedHero.runedHp }}" name="{{ selectedHero.id }}runedHp" onkeypress="return isNumber9(event)"></td>
+                  {% else %}
+                  <td class="align-middle">{{ selectedHero.baseStats.hp }}</td>
+                  <td class="align-middle">-</td>
+                  <td><input type="text" maxlength="10" class="form-control form-control-sm" disabled></td>
+                  {% endif %}
               </tr>
               <tr class="text-left">
-                  <td>Defense</td>
-                  <td>{{ selectedHero.displayStat(selectedHero.defense()) }}</td>
-                  <td>{{ selectedHero.defense() }}</td>
+                  <td class="align-middle text-center"><img src="{{ url_for('static', filename='def.png') }}" width="25" alt="Defense"></td>
+                  <td class="align-middle">Defense</td>
+                  {% if selectedHero.level > 0 %}
+                  <td class="align-middle">{{ selectedHero.displayStat(selectedHero.defense()) }}</td>
+                  <td class="align-middle">{{ selectedHero.defense() }}</td>
                   <td><input type="text" maxlength="10" class="form-control form-control-sm" id="{{ selectedHero.id }}runedDef" value="{{ selectedHero.runedDef }}" name="{{ selectedHero.id }}runedDef" onkeypress="return isNumber9(event)"></td>
+                  {% else %}
+                  <td class="align-middle">{{ selectedHero.baseStats.defense }}</td>
+                  <td class="align-middle">-</td>
+                  <td><input type="text" maxlength="10" class="form-control form-control-sm" disabled></td>
+                  {% endif %}
               </tr>
               <tr class="text-left">
-                  <td>Attack per sec</td>
-                  <td>{{ selectedHero.aps()|round(2, 'common' ) }}</td>
-                  <td>{{ selectedHero.aps() }}</td>
+                  <td class="align-middle text-center"><img src="{{ url_for('static', filename='aps.png') }}" width="25" alt="APS"></td>
+                  <td class="align-middle">Attack per sec</td>
+                  {% if selectedHero.level > 0 %}
+                  <td class="align-middle">{{ selectedHero.aps()|round(2, 'common' ) }}</td>
+                  <td class="align-middle">{{ selectedHero.aps() }}</td>
                   <td><input type="text" maxlength="10" class="form-control form-control-sm" id="{{ selectedHero.id }}runedAps" value="{{ selectedHero.runedAps }}" name="{{ selectedHero.id }}runedAps" onkeypress="return isNumber9(event)"></td>
+                  {% else %}
+                  <td class="align-middle">{{ selectedHero.baseStats.aps }}</td>
+                  <td class="align-middle">-</td>
+                  <td><input type="text" maxlength="10" class="form-control form-control-sm" disabled></td>
+                  {% endif %}
               </tr>
                 <tr class="text-left">
-                  <td>Crit Chance</td>
-                  <td>{{ (selectedHero.crit()*100)|round|int }}%</td>
-                    <td>{{ selectedHero.crit()*100 }}% </td>
-                    <td><input type="text" maxlength="10" class="form-control form-control-sm" id="{{ selectedHero.id }}runedCrit" value="{{ selectedHero.runedCrit }}" name="{{ selectedHero.id }}runedCrit" onkeypress="return isNumber9(event)"></td>
-              </tr>
+                  <td class="align-middle text-center"><img src="{{ url_for('static', filename='crit.png') }}" width="25" alt="Crit Chance"></td>
+                  <td class="align-middle">Crit Chance</td>
+                  {% if selectedHero.level > 0 %}
+                  <td class="align-middle">{{ (selectedHero.crit()*100)|round|int }}%</td>
+                  <td class="align-middle">{{ selectedHero.crit()*100 }}% </td>
+                  <td><input type="text" maxlength="10" class="form-control form-control-sm" id="{{ selectedHero.id }}runedCrit" value="{{ selectedHero.runedCrit }}" name="{{ selectedHero.id }}runedCrit" onkeypress="return isNumber9(event)"></td>
+                  {% else %}
+                  <td class="align-middle">{{ selectedHero.baseStats.crit }}%</td>
+                  <td class="align-middle">-</td>
+                  <td><input type="text" maxlength="10" class="form-control form-control-sm" disabled></td>
+                  {% endif %}
+                </tr>
               <tr class="text-left">
-                  <td>Crit Damage</td>
-                  <td>{{ ((selectedHero.critDmg())*100)|round|int }}%</td>
-                  <td>{{ (selectedHero.critDmg()*100)|round(2, 'common') }}%</td>
+                  <td class="align-middle text-center"><img src="{{ url_for('static', filename='crit.png') }}" width="25" alt="Crit Damage"></td>
+                  <td class="align-middle">Crit Damage</td>
+                  {% if selectedHero.level > 0 %}
+                  <td class="align-middle">{{ ((selectedHero.critDmg())*100)|round|int }}%</td>
+                  <td class="align-middle">{{ (selectedHero.critDmg()*100)|round(2, 'common') }}%</td>
                   <td><input type="text" maxlength="10" class="form-control form-control-sm" id="{{ selectedHero.id }}runedCritDmg" value="{{ selectedHero.runedCritDmg }}" name="{{ selectedHero.id }}runedCritDmg" onkeypress="return isNumber9(event)"></td>
+                  {% else %}
+                  <td class="align-middle">{{ selectedHero.baseStats.critDmg }}%</td>
+                  <td class="align-middle">-</td>
+                  <td><input type="text" maxlength="10" class="form-control form-control-sm" disabled></td>
+                  {% endif %}
               </tr>
      <tr class="text-center">
                   <td>&nbsp;</td>
                   <td>&nbsp;</td>
                   <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  {% if selectedHero.level > 0 %}
                   <td><button class="btn btn-primary btn-lg" type="submit">Save Rune Values</button></td>
+                  {% else %}
+                  <td><button class="btn btn-primary btn-lg" type="submit" disabled>Save Rune Values</button></td>
+                  {% endif %}
               </tr>
           </table>
 </form>
@@ -130,35 +184,35 @@
               <th colspan="5">How to rune</th>
           </tr>
           </thead>
-          <tr class="table-secondary">
+          <tr class="table-secondary align-middle">
               <td>&nbsp;</td>
-              <td>Rune Set</td>
+              <td width="18%">Rune Set</td>
               <td>Primary</td>
               <td>Secondary</td>
               <td>Notes</td>
           </tr>
-          <tr>
-              <td>PVP</td>
-              <td>
+          <tr class="align-middle">
+              <td class="align-middle">PVP</td>
+              <td class="align-middle">
                   {% for i in heroDict[current][0] %}
                   <img class="img-fluid" src="/static/{{i}}.png" alt="{{i}}" name="{{i}}" width="25">
                   {% endfor %}
               </td>
-              <td>{{ heroDict[current][1] }}</td>
-              <td>{{ heroDict[current][2] }}</td>
-              <td>{{ heroDict[current][3] }}</td>
+              <td class="align-middle">{{ heroDict[current][1] }}</td>
+              <td class="align-middle">{{ heroDict[current][2] }}</td>
+              <td class="align-middle">{{ heroDict[current][3] }}</td>
           </tr>
 {% if heroDict[current][6] %}
             <tr>
-              <td>PVE</td>
-              <td>
+              <td class="align-middle">PVE</td>
+              <td class="align-middle">
                   {% for i in heroDict[current][6] %}
                   <img class="img-fluid" src="/static/{{i}}.png" alt="{{i}}" name="{{i}}" width="25">
                   {% endfor %}
               </td>
-              <td>{{ heroDict[current][7] }}</td>
-              <td>{{ heroDict[current][8] }}</td>
-              <td>{{ heroDict[current][9] }}</td>
+              <td class="align-middle">{{ heroDict[current][7] }}</td>
+              <td class="align-middle">{{ heroDict[current][8] }}</td>
+              <td class="align-middle">{{ heroDict[current][9] }}</td>
           </tr>
 
 {% endif %}
