@@ -2,13 +2,105 @@
 
 {% block content %}
 
+{% if current_user.is_authenticated %}
 <div class="row pt-3">
     <div class="col-lg-12">
     <h1 class="display-4">Welcome {{ current_user.username }}</h1>
         <hr>
-        <p class="instructions">This is a temporary index page. {{ errorType }}</p>
+        <p class="instructions">As a registered user you have access to all the features of CTA Companion.</p>
         <hr>
     </div>
 </div>
+
+<div class="row">
+    <div class="col-lg-6 p-3">
+        <h4>Data input</h4><hr>
+        <ul class="list-group">
+            <li class="list-group-item list-group-item-info">Hero details (Star Level, Awaken, Weapon Level, Medals) can be input in My Account.</li>
+            <li class="list-group-item list-group-item-info">Prism Power, Hero Power, Artifact Power and Days Played can be input in My Account.</li>
+            <li class="list-group-item list-group-item-info">Runed values can be input for each hero on its respective page.</li>
+            <li class="list-group-item list-group-item-info">Artifacts and their level can be input in Artifacts.</li>
+        </ul>
+        <hr>
+    </div>
+
+    <div class="col-lg-6 p-3">
+        <h4>Data output</h4><hr>
+        <ul class="list-group">
+            <li class="list-group-item list-group-item-success">Hero Collection contains a sortable and searchable list of all your heroes.</li>
+            <li class="list-group-item list-group-item-success">Click on any hero to see more details such as how to rune and a hero description. This is where you input runed values.</li>
+            <li class="list-group-item list-group-item-success">Artifacts contains a table of your artifacts combined effects.</li>
+            <li class="list-group-item list-group-item-success">Progress contains visual representation of your progress by rarity within each element and overall.
+            <li class="list-group-item list-group-item-success">Progress also contains a table of percentages and maxed heroes by rarity, element, and overall.
+            <li class="list-group-item list-group-item-success">Boss Teams will automatically generate the best possible team for every boss based on your input</li>
+        </ul>
+        <hr>
+    </div>
+
+</div>
+
+{% else %}
+
+<div class="row pt-3">
+    <div class="col-lg-12 text-center">
+    <h1 class="display-4 text-center">Welcome to CTA Companion</h1>
+        <hr>
+        <p class="instructions">CTA Companion is a web application packed with features for the mobile game Crush Them All!</p>
+        <hr>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-3">
+        &nbsp;
+    </div>
+    <div class="col-lg-6 p-3 bg-primary text-white rounded-lg border border-white shadow">
+        <h2 class="text-center">CTA Companion</h2><hr>
+        <p class="text-center">
+            <ul>
+        <li>Generate optimal teams for every boss in Slay Boss Event</li>
+        <li>Comprehensive progress tracking</li>
+        <li>Sort and browse your Hero Collection</li>
+        <li>See individual Hero details, such as:</li>
+        <ul>
+        <li>DPS (including SP2)</li>
+        <li>How-To-Rune</li>
+        <li>PVP Tier, Hero descriptions and much more</li>
+        </ul>
+        </p><hr>
+    </div>
+<div class="col-lg-3 p-3 rounded-right border border-white align-middle text-center">
+   &nbsp;
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-lg-3">
+        &nbsp;
+    </div>
+    <div class="col-lg-6 p-3 text-center">
+        <hr>
+        <p><a href="{{ url_for('login') }}">Login</a> or <a href="{{ url_for('register') }}">create an account</a> to access all the features.</p>
+        <hr>
+        <!--
+        <p><img src="{{ url_for('static', filename='CTA_logo.png') }}" alt="CTA" width="200"></p>
+        -->
+    </div>
+<div class="col-lg-3 p-3 rounded-right border border-white align-middle text-center">
+   &nbsp;
+    </div>
+</div>
+
+
+
+
+
+<!--
+To utilize all the features of CTA Companion you need to create an account and login. Registered users can input their hero details, runed values, artifacts and more.
+-->
+
+
+{% endif %}
 
 {% endblock %}
