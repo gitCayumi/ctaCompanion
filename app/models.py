@@ -17,6 +17,10 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     registered = db.Column(db.DateTime, default=datetime.utcnow)
+    prismPower = db.Column(db.Integer, index=True)
+    heroPower = db.Column(db.Integer, index=True)
+    artifactPower = db.Column(db.Integer, index=True)
+    daysPlayed = db.Column(db.Integer, index=True)
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     heroes = db.relationship('Hero', backref='player', lazy='dynamic')
 
@@ -36,6 +40,23 @@ class User(UserMixin, db.Model):
     def registeredProper(self, date):
         proper = date.strftime("%Y-%m-%d")
         return proper
+
+    def totalPower(self):
+        prism = self.prismPower
+        hero = self.heroPower
+        art = self.artifactPower
+        total = prism+hero+art
+        return '{:,}'.format(total).replace(',', ' ')
+
+    def powerPerDay(self):
+        total = int(self.prismPower + self.heroPower + self.artifactPower)
+        days = self.daysPlayed
+        # Avoid zero divison if days played = 0
+        if days == 0:
+            return '{:,}'.format(total).replace(',', ' ')
+        total = int(total/days)
+        return '{:,}'.format(total).replace(',', ' ')
+
 
 
 class Hero(db.Model):

@@ -83,6 +83,15 @@ def account(username):
                 flash(u'Invalid input', 'error')
                 return render_template('account.html', user=user, heroes=heroes, title='Account')
 
+            try:
+                int(request.form.get("prismPower"))
+                int(request.form.get("heroPower"))
+                int(request.form.get("artifactPower"))
+                int(request.form.get("daysPlayed"))
+            except:
+                flash(u'Invalid input', 'error')
+                return render_template('account.html', user=user, heroes=heroes, title='Account')
+
         for j in heroes:
             current = str(j.id)
             level = validateLevel(int(request.form.get(current + "level")))
@@ -95,7 +104,18 @@ def account(username):
             hero.awaken = awaken
             hero.wpn = wpn
             hero.medals = medals
-            db.session.commit()
+
+        prismPower = int(request.form.get("prismPower"))
+        heroPower = int(request.form.get("heroPower"))
+        artifactPower = int(request.form.get("artifactPower"))
+        daysPlayed = int(request.form.get("daysPlayed"))
+
+        user.prismPower = prismPower
+        user.heroPower = heroPower
+        user.artifactPower = artifactPower
+        user.daysPlayed = daysPlayed
+
+        db.session.commit()
 
         flash(u'Your data was updated successfully!', 'info')
         return render_template('account.html', user=user, heroes=heroes, title='Account')
