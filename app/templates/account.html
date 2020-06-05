@@ -2,40 +2,98 @@
 
 {% block content %}
 
-  <div class="row pt-3">
+<div class="row pt-3">
     <div class="col-lg-12">
-      <h1 class="display-4">Hero Setup</h1>
+    <h1 class="display-4">{{ user.username }}'s Account</h1>
+        <hr>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-1">
+    <img class="rounded" src="{{ user.avatar(64) }}">
+    </div>
+    <div class="col-lg-3">
+        <table class="table table-borderless table-sm">
+            <tr>
+                <td width="150">Member since:</td><td>{{ user.registeredProper(user.registered) }}</td>
+            </tr>
+            <tr>
+                <td width="150">Total Power:</td><td>6 854 214</td>
+            </tr>
+            <tr>
+                <td width="150">Power per day:</td><td>16 584</td>
+            </tr>
+
+
+        </table>
+    </div>
+    <!--
+    <div class="col-lg-3">
+        <table class="table table-borderless table-sm">
+            <tr>
+                <td width="150">Overall progress:</td><td> POSSIBLY ADD </td>
+            </tr>
+            <tr>
+                <td width="150">Favoured element:</td><td> POSSIBLY ADD /td>
+            </tr>
+
+        </table>
+    </div>
+    -->
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <hr>
+    </div>
+</div>
+
+
+<div class="row pt-3">
+    <div class="col-lg-12">
+    <h1 class="display-4">Data Input</h1>
+        <hr>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <p class="instructions">Prism Power, Hero Power, Artifact Power and Days Played can be found in-game at the <b>stats</b> screen. Input the values below.</p>
+      <p class="instructions">Input the Star Level, Awaken, Weapon Level and Medals for each of your heroes.</p>
+        <p class="instructions">Remember to save your changes at the bottom!</p>
       <hr>
-      <p class="instructions">Input the Star Level, Awaken, Weapon Level and Medals for each of your heroes. Remember to save your changes!</p>
-      <hr>
-      <!-- Button to Open the Modal -->
+
+
+
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-  Detailed information
+  Detailed input information
 </button>
 
-<!-- The Modal -->
+
 <div class="modal" id="myModal">
   <div class="modal-dialog">
     <div class="modal-content">
 
-      <!-- Modal Header -->
+
       <div class="modal-header">
         <h4 class="modal-title">Input Information and Validation</h4>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
 
-      <!-- Modal body -->
+
       <div class="modal-body">
         <p>Each field expects integer inputs. Mischievous behaviour and unintended inputs are controlled to some extent on the client-side through
-          scripts and standard attributes. These are utilized to ensure valid parameters. Once submitted a server-side validation will process the input per below.</p>
-        <p>Star Level and Awaken allows one digit 0 - 7. Inevitably a hero's Awaken cannot be greater than its Star Level.
-          Should this be submitted the server-side will decrease the Awaken to match the respective Star Level. Leave at 0 for heroes you have not yet unlocked.</p>
-        <p>Weapon Level allows one digit 0 - 9. Input smaller than 0 or greater than 9 will revert the level to its previous value.</p>
-        <p>Medals allows four digits and the server-side validation will adjust the value to never surpass the total medals of a 7-star hero.</p>
+          scripts and standard attributes. These are utilized to ensure valid parameters. Once submitted a server-side validation will process the input as well.</p>
+          <p><b>Prism Power</b> is used to calculate your Total Power and Power per day. Can be left at 0 if you do not care about this value.</p>
+          <p><b>Hero Power</b> is used to calculate Gun Lord Artifacts as well as Total Power and Power per day. It's recommended you input this value.</p>
+          <p><b>Artifact Power</b> is used to calculate your Total Power and Power per day. Can be left at 0 if you do not care about this value.</p>
+          <p><b>Days Played</b> is used to calculate your Total Power and Power per day. Can be left at 0 if you do not care about this value.</p>
+        <p><b>Star Level and Awaken</b> is used to calculate a heroes base stats. Stars are also used to track account progress while Awaken is used to calculate hero investment. Leave at 0 for heroes you have not yet unlocked.</p>
+        <p><b>Weapon Level</b> is used to calculate hero investment and possibly to determine unlocked rune slots in a future update. This can be left at 0 if you do not care about hero investments.</p>
+        <p><b>Medals</b> are used to track account progress. Can be left at 0 if you do not care about progress.</p>
         <p>Invalid inputs will result in an error and no changes will be saved.</p>
       </div>
 
-      <!-- Modal footer -->
+
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
       </div>
@@ -61,6 +119,46 @@
     return true;
 }
 </script>
+
+<div class="row pt-3">
+    <div class="col-lg-3">
+        <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text">Prism Power</span>
+    </div>
+    <input type="text" class="form-control" value="0">
+  </div>
+    </div>
+
+    <div class="col-lg-3">
+        <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text">Hero Power</span>
+    </div>
+    <input type="text" class="form-control" value="0">
+  </div>
+    </div>
+
+    <div class="col-lg-3">
+        <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text">Artifact Power</span>
+    </div>
+    <input type="text" class="form-control" value="0">
+  </div>
+    </div>
+
+    <div class="col-lg-3">
+        <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text">Days Played</span>
+    </div>
+    <input type="text" class="form-control" value="0">
+  </div>
+    </div>
+</div>
+
+
   <!-- WATER HEROES -->
   <div class="row">
     <div class="col-lg-6 pt-3">
@@ -314,10 +412,4 @@
 </div>
       </form>
 <br>
-
-
-
-
-
-
 {% endblock %}

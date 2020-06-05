@@ -11,26 +11,135 @@
     </div>
  </div>
 
+   <!-- WATER HEROES -->
   <div class="row">
-    <div class="col-lg-6 pt-3">
-    {{ heroes[48] }} - {{ heroes[48].medals }}<br>
-        Progress: {{ heroes[48].progress() }}<br><br>
+      <div class="col-lg-4 pt-3">
+      <table class="table table-borderless table-sm" cellpadding="0" cellspacing="0">
+        <thead>
+        <tr class="WaterHead shadow">
+          <th class="text-center align-middle"><img src="{{ url_for('static', filename='water.png') }}" width="40" alt="Water"></th>
 
-        <ul>
-        {% for i in heroes %}
-        <li>{{i.id }} {{ i.baseStats.name }}: {{ i.dps() }}</li>
-            {% endfor %}
-            </ul>
-    </div>
-      <div class="col-lg-6 pt-3">
-    {{ heroes[48] }} - {{ heroes[48].medals }}<br>
-        Progress: {{ heroes[48].progress() }}<br><br>
+          <th class="text-center align-middle"><img src="{{ url_for('static', filename='star.png') }}" width="25" alt="Star Level"></th>
+          <th class="text-center align-middle"><img src="{{ url_for('static', filename='awaken.png') }}" width="25" alt="Awaken"></th>
+          <th class="text-center align-middle">WPN</th>
+          <th class="text-center align-middle"><img src="{{ url_for('static', filename='medal.png') }}" width="25" alt="Medals"></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in heroes|sort(attribute='baseStats.name') %}
+        {% if i.baseStats.element == "Water" and i.baseStats.rarity == "Common" %}
 
-        <ul>
-        {% for i in heroes %}
-        <li>{{ i.baseStats.name }}: {{ i.dpsSP2() }}</li>
-            {% endfor %}
-            </ul>
+        <!-- WATER COMMON -->
+        {% include '_heroSetup2.html' %}
+
+        {% endif %}
+        {% endfor %}
+        {% for i in heroes|sort(attribute='baseStats.name') %}
+        {% if i.baseStats.element == "Water" and i.baseStats.rarity == "Rare" %}
+
+        <!-- WATER RARE -->
+        {% include '_heroSetup2.html' %}
+
+        {% endif %}
+        {% endfor %}
+        {% for i in heroes|sort(attribute='baseStats.name') %}
+        {% if i.baseStats.element == "Water" and i.baseStats.rarity == "Epic" %}
+
+        <!-- WATER EPIC -->
+        {% include '_heroSetup2.html' %}
+
+        {% endif %}
+        {% endfor %}
+
+        </tbody>
+      </table>
     </div>
+
+<!-- FIRE HEROES -->
+           <div class="col-lg-4 pt-3">
+      <table class="table table-borderless table-sm" cellpadding="0" cellspacing="0">
+        <thead>
+        <tr class="FireHead shadow">
+          <th class="text-center align-middle"><img src="{{ url_for('static', filename='fire.png') }}" width="40" alt="Fire"></th>
+          <th class="text-center align-middle><img src="{{ url_for('static', filename='star.png') }}" width="25" alt="Star Level"></th>
+          <th class="text-center align-middle"><img src="{{ url_for('static', filename='awaken.png') }}" width="25" alt="Awaken"></th>
+          <th class="text-center align-middle">WPN</th>
+          <th class="text-center align-middle"><img src="{{ url_for('static', filename='medal.png') }}" width="25" alt="Medals"></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in heroes|sort(attribute='baseStats.name') %}
+        {% if i.baseStats.element == "Fire" and i.baseStats.rarity == "Common" %}
+
+        <!-- FIRE COMMON -->
+        {% include '_heroSetup2.html' %}
+
+        {% endif %}
+        {% endfor %}
+        {% for i in heroes|sort(attribute='baseStats.name') %}
+        {% if i.baseStats.element == "Fire" and i.baseStats.rarity == "Rare" %}
+
+        <!-- FIRE RARE -->
+        {% include '_heroSetup2.html' %}
+
+        {% endif %}
+        {% endfor %}
+        {% for i in heroes|sort(attribute='baseStats.name') %}
+        {% if i.baseStats.element == "Fire" and i.baseStats.rarity == "Epic" %}
+
+        <!-- FIRE EPIC -->
+        {% include '_heroSetup2.html' %}
+
+        {% endif %}
+        {% endfor %}
+
+        </tbody>
+      </table>
+    </div>
+      
+      <!-- EARTH HEROES -->
+           <div class="col-lg-4 pt-3">
+      <table class="table table-borderless table-sm" cellpadding="0" cellspacing="0">
+        <thead>
+        <tr class="EarthHead shadow">
+          <th class="text-center align-middle"><img src="{{ url_for('static', filename='earth.png') }}" width="40" alt="Earth"></th>
+
+          <th class="text-center align-middle"><img src="{{ url_for('static', filename='star.png') }}" width="25" alt="Star Level"></th>
+          <th class="text-center align-middle"><img src="{{ url_for('static', filename='awaken.png') }}" width="25" alt="Awaken"></th>
+          <th class="text-center align-middle">WPN</th>
+          <th class="text-center align-middle"><img src="{{ url_for('static', filename='medal.png') }}" width="25" alt="Medals"></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in heroes|sort(attribute='baseStats.name') %}
+        {% if i.baseStats.element == "Earth" and i.baseStats.rarity == "Common" %}
+
+        <!-- EARTH COMMON -->
+        {% include '_heroSetup2.html' %}
+
+        {% endif %}
+        {% endfor %}
+        {% for i in heroes|sort(attribute='baseStats.name') %}
+        {% if i.baseStats.element == "Earth" and i.baseStats.rarity == "Rare" %}
+
+        <!-- EARTH RARE -->
+        {% include '_heroSetup2.html' %}
+
+        {% endif %}
+        {% endfor %}
+        {% for i in heroes|sort(attribute='baseStats.name') %}
+        {% if i.baseStats.element == "Earth" and i.baseStats.rarity == "Epic" %}
+
+        <!-- EARTH EPIC -->
+        {% include '_heroSetup2.html' %}
+
+        {% endif %}
+        {% endfor %}
+
+        </tbody>
+      </table>
+    </div>
+      
+      
   </div>
 {% endblock %}

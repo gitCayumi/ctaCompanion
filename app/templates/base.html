@@ -46,13 +46,11 @@
     <div class="collapse navbar-collapse" id="ctacNav">
       <ul class="navbar-nav mr-auto">
           {% if current_user.is_authenticated %}
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="dropdownCtaC" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Heroes</a>
-          <div class="dropdown-menu" aria-labelledby="dropdownCtaC">
-            <a class="dropdown-item" href="{{ url_for('collection', username=current_user.username) }}">Hero Collection</a>
-            <a class="dropdown-item" href="{{ url_for('progress', username=current_user.username) }}">Hero Progress</a>
-            <a class="dropdown-item" href="{{ url_for('heroSetup', username=current_user.username) }}">Hero Setup</a>
-          </div>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('collection', username=current_user.username) }}">Hero Collection</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('progress', username=current_user.username) }}">Progress</a>
         </li>
 
         <li class="nav-item">
@@ -61,12 +59,19 @@
         <li class="nav-item">
           <a class="nav-link" href="#">Boss Teams</a>
         </li>
+
+        <!--
         <li class="nav-item">
           <a class="nav-link" href="{{ url_for('test', username=current_user.username) }}">TEST AREA</a>
       </li>
+        -->
+
           {% endif %}
         <li class="nav-item">
           <a class="nav-link" href="#">Guides</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('contact') }}">Contact</a>
         </li>
       </ul>
       <ul class="navbar-nav ml-auto">
@@ -79,15 +84,13 @@
       </li>
         {% else %}
       <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('profile', username=current_user.username) }}">My Profile</a>
+          <a class="nav-link" href="{{ url_for('account', username=current_user.username) }}">My Account</a>
       </li>
       <li class="nav-item">
           <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
       </li>
         {% endif %}
-        <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('contact') }}">Contact</a>
-        </li>
+
 
       </ul>
     </div>

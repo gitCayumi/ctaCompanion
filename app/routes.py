@@ -62,40 +62,33 @@ def register():
     return render_template('register.html', title='Sign up', form=form, errorType=errorType)
 
 
-@app.route('/profile/<username>')
+@app.route('/account/<username>', methods=['GET', 'POST'])
 @login_required
-def profile(username):
-    user = User.query.filter_by(username=username).first_or_404()
-    return render_template('profile.html', user=user, title='Profile')
-
-
-@app.route('/heroSetup/<username>', methods=["GET", "POST"])
-@login_required
-def heroSetup(username):
+def account(username):
     user = User.query.filter_by(username=username).first_or_404()
     heroes = Hero.query.filter_by(player=user)
     if request.method == "GET":
-        return render_template('heroSetup.html', user=user, heroes=heroes, title='Hero Setup')
+        return render_template('account.html', user=user, heroes=heroes, title='Account')
 
     else:
         for i in heroes:
             current = str(i.id)
             # also handle empty inputs.. if not request.form.. = 0
             try:
-                int(request.form.get(current+"level"))
-                int(request.form.get(current+"awaken"))
-                int(request.form.get(current+"wpn"))
-                int(request.form.get(current+"medal"))
+                int(request.form.get(current + "level"))
+                int(request.form.get(current + "awaken"))
+                int(request.form.get(current + "wpn"))
+                int(request.form.get(current + "medal"))
             except:
                 flash(u'Invalid input', 'error')
-                return render_template('heroSetup.html', user=user, heroes=heroes, title='Hero Setup')
+                return render_template('account.html', user=user, heroes=heroes, title='Account')
 
         for j in heroes:
             current = str(j.id)
-            level = validateLevel(int(request.form.get(current+"level")))
-            awaken = validateAwaken(int(request.form.get(current+"awaken")), level)
-            wpn = validateWeapon(int(request.form.get(current+"wpn")), j.wpn)
-            medals = validateMedals(int(request.form.get(current+"medal")), level)
+            level = validateLevel(int(request.form.get(current + "level")))
+            awaken = validateAwaken(int(request.form.get(current + "awaken")), level)
+            wpn = validateWeapon(int(request.form.get(current + "wpn")), j.wpn)
+            medals = validateMedals(int(request.form.get(current + "medal")), level)
 
             hero = Hero.query.get(j.id)
             hero.level = level
@@ -104,8 +97,9 @@ def heroSetup(username):
             hero.medals = medals
             db.session.commit()
 
-        flash(u'Heroes updated successfully!', 'info')
-        return render_template('heroSetup.html', user=user, heroes=heroes, title='Hero Setup')
+        flash(u'Your data was updated successfully!', 'info')
+        return render_template('account.html', user=user, heroes=heroes, title='Account')
+
 
 
 @app.route('/collection/<username>')
@@ -114,6 +108,7 @@ def collection(username):
     user = User.query.filter_by(username=username).first_or_404()
     heroes = Hero.query.filter_by(player=user)
     return render_template('collection.html', user=user, heroes=heroes, title='Hero Collection')
+
 
 # This mess needs to be refactored, I just created and kept going without thinking ahead.
 # Data can be returned and presented in a much more elegant and efficient way
@@ -223,3 +218,44 @@ def hero(heroid):
 def contact():
 
     return render_template('contact.html', title='Contact')
+
+
+"""
+@app.route('/heroSetup/<username>', methods=["GET", "POST"])
+@login_required
+def heroSetup(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    heroes = Hero.query.filter_by(player=user)
+    if request.method == "GET":
+        return render_template('heroSetup.html', user=user, heroes=heroes, title='Hero Setup')
+
+    else:
+        for i in heroes:
+            current = str(i.id)
+            # also handle empty inputs.. if not request.form.. = 0
+            try:
+                int(request.form.get(current+"level"))
+                int(request.form.get(current+"awaken"))
+                int(request.form.get(current+"wpn"))
+                int(request.form.get(current+"medal"))
+            except:
+                flash(u'Invalid input', 'error')
+                return render_template('heroSetup.html', user=user, heroes=heroes, title='Hero Setup')
+
+        for j in heroes:
+            current = str(j.id)
+            level = validateLevel(int(request.form.get(current+"level")))
+            awaken = validateAwaken(int(request.form.get(current+"awaken")), level)
+            wpn = validateWeapon(int(request.form.get(current+"wpn")), j.wpn)
+            medals = validateMedals(int(request.form.get(current+"medal")), level)
+
+            hero = Hero.query.get(j.id)
+            hero.level = level
+            hero.awaken = awaken
+            hero.wpn = wpn
+            hero.medals = medals
+            db.session.commit()
+
+        flash(u'Heroes updated successfully!', 'info')
+        return render_template('heroSetup.html', user=user, heroes=heroes, title='Hero Setup')
+"""

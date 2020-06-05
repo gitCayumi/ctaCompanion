@@ -44,7 +44,7 @@ $(document).ready(function() {
     <div class="col-lg-12">
       <h1 class="display-4">Hero Collection</h1>
       <hr>
-      <p class="instructions">Sort and filter your heroes below. Click on any hero to see more details. Your heroes can be input in the <a href="{{ url_for('heroSetup', username=current_user.username) }}">Hero Setup</a>.</p>
+      <p class="instructions">Sort and filter your heroes below. Click on any hero to see more details. Your heroes can be input in <a href="{{ url_for('account', username=current_user.username) }}">Your Account</a>.</p>
         <hr>
     </div>
  </div>
@@ -73,7 +73,7 @@ $(document).ready(function() {
         {% if i.level > 0 %}
         <tr>
             <td class="{{i.baseStats.element}}{{i.baseStats.rarity}}" width="25"><img class="img-fluid" src="/static/{{i.baseStats.nameSafe}}.png" alt="{{i.baseStats.name}}"></td>
-            <td class="{{i.baseStats.element}}{{i.baseStats.rarity}}"><b><a class="text-dark" href="{{ url_for('hero', heroid=i.id) }}">{{ i.baseStats.name }}</a></b></td>
+            <td class="{{i.baseStats.element}}{{i.baseStats.rarity}}"><a class="text-dark" href="{{ url_for('hero', heroid=i.id) }}">{{ i.baseStats.name }}</b></td>
             <td class="{{i.baseStats.element}}{{i.baseStats.rarity}}">{{ i.baseStats.element }}</td>
             <td class="{{i.baseStats.element}}{{i.baseStats.rarity}}">{{ i.baseStats.rarity }}</td>
             <td class="{{i.baseStats.element}}{{i.baseStats.rarity}}">{{ i.baseStats.job }}</td>

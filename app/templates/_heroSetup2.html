@@ -1,12 +1,12 @@
         <tr>
             <!-- HERO IMAGE -->
-            <td class="align-middle {{i.baseStats.element}}{{i.baseStats.rarity}}" width="50"><img class="img-fluid" src="/static/{{i.baseStats.nameSafe}}.png" alt="{{i.baseStats.name}}"></td>
+            <td class="text-center align-middle {{i.baseStats.element}}{{i.baseStats.rarity}}" width="8%"><img class="img-fluid" src="/static/{{i.baseStats.nameSafe}}.png" alt="{{i.baseStats.name}}"></td>
 
-            <!-- HERO NAME -->
-            <td class="align-middle {{i.baseStats.element}}{{i.baseStats.rarity}}" width="200">{{ i.baseStats.name }}</td>
-
+            <!-- HERO NAME
+            <td class="align-middle {{i.baseStats.element}}{{i.baseStats.rarity}}" width="200"><b>{{ i.baseStats.name }}</b></td>
+-->
             <!-- STAR LEVEL -->
-            <td class="align-middle {{i.baseStats.element}}{{i.baseStats.rarity}}" width="90">
+            <td class="align-middle {{i.baseStats.element}}{{i.baseStats.rarity}}" width="23%">
                 <select class="form-control form-control-sm" id="{{ i.id }}level" name="{{ i.id }}level">
                     {% for j in range(0, 8) %}
                     {% if j == i.level %}
@@ -19,7 +19,7 @@
             </td>
 
             <!-- AWAKEN -->
-            <td class="align-middle {{i.baseStats.element}}{{i.baseStats.rarity}}" width="90">
+            <td class="align-middle {{i.baseStats.element}}{{i.baseStats.rarity}}" width="23%">
                 <select class="form-control form-control-sm" id="{{ i.id }}awaken" name="{{ i.id }}awaken">
                     {% for j in range(0, 8) %}
                     {% if j == i.awaken %}
@@ -32,7 +32,7 @@
             </td>
 
             <!-- WEAPON LEVEL -->
-            <td class="align-middle {{i.baseStats.element}}{{i.baseStats.rarity}}" width="90">
+            <td class="align-middle {{i.baseStats.element}}{{i.baseStats.rarity}}" width="23%">
                 <select class="form-control form-control-sm" id="{{ i.id }}wpn" name="{{ i.id }}wpn">
                     {% for j in range(0, 10) %}
                     {% if j == i.wpn %}
@@ -45,7 +45,7 @@
             </td>
 
             <!-- MEDALS -->
-            <td class="align-middle {{i.baseStats.element}}{{i.baseStats.rarity}}" width="90">
+            <td class="align-middle {{i.baseStats.element}}{{i.baseStats.rarity}}" width="23%">
                 <input type="text" maxlength="4" class="form-control form-control-sm" id="{{ i.id }}medal" value="{{ i.medals }}" name="{{ i.id }}medal" onkeypress="return isNumber9(event)">
             </td>
         </tr>
