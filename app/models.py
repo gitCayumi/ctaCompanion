@@ -70,10 +70,14 @@ class ArtBase(db.Model):
     element = db.Column(db.String(16), index=True)
     artifacts = db.relationship('Artifact', backref='artBase', lazy='dynamic')
 
+    def __repr__(self):
+        return '{}'.format(self.name)
+
 
 class Artifact(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    level = db.Column(db.Integer, index=True)
+    level = db.Column(db.Integer, default=0, index=True)
+    type = db.Column(db.String(16), index=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     artbase_id = db.Column(db.Integer, db.ForeignKey('art_base.id'))
 

@@ -8,8 +8,65 @@
         <hr>
         <p class="instructions">Select your Artifacts and input their level. Their combined effects will be shown to the right.</p>
         <hr>
+    </div>
+</div>
+<script>
+  function isNumber9(evt) {
+    evt = (evt) ? evt : window.event;
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        return false;
+    }
+    return true;
+}
+</script>
+<form action="#" method="post" novalidate>
+<div class="row pt-3">
+    <div class="col-lg-6">
+    <table class="table table-light">
+        <thead class="thead-dark">
+        <tr>
+            <th>Artifact</th>
+            <th width="100">Level</th>
+        </tr>
+        </thead>
+
+        {% for i in normal %}
+
+        <tr>
+            <td><select class="form-control form-control-sm" id="#" name="{{ i.id }}art">
+            <option value="0" disabled>### 7-STAR ###</option>
+            {% for j in artifactBase %}
+            {% if i.artBase.name == j.name %}
+            <option value="{{ j.id }}" selected>{{ j }}</option>
+                {% else %}
+                <option value="{{ j.id }}">{{ j }}</option>
+                {% endif %}
+            {% endfor %}
+            </td>
+            <td><input type="text" maxlength="2" class="form-control form-control-sm" id="#" value="{{ i.level }}" name="{{ i.id }}level" onkeypress="return isNumber9(event)"></td>
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
+
+
+    <div class="col-lg-6">
+        <table class="table table-light">
+        <thead class="thead-dark">
+        <tr>
+            <th>&nbsp;</th>
+            <th>Attack</th>
+            <th>APS</th>
+            <th>Crit %</th>
+            <th>Crit DMG</th>
+        </tr>
+        </thead>
+        </table>
 
     </div>
 </div>
+</form>
+{{ normal[0].artBase.name }}{{ artifactBase[0] }}
 
 {% endblock %}

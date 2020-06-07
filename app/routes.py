@@ -3,7 +3,7 @@ from app import app, db
 from app.forms import LoginForm, RegistrationForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Base, Hero, validateAwaken, validateLevel, validateWeapon, validateMedals, heroProgress, \
-    totalMedals, rarityMedals
+    totalMedals, rarityMedals, ArtBase, Artifact
 from werkzeug.urls import url_parse
 from app.heroDict import heroDict
 
@@ -56,6 +56,15 @@ def register():
         for i in base:
             hero = Hero(level=0, awaken=0, wpn=0, medals=0, runedAtk=0, runedHp=0, runedDef=0, runedAps=0, runedCrit=0, runedCritDmg=0, player=user, baseStats=i)
             db.session.add(hero)
+        # Create normal artifact slots for user
+        emptyArt = ArtBase.query.get(81)
+        for j in range(22):
+            art = Artifact(type="N", owner=user, artBase=emptyArt)
+            db.session.add(art)
+        # Create event artifact slots for user
+        for k in range(17):
+            eventArt = Artifact(type="E", owner=user, artBase=emptyArt)
+            db.session.add(eventArt)
         db.session.commit()
         flash(u'Your account has been created! Login to access the features of this website.', 'info')
         return redirect(url_for('login'))
@@ -244,7 +253,9 @@ def contact():
 @login_required
 def artifacts(username):
     user = User.query.filter_by(username=username).first_or_404()
-    # artifacts = Artifacts.query.filter_by(player=user)
-    return render_template('artifacts.html', user=user, title='Artifacts')
+    normal = Artifact.query.filter_by(owner=user, type="N")
+    event = Artifact.query.filter_by(owner=user, type="E")
+    artifactBase = ArtBase.query.all()
+    return render_template('artifacts.html', user=user, title='Artifacts', artifactBase=artifactBase, normal=normal, event=event)
 
 
