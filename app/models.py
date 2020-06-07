@@ -23,6 +23,7 @@ class User(UserMixin, db.Model):
     daysPlayed = db.Column(db.Integer, default=0, index=True)
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     heroes = db.relationship('Hero', backref='player', lazy='dynamic')
+    artifacts = db.relationship('Artifact', backref='owner', lazy='dynamic')
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -57,6 +58,24 @@ class User(UserMixin, db.Model):
         total = int(total/days)
         return '{:,}'.format(total).replace(',', ' ')
 
+
+class ArtBase(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    star = db.Column(db.Integer, index=True)
+    name = db.Column(db.String(32), index=True)
+    atk = db.Column(db.Integer, index=True)
+    atkLevel = db.Column(db.Integer, index=True)
+    critDmg = db.Column(db.Integer, index=True)
+    critDmgLevel = db.Column(db.Integer, index=True)
+    element = db.Column(db.String(16), index=True)
+    artifacts = db.relationship('Artifact', backref='artBase', lazy='dynamic')
+
+
+class Artifact(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    level = db.Column(db.Integer, index=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    artbase_id = db.Column(db.Integer, db.ForeignKey('art_base.id'))
 
 
 class Hero(db.Model):
