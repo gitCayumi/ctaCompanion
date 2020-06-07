@@ -240,42 +240,11 @@ def contact():
     return render_template('contact.html', title='Contact')
 
 
-"""
-@app.route('/heroSetup/<username>', methods=["GET", "POST"])
+@app.route('/artifacts/<username>')
 @login_required
-def heroSetup(username):
+def artifacts(username):
     user = User.query.filter_by(username=username).first_or_404()
-    heroes = Hero.query.filter_by(player=user)
-    if request.method == "GET":
-        return render_template('heroSetup.html', user=user, heroes=heroes, title='Hero Setup')
+    # artifacts = Artifacts.query.filter_by(player=user)
+    return render_template('artifacts.html', user=user, title='Artifacts')
 
-    else:
-        for i in heroes:
-            current = str(i.id)
-            # also handle empty inputs.. if not request.form.. = 0
-            try:
-                int(request.form.get(current+"level"))
-                int(request.form.get(current+"awaken"))
-                int(request.form.get(current+"wpn"))
-                int(request.form.get(current+"medal"))
-            except:
-                flash(u'Invalid input', 'error')
-                return render_template('heroSetup.html', user=user, heroes=heroes, title='Hero Setup')
 
-        for j in heroes:
-            current = str(j.id)
-            level = validateLevel(int(request.form.get(current+"level")))
-            awaken = validateAwaken(int(request.form.get(current+"awaken")), level)
-            wpn = validateWeapon(int(request.form.get(current+"wpn")), j.wpn)
-            medals = validateMedals(int(request.form.get(current+"medal")), level)
-
-            hero = Hero.query.get(j.id)
-            hero.level = level
-            hero.awaken = awaken
-            hero.wpn = wpn
-            hero.medals = medals
-            db.session.commit()
-
-        flash(u'Heroes updated successfully!', 'info')
-        return render_template('heroSetup.html', user=user, heroes=heroes, title='Hero Setup')
-"""
