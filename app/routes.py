@@ -186,6 +186,7 @@ def progress(username):
     darkRareMedals = rarityMedals(user, "Dark", "Rare")
     darkEpicMedals = rarityMedals(user, "Dark", "Epic")
     darkLegendaryMedals = rarityMedals(user, "Dark", "Legendary")
+    progressactive = 1
 
     return render_template('progress.html', user=user, title='Hero Progress', waterCommon=waterCommon, waterRare=waterRare, waterEpic=waterEpic,
                            fireCommon=fireCommon, fireRare=fireRare, fireEpic=fireEpic, earthCommon=earthCommon, earthRare=earthRare, earthEpic=earthEpic,
@@ -195,7 +196,8 @@ def progress(username):
                            fireCommonMedals=fireCommonMedals, fireRareMedals=fireRareMedals, fireEpicMedals=fireEpicMedals,
                            earthCommonMedals=earthCommonMedals, earthRareMedals=earthRareMedals, earthEpicMedals=earthEpicMedals,
                            lightCommonMedals=lightCommonMedals, lightRareMedals=lightRareMedals, lightEpicMedals=lightEpicMedals, lightLegendaryMedals=lightLegendaryMedals,
-                           darkCommonMedals=darkCommonMedals, darkRareMedals=darkRareMedals, darkEpicMedals=darkEpicMedals, darkLegendaryMedals=darkLegendaryMedals)
+                           darkCommonMedals=darkCommonMedals, darkRareMedals=darkRareMedals, darkEpicMedals=darkEpicMedals, darkLegendaryMedals=darkLegendaryMedals,
+                           progressactive=progressactive)
 
 
 @app.route('/test/<username>')
