@@ -58,6 +58,10 @@ class User(UserMixin, db.Model):
         total = int(total/days)
         return '{:,}'.format(total).replace(',', ' ')
 
+    def artDisplay(self, x):
+        return '{:,}'.format(x).replace(',', ' ')
+
+
 
 class ArtBase(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -107,6 +111,10 @@ class Hero(db.Model):
 
     def displayAps(self, aps):
         return round(aps, 2)
+
+    # Space divide thousands for HP and ATK
+    def displayOther(self, x):
+        return '{:,}'.format(x).replace(',', ' ')
 
     def atk(self):
         # Temporary placeholder variable for runed values
@@ -396,3 +404,171 @@ def rarityMedals(user, element, rarity):
             total += 4880
         total += i.medals
     return total
+
+
+def artAtk(user, element):
+    arts = Artifact.query.filter_by(owner=user)
+    attack = 0
+    glBreak = 5000000
+    for i in arts:
+        if i.artBase.element == element or i.artBase.element == "All":
+            attack += i.artBase.atk + ((i.level-1)*i.artBase.atkLevel)
+        if i.artBase.id == 79:
+            if user.heroPower < glBreak:
+                attack += int((0.005 + (0.001*i.level))*user.heroPower)
+            else:
+                attack += int((0.005 + (0.001 * i.level)) * (glBreak + ((user.heroPower-glBreak) / 2)))
+
+    Vulcan = 0      #16, 17, 18
+    Abaddon = 0     #1, 2, 3
+    Phoenix = 0     #34, 35, 36
+    Abyssal = 0     #19, 20, 21
+    Efreeti = 0     #37, 38, 39
+    Hades = 0       #43, 44, 45
+
+    for i in arts:
+        if i.artbase_id == 16 or i.artbase_id == 17 or i.artbase_id == 18:
+            Vulcan += 1
+        elif i.artbase_id == 1 or i.artbase_id == 2 or i.artbase_id == 3:
+            Abaddon += 1
+        elif i.artbase_id == 34 or i.artbase_id == 35 or i.artbase_id == 36:
+            Phoenix += 1
+        elif i.artbase_id == 19 or i.artbase_id == 20 or i.artbase_id == 21:
+            Abyssal += 1
+        elif i.artbase_id == 37 or i.artbase_id == 38 or i.artbase_id == 39:
+            Efreeti += 1
+        elif i.artbase_id == 43 or i.artbase_id == 44 or i.artbase_id == 45:
+            Hades += 1
+    if Vulcan == 3:
+        attack += 10000
+    if Abaddon == 3:
+        attack += 10000
+    if Phoenix == 3:
+        attack += 4000
+    if Abyssal == 3:
+        attack += 4000
+    if Hades == 3:
+        attack += 1000
+    return attack
+
+def artCrit(user):
+    arts = Artifact.query.filter_by(owner=user)
+    crit = 0
+    Phoenix = 0  # 34, 35, 36
+    Efreeti = 0  # 37, 38, 39
+    for i in arts:
+        if i.artbase_id == 34 or i.artbase_id == 35 or i.artbase_id == 36:
+            Phoenix += 1
+        elif i.artbase_id == 37 or i.artbase_id == 38 or i.artbase_id == 39:
+            Efreeti += 1
+    if Phoenix == 3:
+        crit += 15
+    if Efreeti == 3:
+        crit += 10
+    return crit
+
+
+def artAps(user):
+    arts = Artifact.query.filter_by(owner=user)
+    aps = 0
+    Atlantis = 0    #13, 14, 15
+    Mermaid = 0     #31, 32, 33
+    Poseidon = 0    #49, 50, 51
+    Zeus = 0        #52, 53, 54
+    for i in arts:
+        if i.artbase_id == 13 or i.artbase_id == 14 or i.artbase_id == 15:
+            Atlantis += 1
+        elif i.artbase_id == 31 or i.artbase_id == 32 or i.artbase_id == 33:
+            Mermaid += 1
+        elif i.artbase_id == 49 or i.artbase_id == 50 or i.artbase_id == 51:
+            Poseidon += 1
+        elif i.artbase_id == 52 or i.artbase_id == 53 or i.artbase_id == 54:
+            Zeus += 1
+    if Atlantis == 3:
+        aps += 20
+    if Mermaid == 3:
+        aps += 15
+    if Poseidon == 3:
+        aps += 10
+    if Zeus == 3:
+        aps += 10
+    return aps
+
+
+def artCritDmg(user, element):
+    arts = Artifact.query.filter_by(owner=user)
+    critDmg = 0
+    for i in arts:
+        if i.artBase.element == element or i.artBase.element == "All":
+            critDmg += i.artBase.critDmg + ((i.level - 1) * i.artBase.critDmgLevel)
+    return int(round(critDmg, 0))
+
+
+def validateArt(art, level):
+    level = int(level)
+    # spaghetti code for event artifacts because of poor table design in art_base
+    three = [65, 69, 71, 72, 75, 78, 79, 80]
+    four = [66, 67, 68, 70, 73, 74, 76, 77]
+
+    # Make sure 7-star artifacts don't go above 50 (45+5 enhanced)
+    if art.artBase.star == 7 and level > 50:
+        level = 50
+    # Same as above for 6-stars and level 45
+    elif art.artBase.star == 6 and level > 45:
+        level = 45
+    # 5-star and 40
+    elif art.artBase.star == 5 and level > 40:
+        level = 40
+    # 4-star and 35
+    elif art.artBase.star == 4 and level > 35:
+        level = 35
+    # LEEROY
+    elif art.artBase.id == 64 and level > 25:
+        level = 25
+    elif art.artBase.id in three and level > 30:
+        level = 30
+    elif art.artBase.id in four and level > 35:
+        level = 35
+    return level
+
+
+"""
+4
+four = [66, 67, 68, 70, 73, 74, 76, 77]
+Frosty Sword            73
+Frozen Flame            74
+King's Gloves           77
+King Rewards II         76
+Samurai Helmet          70       
+Cloak of Speed          68
+Astro Time Warper II    66
+Astro Head Start        67
+
+
+3
+three = [65, 69, 71, 72, 75, 78, 79, 80] 
+Frosty Shield           72
+Frosty Dragon           71
+King Rewards I          75
+Flip Flops of Speed     69
+Astro Time Warper I     65
+Soul Hand               79
+Soul Shield             80
+Soul Boots              78
+
+2
+Astrogem
+----------
+Set Bonus
+Vulcan          10000%  ATK     ALL
+Abaddon         10000%  ATK     ALL
+Phoenix         4000%   ATK     ALL     15% CRIT ALL
+Abyssal         4000%   ATK     ALL
+Efreeti                                 10% CRIT ALL
+Hades           1000%   ATK     ALL
+
+Atlantis        20%     APS     ALL
+Mermaid         15%     APS     ALL
+Poseidon        10%     APS     ALL
+Zeus            10%     APS     ALL
+"""

@@ -36,6 +36,7 @@
   <body>
 
   <header>
+
 <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
   <div class="container">
     <a class="navbar-brand" href="{{ url_for('index') }}">CTA Companion</a>
@@ -47,7 +48,11 @@
       <ul class="navbar-nav mr-auto">
           {% if current_user.is_authenticated %}
         <li class="nav-item">
+            {% if heroactive == 1 %}
+            <a class="nav-link active" href="{{ url_for('collection', username=current_user.username) }}">Hero Collection</a>
+            {% else %}
             <a class="nav-link" href="{{ url_for('collection', username=current_user.username) }}">Hero Collection</a>
+            {% endif %}
         </li>
         <li class="nav-item">
             <a class="nav-link" href="{{ url_for('progress', username=current_user.username) }}">Progress</a>
@@ -84,7 +89,11 @@
       </li>
         {% else %}
       <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('account', username=current_user.username) }}">My Account</a>
+            {% if useractive == 1 %}
+            <a class="nav-link active" href="{{ url_for('account', username=current_user.username) }}">My Account</a>
+            {% else %}
+            <a class="nav-link" href="{{ url_for('account', username=current_user.username) }}">My Account</a>
+            {% endif %}
       </li>
       <li class="nav-item">
           <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>

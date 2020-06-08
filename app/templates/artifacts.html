@@ -6,10 +6,62 @@
     <div class="col-lg-12">
     <h1 class="display-4">Artifacts</h1>
         <hr>
-        <p class="instructions">Select your Artifacts and input their level. Their combined effects will be shown to the right.</p>
+        <p class="instructions">Select your Artifacts and input their level. Their combined effects will be shown below.</p>
         <hr>
     </div>
 </div>
+<div class="row pt-3">
+    <div class="col-lg-12">
+        <table class="table table-borderless">
+            <thead class="thead-dark">
+            <tr>
+                <th>&nbsp;</th>
+                <th class="align-middle text-center" width="23%"><img src="{{ url_for('static', filename='atk.png') }}" width="25" alt="Attack"></th>
+                <th class="align-middle text-center" width="23%"><img src="{{ url_for('static', filename='aps.png') }}" width="25" alt="APS"></th>
+                <th class="align-middle text-center" width="23%"><img src="{{ url_for('static', filename='crit.png') }}" width="25" alt="CritChance"></th>
+                <th class="align-middle text-center" width="23%">Crit Damage</th>
+            </tr>
+            <tr>
+                <td class="WaterRare align-middle"><img src="{{ url_for('static', filename='water.png') }}" width="40" alt="Water"></td>
+                <td class="WaterRare align-middle text-center">{{ user.artDisplay(waterAtk) }}%</td>
+                <td class="WaterRare align-middle text-center">{{ allAps }}%</td>
+                <td class="WaterRare align-middle text-center">{{ user.artDisplay(allCrit) }}%</td>
+                <td class="WaterRare align-middle text-center">{{ waterCritDmg }}%</td>
+            </tr>
+            <tr>
+                <td class="FireRare align-middle"><img src="{{ url_for('static', filename='fire.png') }}" width="40" alt="Fire"></td>
+                <td class="FireRare align-middle text-center">{{ user.artDisplay(fireAtk) }}%</td>
+                <td class="FireRare align-middle text-center">{{ allAps }}%</td>
+                <td class="FireRare align-middle text-center">{{ user.artDisplay(allCrit) }}%</td>
+                <td class="FireRare align-middle text-center">{{ fireCritDmg }}%</td>
+            </tr>
+            <tr>
+                <td class="EarthRare align-middle"><img src="{{ url_for('static', filename='earth.png') }}" width="40" alt="Earth"></td>
+                <td class="EarthRare align-middle text-center">{{ user.artDisplay(earthAtk) }}%</td>
+                <td class="EarthRare align-middle text-center">{{ allAps }}%</td>
+                <td class="EarthRare align-middle text-center">{{ allCrit }}%</td>
+                <td class="EarthRare align-middle text-center">{{ earthCritDmg }}%</td>
+            </tr>
+            <tr>
+                <td class="LightRare align-middle"><img src="{{ url_for('static', filename='light.png') }}" width="40" alt="Light"></td>
+                <td class="LightRare align-middle text-center">{{ user.artDisplay(lightAtk) }}%</td>
+                <td class="LightRare align-middle text-center">{{ allAps }}%</td>
+                <td class="LightRare align-middle text-center">{{ allCrit }}%</td>
+                <td class="LightRare align-middle text-center">{{ lightCritDmg }}%</td>
+            </tr>
+            <tr>
+                <td class="DarkRare align-middle"><img src="{{ url_for('static', filename='dark.png') }}" width="40" alt="Dark"></td>
+                <td class="DarkRare align-middle text-center">{{ user.artDisplay(darkAtk) }}%</td>
+                <td class="DarkRare align-middle text-center">{{ allAps }}%</td>
+                <td class="DarkRare align-middle text-center">{{ allCrit }}%</td>
+                <td class="DarkRare align-middle text-center">{{ darkCritDmg }}%</td>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+
 <script>
   function isNumber9(evt) {
     evt = (evt) ? evt : window.event;
@@ -20,27 +72,28 @@
     return true;
 }
 </script>
-<form action="#" method="post" novalidate>
+<form action="/artifacts/{{ user.username }}" method="post" novalidate>
 <div class="row pt-3">
     <div class="col-lg-6">
     <table class="table table-light">
         <thead class="thead-dark">
         <tr>
-            <th>Artifact</th>
+            <th>Standard Artifacts</th>
             <th width="100">Level</th>
         </tr>
         </thead>
 
-        {% for i in normal %}
+        {% for i in normal|sort(reverse=True, attribute='artBase.star,artBase.name') %}
 
-        <tr>
+        <tr class="table-sm">
             <td><select class="form-control form-control-sm" id="#" name="{{ i.id }}art">
-            <option value="0" disabled>### 7-STAR ###</option>
             {% for j in artifactBase %}
+                {% if j.star != "Event" %}
             {% if i.artBase.name == j.name %}
             <option value="{{ j.id }}" selected>{{ j }}</option>
                 {% else %}
                 <option value="{{ j.id }}">{{ j }}</option>
+                {% endif %}
                 {% endif %}
             {% endfor %}
             </td>
@@ -55,18 +108,41 @@
         <table class="table table-light">
         <thead class="thead-dark">
         <tr>
-            <th>&nbsp;</th>
-            <th>Attack</th>
-            <th>APS</th>
-            <th>Crit %</th>
-            <th>Crit DMG</th>
+            <th>Event Artifacts</th>
+            <th width="100">Level</th>
         </tr>
         </thead>
-        </table>
+
+        {% for k in event %}
+
+        <tr class="table-sm">
+            <td><select class="form-control form-control-sm" id="#" name="{{ k.id }}art">
+            {% for l in artifactBase %}
+                {% if l.star == "Event" or l.star == 0 %}
+            {% if k.artBase.name == l.name %}
+            <option value="{{ l.id }}" selected>{{ l }}</option>
+                {% else %}
+                <option value="{{ l.id }}">{{ l }}</option>
+                {% endif %}
+                {% endif %}
+            {% endfor %}
+            </td>
+            <td><input type="text" maxlength="2" class="form-control form-control-sm" id="#" value="{{ k.level }}" name="{{ k.id }}level" onkeypress="return isNumber9(event)"></td>
+        </tr>
+
+        {% endfor %}
+    </table>
+
 
     </div>
 </div>
+<div class="row">
+    <div class="col-lg-12 text-center">
+        <hr>
+      <button class="btn btn-primary btn-lg text-center" type="submit">Save Artifacts</button>
+    </div>
+</div>
 </form>
-{{ normal[0].artBase.name }}{{ artifactBase[0] }}
+<br><br>
 
 {% endblock %}

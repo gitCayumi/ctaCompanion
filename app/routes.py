@@ -3,7 +3,7 @@ from app import app, db
 from app.forms import LoginForm, RegistrationForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Base, Hero, validateAwaken, validateLevel, validateWeapon, validateMedals, heroProgress, \
-    totalMedals, rarityMedals, ArtBase, Artifact
+    totalMedals, rarityMedals, ArtBase, Artifact, artAtk, artCrit, artAps, artCritDmg, validateArt
 from werkzeug.urls import url_parse
 from app.heroDict import heroDict
 
@@ -76,8 +76,9 @@ def register():
 def account(username):
     user = User.query.filter_by(username=username).first_or_404()
     heroes = Hero.query.filter_by(player=user)
+    useractive = 1
     if request.method == "GET":
-        return render_template('account.html', user=user, heroes=heroes, title='Account')
+        return render_template('account.html', user=user, heroes=heroes, title='Account', useractive=useractive)
 
     else:
         for i in heroes:
@@ -136,7 +137,8 @@ def account(username):
 def collection(username):
     user = User.query.filter_by(username=username).first_or_404()
     heroes = Hero.query.filter_by(player=user)
-    return render_template('collection.html', user=user, heroes=heroes, title='Hero Collection')
+    heroactive = 1
+    return render_template('collection.html', user=user, heroes=heroes, title='Hero Collection', heroactive=heroactive)
 
 
 # This mess needs to be refactored, I just created and kept going without thinking ahead.
@@ -238,7 +240,6 @@ def hero(heroid):
         selectedHero.runedCritDmg = runedCritDmg
         db.session.commit()
 
-        test = request.form.get(str(selectedHero.id) + "runedAtk")
         flash(u'Rune values updated!', 'info')
         return render_template('hero.html', selectedHero=selectedHero, title=selectedHero.baseStats.name, user=user, heroDict=heroDict)
 
@@ -249,13 +250,71 @@ def contact():
     return render_template('contact.html', title='Contact')
 
 
-@app.route('/artifacts/<username>')
+@app.route('/artifacts/<username>', methods=["GET", "POST"])
 @login_required
 def artifacts(username):
     user = User.query.filter_by(username=username).first_or_404()
     normal = Artifact.query.filter_by(owner=user, type="N")
     event = Artifact.query.filter_by(owner=user, type="E")
     artifactBase = ArtBase.query.all()
-    return render_template('artifacts.html', user=user, title='Artifacts', artifactBase=artifactBase, normal=normal, event=event)
+    waterAtk = artAtk(user, "Water")
+    fireAtk = artAtk(user, "Fire")
+    earthAtk = artAtk(user, "Earth")
+    lightAtk = artAtk(user, "Light")
+    darkAtk = artAtk(user, "Dark")
+    allCrit = artCrit(user)
+    allAps = artAps(user)
+    waterCritDmg = artCritDmg(user, "Water")
+    fireCritDmg = artCritDmg(user, "Fire")
+    earthCritDmg = artCritDmg(user, "Earth")
+    lightCritDmg = artCritDmg(user, "Light")
+    darkCritDmg = artCritDmg(user, "Dark")
 
+
+    if request.method == "GET":
+        return render_template('artifacts.html', user=user, title='Artifacts', artifactBase=artifactBase, event=event,
+                               normal=normal, fireAtk=fireAtk, earthAtk=earthAtk, waterAtk=waterAtk, lightAtk=lightAtk,
+                               darkAtk=darkAtk, allCrit=allCrit, allAps=allAps, fireCritDmg=fireCritDmg,
+                               earthCritDmg=earthCritDmg, waterCritDmg=waterCritDmg, lightCritDmg=lightCritDmg,
+                               darkCritDmg=darkCritDmg)
+    else:
+        arts = Artifact.query.filter_by(owner=user)
+        for j in arts:
+            current = str(j.id)
+            try:
+                int(request.form.get(current + "art"))
+                int(request.form.get(current + "level"))
+            except:
+                flash(u'Invalid input', 'error')
+                return redirect(url_for('artifacts', username=current_user.username))
+
+        # Populate dictionary with artifact base_id as key, and count as value to ensure no duplicates
+        artDict = {}
+        for m in arts:
+            current = str(m.id)
+            if request.form.get(current + "art") != "81":
+                # create new key with current submitted artifacts base_id, increase its value by 1 (except 'empty')
+                artDict[request.form.get(current + "art")] = artDict.get(request.form.get(current + "art"), 0) + 1
+        for n in artDict.values():
+            # if any artifact has a count greater than 1 we have a duplicate and generate error.
+            if n > 1:
+                flash(u'You may not have duplicate Artifacts', 'error')
+                return redirect(url_for('artifacts', username=current_user.username))
+
+        for i in arts:
+            current = str(i.id)
+            art = Artifact.query.get(i.id)
+            # Bring empty artifacts back 0 if needed
+            if request.form.get(current + "art") == "81":
+                art.level = 0
+            else:
+                art.level = validateArt(art, request.form.get(current + "level"))
+            art.artbase_id = request.form.get(current + "art")
+
+        db.session.commit()
+        # There's got to be a better way than running all functions and re-query the database..
+        # Note to self: return redirect instead of render_template...
+
+        flash(u'Artifacts updated successfully!', 'info')
+        return redirect(url_for('artifacts', username=current_user.username))
 

@@ -75,7 +75,7 @@
                   <td class="align-middle">Attack</td>
                   {% if selectedHero.level > 0 %}
                   <td class="align-middle">{{ selectedHero.displayStat(selectedHero.atk()) }}</td>
-                  <td class="align-middle">{{ selectedHero.atk() }}</td>
+                  <td class="align-middle">{{ selectedHero.displayOther(selectedHero.atk()) }}</td>
                   <td><input type="text" maxlength="10" class="form-control form-control-sm" id="{{ selectedHero.id }}runedAtk" value="{{ selectedHero.runedAtk }}" name="{{ selectedHero.id }}runedAtk"></td>
                   {% else %}
                   <td class="align-middle">{{ selectedHero.baseStats.atk }}</td>
@@ -88,7 +88,7 @@
                   <td class="align-middle">HP</td>
                   {% if selectedHero.level > 0 %}
                   <td class="align-middle">{{ selectedHero.displayStat(selectedHero.hp()) }}</td>
-                  <td class="align-middle">{{ selectedHero.hp() }}</td>
+                  <td class="align-middle">{{ selectedHero.displayOther(selectedHero.hp()) }}</td>
                   <td><input type="text" maxlength="10" class="form-control form-control-sm" id="{{ selectedHero.id }}runedHp" value="{{ selectedHero.runedHp }}" name="{{ selectedHero.id }}runedHp" onkeypress="return isNumber9(event)"></td>
                   {% else %}
                   <td class="align-middle">{{ selectedHero.baseStats.hp }}</td>
@@ -136,7 +136,7 @@
                   {% endif %}
                 </tr>
               <tr class="text-left">
-                  <td class="align-middle text-center"><img src="{{ url_for('static', filename='crit.png') }}" width="25" alt="Crit Damage"></td>
+                  <td class="align-middle text-center">-</td>
                   <td class="align-middle">Crit Damage</td>
                   {% if selectedHero.level > 0 %}
                   <td class="align-middle">{{ ((selectedHero.critDmg())*100)|round|int }}%</td>
