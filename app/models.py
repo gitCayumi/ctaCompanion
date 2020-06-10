@@ -61,6 +61,51 @@ class User(UserMixin, db.Model):
     def artDisplay(self, x):
         return '{:,}'.format(x).replace(',', ' ')
 
+    def artAtk2(self, element):
+        arts = self.artifacts
+        attack = 0
+        glBreak = 5000000
+        for i in arts:
+            if i.artBase.element == element or i.artBase.element == "All":
+                attack += i.artBase.atk + ((i.level - 1) * i.artBase.atkLevel)
+            if i.artBase.id == 79:
+                if self.heroPower < glBreak:
+                    attack += int((0.005 + (0.001 * i.level)) * self.heroPower)
+                else:
+                    attack += int((0.005 + (0.001 * i.level)) * (glBreak + ((self.heroPower - glBreak) / 2)))
+
+        Vulcan = 0  # 16, 17, 18
+        Abaddon = 0  # 1, 2, 3
+        Phoenix = 0  # 34, 35, 36
+        Abyssal = 0  # 19, 20, 21
+        Efreeti = 0  # 37, 38, 39
+        Hades = 0  # 43, 44, 45
+
+        for i in arts:
+            if i.artbase_id == 16 or i.artbase_id == 17 or i.artbase_id == 18:
+                Vulcan += 1
+            elif i.artbase_id == 1 or i.artbase_id == 2 or i.artbase_id == 3:
+                Abaddon += 1
+            elif i.artbase_id == 34 or i.artbase_id == 35 or i.artbase_id == 36:
+                Phoenix += 1
+            elif i.artbase_id == 19 or i.artbase_id == 20 or i.artbase_id == 21:
+                Abyssal += 1
+            elif i.artbase_id == 37 or i.artbase_id == 38 or i.artbase_id == 39:
+                Efreeti += 1
+            elif i.artbase_id == 43 or i.artbase_id == 44 or i.artbase_id == 45:
+                Hades += 1
+        if Vulcan == 3:
+            attack += 10000
+        if Abaddon == 3:
+            attack += 10000
+        if Phoenix == 3:
+            attack += 4000
+        if Abyssal == 3:
+            attack += 4000
+        if Hades == 3:
+            attack += 1000
+        return attack
+
 
 
 class ArtBase(db.Model):
@@ -184,8 +229,21 @@ class Hero(db.Model):
 
     def dpsSP2(self):
         # (atk * aps * (1-crit rate)) + (atk  * aps * critRate * critDmg)
-        sp2 = 1
-        sp2num = 5
+        sp2 = self.baseStats.sp2
+        sp2num = self.baseStats.sp2num
+        atk = self.atk() * self.player.artAtk2(self.baseStats.element)
+        aps = self.aps()
+        crit = self.crit()
+        critDmg = self.critDmg()
+        dps = ((atk * aps * (1-crit)) + (atk * aps * crit * critDmg)) * (6 + sp2 * sp2num)/7
+        #  x (6 + sp2_damage x sp2_num_attacks)/7
+        dps = int(round(dps))
+        return '{:,}'.format(dps).replace(',', ' ')
+
+    def raidDPS(self):
+        # (atk * aps * (1-crit rate)) + (atk  * aps * critRate * critDmg)
+        sp2 = self.baseStats.sp2
+        sp2num = self.baseStats.sp2num
         atk = self.atk()
         aps = self.aps()
         crit = self.crit()
@@ -194,6 +252,10 @@ class Hero(db.Model):
         #  x (6 + sp2_damage x sp2_num_attacks)/7
         dps = int(round(dps))
         return '{:,}'.format(dps).replace(',', ' ')
+
+    def testing(self, user):
+        x = self.player.email
+        return x
 
 
 
@@ -347,6 +409,7 @@ def validateMedals(medals, level):
 def heroProgress(user, element, rarity):
     # Query players hero based on element and rarity
     heroes = Hero.query.filter_by(player=user).join(Base).filter(Base.element==element, Base.rarity==rarity)
+    # heroes = Hero.query.filter_by(player=u).filter(Hero.level == 0)
     # Placeholder variables for count of heroes within query, total progress, and maxed heroes
     count = 0
     total = 0

@@ -99,3 +99,22 @@ heroDict = {
 """
         "Hero nameSafe": [["pvp runes"], "Primary", "Secondary", "RUNE NOTES", "PVP TIER", "HERO INFO", ["pve runes"],"Primary", "Secondary", "RUNE NOTES"]
 """
+
+kraken = {
+        "Barbarian": 2,
+        "Brawler": 2,
+        "Gunner": 1,
+        "Knight": 2,
+        "Lancer": 1,
+        "Magician": 1,
+        "Ranger": 1,
+        "Rogue": 1,
+        "Samurari": 2,
+        "Support": 1,
+        "Fly": 0,
+        "Water": 1,
+        "Fire": 0.5,
+        "Earth": 4,
+        "Light": 1,
+        "Dark": 1
+}

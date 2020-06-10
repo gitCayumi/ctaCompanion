@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+ <div class="row pt-3">
+    <div class="col-lg-12">
+      <h1 class="display-4">Boss Teams</h1>
+      <hr>
+      <p class="instructions">These are your optimal teams for damage for each boss and mini</p>
+      <hr>
+    </div>
+ </div>
+
+ <div class="row pt-3">
+    <div class="col-lg-3">
+      {% for i in heroes %}
+      {{ i.testing(user) }}<br>
+      {% endfor %}
+ </div>
+
+        <div class="col-lg-3">
+      {% for i in heroes %}
+      {{ i.dpsSP2() }}<br>
+      {% endfor %}
+ </div>
+
+        <div class="col-lg-3">
+      {% for i in heroes %}
+      {{ i.raidDPS() }}<br>
+      {% endfor %}
+ </div>
+
+    <div class="col-lg-3">
+      {{ user.artAtk2("Fire") }}
+ </div>
+ </div>
+
+{% endblock %}

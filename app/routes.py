@@ -5,7 +5,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Base, Hero, validateAwaken, validateLevel, validateWeapon, validateMedals, heroProgress, \
     totalMedals, rarityMedals, ArtBase, Artifact, artAtk, artCrit, artAps, artCritDmg, validateArt
 from werkzeug.urls import url_parse
-from app.heroDict import heroDict
+from app.heroDict import heroDict, kraken
 
 @app.route('/')
 @app.route('/index')
@@ -319,4 +319,15 @@ def artifacts(username):
 
         flash(u'Artifacts updated successfully!', 'info')
         return redirect(url_for('artifacts', username=current_user.username))
+
+
+@app.route('/bossTeam/<username>')
+@login_required
+def bossTeam(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    heroes = Hero.query.filter_by(player=user).filter(Hero.level > 0)
+
+    bosskraken = kraken
+
+    return render_template('bossTeam.html', user=user, title='Boss Teams', heroes=heroes, bosskraken=bosskraken)
 
