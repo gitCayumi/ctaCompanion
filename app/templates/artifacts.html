@@ -7,7 +7,7 @@
     <h1 class="display-4">Artifacts</h1>
         <hr>
         <p class="instructions">Select your Artifacts and input their level. Their combined effects will be shown below.</p>
-        <p>{{ user.artDisplay(user.artAtk2("Fire")) }}</p>
+        <p></p>
         <hr>
     </div>
 </div>
@@ -24,38 +24,38 @@
             </tr>
             <tr>
                 <td class="WaterRare align-middle"><img src="{{ url_for('static', filename='water.png') }}" width="40" alt="Water"></td>
-                <td class="WaterRare align-middle text-center">{{ user.artDisplay(waterAtk) }}%</td>
-                <td class="WaterRare align-middle text-center">{{ allAps }}%</td>
-                <td class="WaterRare align-middle text-center">{{ user.artDisplay(allCrit) }}%</td>
-                <td class="WaterRare align-middle text-center">{{ waterCritDmg }}%</td>
+                <td class="WaterRare align-middle text-center">{{ user.artDisplay(user.artAtk("Water")) }}%</td>
+                <td class="WaterRare align-middle text-center">{{ user.artAps() }}%</td>
+                <td class="WaterRare align-middle text-center">{{ user.artDisplay(user.artCrit()) }}%</td>
+                <td class="WaterRare align-middle text-center">{{ user.artDisplay(user.artCritDmg("Water")) }}%</td>
             </tr>
             <tr>
                 <td class="FireRare align-middle"><img src="{{ url_for('static', filename='fire.png') }}" width="40" alt="Fire"></td>
-                <td class="FireRare align-middle text-center">{{ user.artDisplay(fireAtk) }}%</td>
-                <td class="FireRare align-middle text-center">{{ allAps }}%</td>
-                <td class="FireRare align-middle text-center">{{ user.artDisplay(allCrit) }}%</td>
-                <td class="FireRare align-middle text-center">{{ fireCritDmg }}%</td>
+                <td class="FireRare align-middle text-center">{{ user.artDisplay(user.artAtk("Fire")) }}%</td>
+                <td class="FireRare align-middle text-center">{{ user.artAps() }}%</td>
+                <td class="FireRare align-middle text-center">{{ user.artDisplay(user.artCrit()) }}%</td>
+                <td class="FireRare align-middle text-center">{{ user.artDisplay(user.artCritDmg("Fire")) }}%</td>
             </tr>
             <tr>
                 <td class="EarthRare align-middle"><img src="{{ url_for('static', filename='earth.png') }}" width="40" alt="Earth"></td>
-                <td class="EarthRare align-middle text-center">{{ user.artDisplay(earthAtk) }}%</td>
-                <td class="EarthRare align-middle text-center">{{ allAps }}%</td>
-                <td class="EarthRare align-middle text-center">{{ allCrit }}%</td>
-                <td class="EarthRare align-middle text-center">{{ earthCritDmg }}%</td>
+                <td class="EarthRare align-middle text-center">{{ user.artDisplay(user.artAtk("Earth")) }}%</td>
+                <td class="EarthRare align-middle text-center">{{ user.artAps() }}%</td>
+                <td class="EarthRare align-middle text-center">{{ user.artDisplay(user.artCrit()) }}%</td>
+                <td class="EarthRare align-middle text-center">{{ user.artDisplay(user.artCritDmg("Earth")) }}%</td>
             </tr>
             <tr>
                 <td class="LightRare align-middle"><img src="{{ url_for('static', filename='light.png') }}" width="40" alt="Light"></td>
-                <td class="LightRare align-middle text-center">{{ user.artDisplay(lightAtk) }}%</td>
-                <td class="LightRare align-middle text-center">{{ allAps }}%</td>
-                <td class="LightRare align-middle text-center">{{ allCrit }}%</td>
-                <td class="LightRare align-middle text-center">{{ lightCritDmg }}%</td>
+                <td class="LightRare align-middle text-center">{{ user.artDisplay(user.artAtk("Light")) }}%</td>
+                <td class="LightRare align-middle text-center">{{ user.artAps() }}%</td>
+                <td class="LightRare align-middle text-center">{{ user.artDisplay(user.artCrit()) }}%</td>
+                <td class="LightRare align-middle text-center">{{ user.artDisplay(user.artCritDmg("Light")) }}%</td>
             </tr>
             <tr>
                 <td class="DarkRare align-middle"><img src="{{ url_for('static', filename='dark.png') }}" width="40" alt="Dark"></td>
-                <td class="DarkRare align-middle text-center">{{ user.artDisplay(darkAtk) }}%</td>
-                <td class="DarkRare align-middle text-center">{{ allAps }}%</td>
-                <td class="DarkRare align-middle text-center">{{ allCrit }}%</td>
-                <td class="DarkRare align-middle text-center">{{ darkCritDmg }}%</td>
+                <td class="DarkRare align-middle text-center">{{ user.artDisplay(user.artAtk("Dark")) }}%</td>
+                <td class="DarkRare align-middle text-center">{{ user.artAps() }}%</td>
+                <td class="DarkRare align-middle text-center">{{ user.artDisplay(user.artCrit()) }}%</td>
+                <td class="DarkRare align-middle text-center">{{ user.artDisplay(user.artCritDmg("Dark")) }}%</td>
             </tr>
             </thead>
         </table>

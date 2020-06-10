@@ -3,13 +3,14 @@ from app import app, db
 from app.forms import LoginForm, RegistrationForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Base, Hero, validateAwaken, validateLevel, validateWeapon, validateMedals, heroProgress, \
-    totalMedals, rarityMedals, ArtBase, Artifact, artAtk, artCrit, artAps, artCritDmg, validateArt
+    totalMedals, rarityMedals, ArtBase, Artifact, validateArt
 from werkzeug.urls import url_parse
-from app.heroDict import heroDict, kraken
+from app.heroDict import heroDict, kraken, undeadsam, fw
+
 
 @app.route('/')
 @app.route('/index')
-#@login_required
+# @login_required
 def index():
     return render_template('index.html', title='Home')
 
@@ -54,7 +55,8 @@ def register():
         # Create entries for every hero for the registered user.
         base = Base.query.all()
         for i in base:
-            hero = Hero(level=0, awaken=0, wpn=0, medals=0, runedAtk=0, runedHp=0, runedDef=0, runedAps=0, runedCrit=0, runedCritDmg=0, player=user, baseStats=i)
+            hero = Hero(level=0, awaken=0, wpn=0, medals=0, runedAtk=0, runedHp=0, runedDef=0, runedAps=0, runedCrit=0,
+                        runedCritDmg=0, player=user, baseStats=i)
             db.session.add(hero)
         # Create normal artifact slots for user
         emptyArt = ArtBase.query.get(81)
@@ -131,7 +133,6 @@ def account(username):
         return render_template('account.html', user=user, heroes=heroes, title='Account')
 
 
-
 @app.route('/collection/<username>')
 @login_required
 def collection(username):
@@ -188,15 +189,25 @@ def progress(username):
     darkLegendaryMedals = rarityMedals(user, "Dark", "Legendary")
     progressactive = 1
 
-    return render_template('progress.html', user=user, title='Hero Progress', waterCommon=waterCommon, waterRare=waterRare, waterEpic=waterEpic,
-                           fireCommon=fireCommon, fireRare=fireRare, fireEpic=fireEpic, earthCommon=earthCommon, earthRare=earthRare, earthEpic=earthEpic,
-                           lightCommon=lightCommon, lightRare=lightRare, lightEpic=lightEpic, lightLegendary=lightLegendary, darkCommon=darkCommon, darkRare=darkRare,
-                           darkEpic=darkEpic, darkLegendary=darkLegendary, waterMedals=waterMedals, fireMedals=fireMedals, earthMedals=earthMedals, lightMedals=lightMedals, darkMedals=darkMedals,
-                           waterCommonMedals=waterCommonMedals, waterRareMedals=waterRareMedals, waterEpicMedals=waterEpicMedals,
-                           fireCommonMedals=fireCommonMedals, fireRareMedals=fireRareMedals, fireEpicMedals=fireEpicMedals,
-                           earthCommonMedals=earthCommonMedals, earthRareMedals=earthRareMedals, earthEpicMedals=earthEpicMedals,
-                           lightCommonMedals=lightCommonMedals, lightRareMedals=lightRareMedals, lightEpicMedals=lightEpicMedals, lightLegendaryMedals=lightLegendaryMedals,
-                           darkCommonMedals=darkCommonMedals, darkRareMedals=darkRareMedals, darkEpicMedals=darkEpicMedals, darkLegendaryMedals=darkLegendaryMedals,
+    return render_template('progress.html', user=user, title='Hero Progress', waterCommon=waterCommon,
+                           waterRare=waterRare, waterEpic=waterEpic,
+                           fireCommon=fireCommon, fireRare=fireRare, fireEpic=fireEpic, earthCommon=earthCommon,
+                           earthRare=earthRare, earthEpic=earthEpic,
+                           lightCommon=lightCommon, lightRare=lightRare, lightEpic=lightEpic,
+                           lightLegendary=lightLegendary, darkCommon=darkCommon, darkRare=darkRare,
+                           darkEpic=darkEpic, darkLegendary=darkLegendary, waterMedals=waterMedals,
+                           fireMedals=fireMedals, earthMedals=earthMedals, lightMedals=lightMedals,
+                           darkMedals=darkMedals,
+                           waterCommonMedals=waterCommonMedals, waterRareMedals=waterRareMedals,
+                           waterEpicMedals=waterEpicMedals,
+                           fireCommonMedals=fireCommonMedals, fireRareMedals=fireRareMedals,
+                           fireEpicMedals=fireEpicMedals,
+                           earthCommonMedals=earthCommonMedals, earthRareMedals=earthRareMedals,
+                           earthEpicMedals=earthEpicMedals,
+                           lightCommonMedals=lightCommonMedals, lightRareMedals=lightRareMedals,
+                           lightEpicMedals=lightEpicMedals, lightLegendaryMedals=lightLegendaryMedals,
+                           darkCommonMedals=darkCommonMedals, darkRareMedals=darkRareMedals,
+                           darkEpicMedals=darkEpicMedals, darkLegendaryMedals=darkLegendaryMedals,
                            progressactive=progressactive)
 
 
@@ -211,10 +222,11 @@ def test(username):
 @app.route('/Hero/<heroid>', methods=["GET", "POST"])
 @login_required
 def hero(heroid):
-    user = User.query.join(Hero).filter(Hero.id==heroid)
+    user = User.query.join(Hero).filter(Hero.id == heroid)
     selectedHero = Hero.query.get(heroid)
     if request.method == "GET":
-        return render_template('hero.html', selectedHero=selectedHero, title=selectedHero.baseStats.name, user=user, heroDict=heroDict)
+        return render_template('hero.html', selectedHero=selectedHero, title=selectedHero.baseStats.name, user=user,
+                               heroDict=heroDict)
     else:
         try:
             float(request.form.get(str(selectedHero.id) + "runedAtk"))
@@ -225,7 +237,8 @@ def hero(heroid):
             float(request.form.get(str(selectedHero.id) + "runedCritDmg"))
         except:
             flash(u'Invalid input', 'error')
-            return render_template('hero.html', selectedHero=selectedHero, title=selectedHero.baseStats.name, user=user, heroDict=heroDict)
+            return render_template('hero.html', selectedHero=selectedHero, title=selectedHero.baseStats.name, user=user,
+                                   heroDict=heroDict)
 
         runedAtk = float(request.form.get(str(selectedHero.id) + "runedAtk"))
         runedHp = float(request.form.get(str(selectedHero.id) + "runedHp"))
@@ -243,12 +256,12 @@ def hero(heroid):
         db.session.commit()
 
         flash(u'Rune values updated!', 'info')
-        return render_template('hero.html', selectedHero=selectedHero, title=selectedHero.baseStats.name, user=user, heroDict=heroDict)
+        return render_template('hero.html', selectedHero=selectedHero, title=selectedHero.baseStats.name, user=user,
+                               heroDict=heroDict)
 
 
 @app.route('/contact', methods=["GET", "POST"])
 def contact():
-
     return render_template('contact.html', title='Contact')
 
 
@@ -259,26 +272,10 @@ def artifacts(username):
     normal = Artifact.query.filter_by(owner=user, type="N")
     event = Artifact.query.filter_by(owner=user, type="E")
     artifactBase = ArtBase.query.all()
-    waterAtk = artAtk(user, "Water")
-    fireAtk = artAtk(user, "Fire")
-    earthAtk = artAtk(user, "Earth")
-    lightAtk = artAtk(user, "Light")
-    darkAtk = artAtk(user, "Dark")
-    allCrit = artCrit(user)
-    allAps = artAps(user)
-    waterCritDmg = artCritDmg(user, "Water")
-    fireCritDmg = artCritDmg(user, "Fire")
-    earthCritDmg = artCritDmg(user, "Earth")
-    lightCritDmg = artCritDmg(user, "Light")
-    darkCritDmg = artCritDmg(user, "Dark")
-
 
     if request.method == "GET":
         return render_template('artifacts.html', user=user, title='Artifacts', artifactBase=artifactBase, event=event,
-                               normal=normal, fireAtk=fireAtk, earthAtk=earthAtk, waterAtk=waterAtk, lightAtk=lightAtk,
-                               darkAtk=darkAtk, allCrit=allCrit, allAps=allAps, fireCritDmg=fireCritDmg,
-                               earthCritDmg=earthCritDmg, waterCritDmg=waterCritDmg, lightCritDmg=lightCritDmg,
-                               darkCritDmg=darkCritDmg)
+                               normal=normal)
     else:
         arts = Artifact.query.filter_by(owner=user)
         for j in arts:
@@ -327,7 +324,5 @@ def bossTeam(username):
     user = User.query.filter_by(username=username).first_or_404()
     heroes = Hero.query.filter_by(player=user).filter(Hero.level > 0)
 
-    bosskraken = kraken
-
-    return render_template('bossTeam.html', user=user, title='Boss Teams', heroes=heroes, bosskraken=bosskraken)
-
+    return render_template('bossTeam.html', user=user, title='Boss Teams', heroes=heroes, kraken=kraken,
+                           undeadsam=undeadsam, fw=fw)

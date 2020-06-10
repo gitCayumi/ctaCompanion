@@ -11,28 +11,139 @@
     </div>
  </div>
 
- <div class="row pt-3">
-    <div class="col-lg-3">
-      {% for i in heroes %}
-      {{ i.testing(user) }}<br>
-      {% endfor %}
+<div class="row pt-3">
+    <div class="col-lg-12">
+        <table class="table">
+            <thead class="thead-dark">
+
+            <tr>
+                <th>Name</th>
+                <th>Attack</th>
+                <th>Raid Attack</th>
+                <th>APS</th>
+                <th>Raid APS</th>
+                <th>Crit</th>
+                <th>Raid Crit</th>
+                <th>Crit DMG</th>
+                <th>Raid Crit DMG</th>
+            </tr>
+            </thead>
+
+            <tr>
+                <td>{{ heroes[10].baseStats.name}}</td>
+                <td>{{ heroes[10].atk()}}</td>
+                <td>{{ heroes[10].raidAtk(user.artAtk("Dark"), 0)}}</td>
+                <td>{{ heroes[10].aps() }}</td>
+                <td>{{ heroes[10].raidAps(user.artAps(), 0)}}</td>
+                <td>{{ heroes[10].crit() }}</td>
+                <td>{{ heroes[10].raidCrit(user.artCrit())}}</td>
+                <td>{{ heroes[10].critDmg() }}</td>
+                <td>{{ heroes[10].raidCritDmg(user.artCritDmg("Dark"), 0)}}</td>
+            </tr>
+            <tr>
+                <td>{{ heroes[8].baseStats.name}}</td>
+                <td>{{ heroes[8].atk()}}</td>
+                <td>{{ heroes[8].raidAtk(user.artAtk("Fire"), 0)}}</td>
+                <td>{{ heroes[8].aps() }}</td>
+                <td>{{ heroes[8].raidAps(user.artAps(), 0)}}</td>
+                <td>{{ heroes[8].crit() }}</td>
+                <td>{{ heroes[8].raidCrit(user.artCrit())}}</td>
+                <td>{{ heroes[8].critDmg() }}</td>
+                <td>{{ heroes[8].raidCritDmg(user.artCritDmg("Fire"), 0)}}</td>
+            </tr>
+
+        </table>
+    </div>
+
  </div>
 
-        <div class="col-lg-3">
-      {% for i in heroes %}
-      {{ i.dpsSP2() }}<br>
-      {% endfor %}
+<div class="row pt-3">
+    <div class="col-lg-12">
+      <h1 class="display-4">Buff test</h1>
+      <hr>
+      {{ user.raidbuffs(heroes, "Fire") }}
+      <hr>
+    </div>
  </div>
 
-        <div class="col-lg-3">
-      {% for i in heroes %}
-      {{ i.raidDPS() }}<br>
-      {% endfor %}
- </div>
+<div class="row pt-3">
+    <div class="col-lg-6">
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th colspan="2" class="text-center">Undead Sam incl. Weakness and Elemental Advantage</th>
+            </tr>
+            <tr>
+                <th>Hero</th>
+                <th>DPS</th>
+            </tr>
+            </thead>
+            {% for key, value in user.raidteam(heroes, undeadsam).items() %}
+            <tr>
+                <td>{{ key }}</td><td>{{ value }}</td>
+            </tr>
+            {% endfor %}
+        </table>
 
-    <div class="col-lg-3">
-      {{ user.artAtk2("Fire") }}
- </div>
- </div>
+    </div>
 
+    <div class="col-lg-6">
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th colspan="2" class="text-center">Undead Sam excl. Weakness and Elemental Advantage</th>
+            </tr>
+            <tr>
+                <th>Hero</th>
+                <th>DPS</th>
+            </tr>
+            </thead>
+            {% for key, value in user.raidteam2(heroes, undeadsam).items() %}
+            <tr>
+                <td>{{ key }}</td><td>{{ value }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+ </div>
+<div class="row pt-3">
+    <div class="col-lg-6">
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th colspan="2" class="text-center">Frostwing incl. Weakness and Elemental Advantage</th>
+            </tr>
+            <tr>
+                <th>Hero</th>
+                <th>DPS</th>
+            </tr>
+            </thead>
+            {% for key, value in user.raidteam(heroes, fw).items() %}
+            <tr>
+                <td>{{ key }}</td><td>{{ value }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+    </div>
+
+    <div class="col-lg-6">
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th colspan="2" class="text-center">Frostwing excl. Weakness and Elemental Advantage</th>
+            </tr>
+            <tr>
+                <th>Hero</th>
+                <th>DPS</th>
+            </tr>
+            </thead>
+            {% for key, value in user.raidteam2(heroes, fw).items() %}
+            <tr>
+                <td>{{ key }}</td><td>{{ value }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+ </div>
 {% endblock %}

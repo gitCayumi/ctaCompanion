@@ -109,9 +109,47 @@ kraken = {
         "Magician": 1,
         "Ranger": 1,
         "Rogue": 1,
-        "Samurari": 2,
+        "Samurai": 2,
         "Support": 1,
         "Fly": 0,
+        "Water": 1,
+        "Fire": 0.5,
+        "Earth": 4,
+        "Light": 1,
+        "Dark": 1
+}
+
+undeadsam = {
+        "Barbarian": 3,
+        "Brawler": 1,
+        "Gunner": 1,
+        "Knight": 5,
+        "Lancer": 1,
+        "Magician": 1,
+        "Ranger": 1,
+        "Rogue": 1,
+        "Samurai": 2,
+        "Support": 1,
+        "Fly": 0,
+        "Water": 0.5,
+        "Fire": 4,
+        "Earth": 1,
+        "Light": 1,
+        "Dark": 1
+}
+
+fw = {
+        "Barbarian": 1,
+        "Brawler": 1,
+        "Gunner": 2,
+        "Knight": 1,
+        "Lancer": 1,
+        "Magician": 5,
+        "Ranger": 2,
+        "Rogue": 1,
+        "Samurai": 1,
+        "Support": 1,
+        "Fly": 1,
         "Water": 1,
         "Fire": 0.5,
         "Earth": 4,

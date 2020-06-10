@@ -61,7 +61,7 @@ class User(UserMixin, db.Model):
     def artDisplay(self, x):
         return '{:,}'.format(x).replace(',', ' ')
 
-    def artAtk2(self, element):
+    def artAtk(self, element):
         arts = self.artifacts
         attack = 0
         glBreak = 5000000
@@ -105,6 +105,90 @@ class User(UserMixin, db.Model):
         if Hades == 3:
             attack += 1000
         return attack
+
+    def artCrit(self):
+        arts = self.artifacts
+        crit = 0
+        Phoenix = 0  # 34, 35, 36
+        Efreeti = 0  # 37, 38, 39
+        for i in arts:
+            if i.artbase_id == 34 or i.artbase_id == 35 or i.artbase_id == 36:
+                Phoenix += 1
+            elif i.artbase_id == 37 or i.artbase_id == 38 or i.artbase_id == 39:
+                Efreeti += 1
+        if Phoenix == 3:
+            crit += 15
+        if Efreeti == 3:
+            crit += 10
+        return crit
+
+    def artAps(self):
+        arts = self.artifacts
+        aps = 0
+        Atlantis = 0  # 13, 14, 15
+        Mermaid = 0  # 31, 32, 33
+        Poseidon = 0  # 49, 50, 51
+        Zeus = 0  # 52, 53, 54
+        for i in arts:
+            if i.artbase_id == 13 or i.artbase_id == 14 or i.artbase_id == 15:
+                Atlantis += 1
+            elif i.artbase_id == 31 or i.artbase_id == 32 or i.artbase_id == 33:
+                Mermaid += 1
+            elif i.artbase_id == 49 or i.artbase_id == 50 or i.artbase_id == 51:
+                Poseidon += 1
+            elif i.artbase_id == 52 or i.artbase_id == 53 or i.artbase_id == 54:
+                Zeus += 1
+        if Atlantis == 3:
+            aps += 20
+        if Mermaid == 3:
+            aps += 15
+        if Poseidon == 3:
+            aps += 10
+        if Zeus == 3:
+            aps += 10
+        return aps
+
+    def artCritDmg(self, element):
+        arts = self.artifacts
+        critDmg = 0
+        for i in arts:
+            if i.artBase.element == element or i.artBase.element == "All":
+                critDmg += i.artBase.critDmg + ((i.level - 1) * i.artBase.critDmgLevel)
+        return int(round(critDmg, 0))
+
+    def raidteam(self, heroes, boss):
+        team = {}
+        current = ""
+        max = 0
+        for i in heroes:
+            team[i.baseStats.name] = i.raidDPS(self.raidbuffs(heroes, i.baseStats.element), boss)
+
+        return team
+
+    def raidbuffs(self, heroes, element):
+        bufftypes = []  # kept for debugging purpose
+        hero = []       # kept for debugging purpose
+        buffs = {
+            "atk": 0,
+            "aps": 0,
+            "critDmg": 0
+            }
+        for i in heroes:
+            if i.baseStats.buffType == 1 and i.level > 3:
+                if i.baseStats.buffElement == element or i.baseStats.buffElement == 'All':
+                    bufftypes.append(i.baseStats.buffType)  # kept for debugging purpose
+                    hero.append(i)                          # kept for debugging purpose
+                    buffs[i.baseStats.buffStat] = buffs.get(i.baseStats.buffStat) + (i.baseStats.buff*(i.level-3))
+
+        return buffs
+
+    def raidteam2(self, heroes, boss):
+        team = {}
+        for i in heroes:
+            team[i.baseStats.name] = i.raidDPS2(boss)
+
+        return team
+
 
 
 
@@ -171,6 +255,16 @@ class Hero(db.Model):
         runedAtk = atk + (atk * (runedAttack / 100))
         return int(runedAtk)
 
+    def raidAtk(self, art, buff):
+        # Temporary placeholder variable for runed values
+        runedAttack = self.runedAtk
+        base = self.baseStats.atk
+        level = self.level
+        awaken = self.awaken
+        atk = int(base * (2 ** (level - 1)) * (1.5 ** awaken))
+        runedAtk = atk + (atk * ((runedAttack+art+buff) / 100))
+        return int(runedAtk) * self.baseStats.crusher
+
 
     def hp(self):
         # Temporary placeholder variable for runed values
@@ -199,11 +293,24 @@ class Hero(db.Model):
         runedAps = base + (base * (runedAps / 100))
         return runedAps
 
+    def raidAps(self, art, buff):
+        # Temporary placeholder variable for runed values
+        runedAps = self.runedAps
+        base = self.baseStats.aps
+        runedAps = base + (base * ((runedAps+art+buff) / 100))
+        return runedAps
+
     def crit(self):
         # Temporary placeholder variable for runed values
         runedCrit = self.runedCrit
         base = self.baseStats.crit
         return (base + runedCrit)/100
+
+    def raidCrit(self, art):
+        # Temporary placeholder variable for runed values
+        runedCrit = self.runedCrit
+        base = self.baseStats.crit
+        return (base + runedCrit + art)/100
 
     def critDmg(self):
         # Temporary placeholder variable for runed values
@@ -211,9 +318,15 @@ class Hero(db.Model):
         base = self.baseStats.critDmg
         return (base + runedDmg)/100
 
+    def raidCritDmg(self, art, buff):
+        # Temporary placeholder variable for runed values
+        runedDmg = self.runedCritDmg
+        base = self.baseStats.critDmg
+        return (base + runedDmg + art + buff)/100
+
     def critDmgDisplay(self):
         # Temporary placeholder variable for runed values
-        runedDmg = 25.75
+        runedDmg = self.runedCritDmg
         base = self.baseStats.critDmg
         return base + runedDmg
 
@@ -225,22 +338,10 @@ class Hero(db.Model):
         critDmg = self.critDmg()
         dps = (atk * aps * (1-crit)) + (atk * aps * crit * critDmg)
         dps = int(round(dps))
-        return '{:,}'.format(dps).replace(',', ' ')
+        return atk, aps, crit, critDmg, dps
+        #return '{:,}'.format(dps).replace(',', ' ')
 
     def dpsSP2(self):
-        # (atk * aps * (1-crit rate)) + (atk  * aps * critRate * critDmg)
-        sp2 = self.baseStats.sp2
-        sp2num = self.baseStats.sp2num
-        atk = self.atk() * self.player.artAtk2(self.baseStats.element)
-        aps = self.aps()
-        crit = self.crit()
-        critDmg = self.critDmg()
-        dps = ((atk * aps * (1-crit)) + (atk * aps * crit * critDmg)) * (6 + sp2 * sp2num)/7
-        #  x (6 + sp2_damage x sp2_num_attacks)/7
-        dps = int(round(dps))
-        return '{:,}'.format(dps).replace(',', ' ')
-
-    def raidDPS(self):
         # (atk * aps * (1-crit rate)) + (atk  * aps * critRate * critDmg)
         sp2 = self.baseStats.sp2
         sp2num = self.baseStats.sp2num
@@ -248,16 +349,45 @@ class Hero(db.Model):
         aps = self.aps()
         crit = self.crit()
         critDmg = self.critDmg()
-        dps = ((atk * aps * (1-crit)) + (atk * aps * crit * critDmg)) * (6 + sp2 * sp2num)/7
+        dps = ((atk * aps * (1-crit)) + (atk * aps * crit * (1+critDmg))) * (6 + sp2 * sp2num)/7
         #  x (6 + sp2_damage x sp2_num_attacks)/7
+        dps = int(round(dps))
+        return '{:,}'.format(dps).replace(',', ' ')
+
+    def raidDPS(self, buff, boss):
+        # Hero values including players artifacts
+        sp2 = self.baseStats.sp2
+        sp2num = self.baseStats.sp2num
+        atk = self.raidAtk(self.player.artAtk(self.baseStats.element), buff['atk'])
+        aps = self.raidAps(self.player.artAps(), buff['aps'])
+        crit = self.raidCrit(self.player.artCrit())
+        critDmg = self.raidCritDmg(self.player.artCritDmg(self.baseStats.element), buff['critDmg'])
+
+        # weakness and elemental advantage, multiplicative (some claim it's multiplicative, others additive)
+        atk *= boss[self.baseStats.element]
+        atk *= boss[self.baseStats.job]
+
+        # dps formula
+        dps = ((atk * aps * (1-crit)) + (atk * aps * crit * (1+critDmg))) * (6 + sp2 * sp2num)/7
+        dps = int(round(dps))
+        return '{:,}'.format(dps).replace(',', ' ')
+
+    def raidDPS2(self, boss):
+        # EXCLUDING WEAKNESS AND ELEMENT FOR TESTING
+        sp2 = self.baseStats.sp2
+        sp2num = self.baseStats.sp2num
+        atk = self.raidAtk(self.player.artAtk(self.baseStats.element), 0)
+        aps = self.raidAps(self.player.artAps(), 0)
+        crit = self.raidCrit(self.player.artCrit())
+        critDmg = self.raidCritDmg(self.player.artCritDmg(self.baseStats.element), 0)
+
+        dps = ((atk * aps * (1-crit)) + (atk * aps * crit * (1+critDmg))) * (6 + sp2 * sp2num)/7
         dps = int(round(dps))
         return '{:,}'.format(dps).replace(',', ' ')
 
     def testing(self, user):
         x = self.player.email
         return x
-
-
 
     def progress(self):
         level = self.level
@@ -467,104 +597,6 @@ def rarityMedals(user, element, rarity):
             total += 4880
         total += i.medals
     return total
-
-
-def artAtk(user, element):
-    arts = Artifact.query.filter_by(owner=user)
-    attack = 0
-    glBreak = 5000000
-    for i in arts:
-        if i.artBase.element == element or i.artBase.element == "All":
-            attack += i.artBase.atk + ((i.level-1)*i.artBase.atkLevel)
-        if i.artBase.id == 79:
-            if user.heroPower < glBreak:
-                attack += int((0.005 + (0.001*i.level))*user.heroPower)
-            else:
-                attack += int((0.005 + (0.001 * i.level)) * (glBreak + ((user.heroPower-glBreak) / 2)))
-
-    Vulcan = 0      #16, 17, 18
-    Abaddon = 0     #1, 2, 3
-    Phoenix = 0     #34, 35, 36
-    Abyssal = 0     #19, 20, 21
-    Efreeti = 0     #37, 38, 39
-    Hades = 0       #43, 44, 45
-
-    for i in arts:
-        if i.artbase_id == 16 or i.artbase_id == 17 or i.artbase_id == 18:
-            Vulcan += 1
-        elif i.artbase_id == 1 or i.artbase_id == 2 or i.artbase_id == 3:
-            Abaddon += 1
-        elif i.artbase_id == 34 or i.artbase_id == 35 or i.artbase_id == 36:
-            Phoenix += 1
-        elif i.artbase_id == 19 or i.artbase_id == 20 or i.artbase_id == 21:
-            Abyssal += 1
-        elif i.artbase_id == 37 or i.artbase_id == 38 or i.artbase_id == 39:
-            Efreeti += 1
-        elif i.artbase_id == 43 or i.artbase_id == 44 or i.artbase_id == 45:
-            Hades += 1
-    if Vulcan == 3:
-        attack += 10000
-    if Abaddon == 3:
-        attack += 10000
-    if Phoenix == 3:
-        attack += 4000
-    if Abyssal == 3:
-        attack += 4000
-    if Hades == 3:
-        attack += 1000
-    return attack
-
-def artCrit(user):
-    arts = Artifact.query.filter_by(owner=user)
-    crit = 0
-    Phoenix = 0  # 34, 35, 36
-    Efreeti = 0  # 37, 38, 39
-    for i in arts:
-        if i.artbase_id == 34 or i.artbase_id == 35 or i.artbase_id == 36:
-            Phoenix += 1
-        elif i.artbase_id == 37 or i.artbase_id == 38 or i.artbase_id == 39:
-            Efreeti += 1
-    if Phoenix == 3:
-        crit += 15
-    if Efreeti == 3:
-        crit += 10
-    return crit
-
-
-def artAps(user):
-    arts = Artifact.query.filter_by(owner=user)
-    aps = 0
-    Atlantis = 0    #13, 14, 15
-    Mermaid = 0     #31, 32, 33
-    Poseidon = 0    #49, 50, 51
-    Zeus = 0        #52, 53, 54
-    for i in arts:
-        if i.artbase_id == 13 or i.artbase_id == 14 or i.artbase_id == 15:
-            Atlantis += 1
-        elif i.artbase_id == 31 or i.artbase_id == 32 or i.artbase_id == 33:
-            Mermaid += 1
-        elif i.artbase_id == 49 or i.artbase_id == 50 or i.artbase_id == 51:
-            Poseidon += 1
-        elif i.artbase_id == 52 or i.artbase_id == 53 or i.artbase_id == 54:
-            Zeus += 1
-    if Atlantis == 3:
-        aps += 20
-    if Mermaid == 3:
-        aps += 15
-    if Poseidon == 3:
-        aps += 10
-    if Zeus == 3:
-        aps += 10
-    return aps
-
-
-def artCritDmg(user, element):
-    arts = Artifact.query.filter_by(owner=user)
-    critDmg = 0
-    for i in arts:
-        if i.artBase.element == element or i.artBase.element == "All":
-            critDmg += i.artBase.critDmg + ((i.level - 1) * i.artBase.critDmgLevel)
-    return int(round(critDmg, 0))
 
 
 def validateArt(art, level):
