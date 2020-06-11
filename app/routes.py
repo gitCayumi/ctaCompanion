@@ -323,6 +323,7 @@ def artifacts(username):
 def bossTeam(username):
     user = User.query.filter_by(username=username).first_or_404()
     heroes = Hero.query.filter_by(player=user).filter(Hero.level > 0)
+    testList = [heroes[0], heroes[1]]
 
     return render_template('bossTeam.html', user=user, title='Boss Teams', heroes=heroes, kraken=kraken,
-                           undeadsam=undeadsam, fw=fw)
+                           undeadsam=undeadsam, fw=fw, testList=testList)

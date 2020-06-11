@@ -158,12 +158,39 @@ class User(UserMixin, db.Model):
 
     def raidteam(self, heroes, boss):
         team = {}
-        current = ""
-        max = 0
-        for i in heroes:
-            team[i.baseStats.name] = i.raidDPS(self.raidbuffs(heroes, i.baseStats.element), boss)
+        teamList = []
+        top = ""
+        high = 0
 
-        return team
+        # get top performing hero
+        for i in heroes:
+            if int(i.raidDPS(self.raidbuffs(teamList, i.baseStats.element), boss)) > high:
+                high = int(i.raidDPS(self.raidbuffs(teamList, i.baseStats.element), boss))
+                top = i
+
+        total = high
+        teamList.append(top)
+        team[top.baseStats.name] = high
+
+        """
+        prev = 0
+        for i in heroes:
+            prev = i
+            if i not in teamList:
+                teamList.append(i)
+            for j in teamList:
+                team[j.baseStats.name] = int(i.raidDPS(self.raidbuffs(teamList, i.baseStats.element), boss))
+            total = sum(team.values())
+            
+            if sum(team.values()) > sum(team.values()) + prev:
+                    top = j
+                    prev
+    
+        for i in heroes:
+            teamList.append(i)
+            team[i.baseStats.name] = i.raidDPS(self.raidbuffs(heroes, i.baseStats.element), boss)
+        """
+        return team, teamList, high, total,
 
     def raidbuffs(self, heroes, element):
         bufftypes = []  # kept for debugging purpose
@@ -370,7 +397,7 @@ class Hero(db.Model):
         # dps formula
         dps = ((atk * aps * (1-crit)) + (atk * aps * crit * (1+critDmg))) * (6 + sp2 * sp2num)/7
         dps = int(round(dps))
-        return '{:,}'.format(dps).replace(',', ' ')
+        return dps
 
     def raidDPS2(self, boss):
         # EXCLUDING WEAKNESS AND ELEMENT FOR TESTING

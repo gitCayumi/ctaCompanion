@@ -99,6 +99,8 @@
             {% endfor %}
             </td>
             <td><input type="text" maxlength="2" class="form-control form-control-sm" id="#" value="{{ i.level }}" name="{{ i.id }}level" onkeypress="return isNumber9(event)"></td>
+            <td> {{ i.artBase.name }}, {{i.artBase.atk+(i.artBase.atkLevel*(i.level-1)) }}</td>
+
         </tr>
         {% endfor %}
     </table>
@@ -129,6 +131,7 @@
             {% endfor %}
             </td>
             <td><input type="text" maxlength="2" class="form-control form-control-sm" id="#" value="{{ k.level }}" name="{{ k.id }}level" onkeypress="return isNumber9(event)"></td>
+            <td> {{ k.artBase.name }}, {{k.artBase.atk+(k.artBase.atkLevel*(k.level-1)) }}</td>
         </tr>
 
         {% endfor %}
