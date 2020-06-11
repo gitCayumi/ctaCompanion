@@ -283,18 +283,17 @@ class Hero(db.Model):
         return int(runedAtk)
 
     def raidAtk(self, art, buff):
-        # Temporary placeholder variable for runed values
         runedAttack = self.runedAtk
         base = self.baseStats.atk
         level = self.level
         awaken = self.awaken
         atk = base * (2 ** (level - 1)) * (1.5 ** awaken)
+        atk *= self.baseStats.crusher
         runedAtk = atk + (atk * ((runedAttack+art+buff) / 100))
-        return runedAtk * self.baseStats.crusher
+        return runedAtk
 
 
     def hp(self):
-        # Temporary placeholder variable for runed values
         runedHP = self.runedHp
         base = self.baseStats.hp
         level = self.level
@@ -304,7 +303,6 @@ class Hero(db.Model):
         return int(runedHP)
 
     def defense(self):
-        # Temporary placeholder variable for runed values
         runedDef = self.runedDef
         base = self.baseStats.defense
         level = self.level
@@ -314,33 +312,28 @@ class Hero(db.Model):
         return int(runedDef)
 
     def aps(self):
-        # Temporary placeholder variable for runed values
         runedAps = self.runedAps
         base = self.baseStats.aps
         runedAps = base + (base * (runedAps / 100))
         return runedAps
 
     def raidAps(self, art, buff):
-        # Temporary placeholder variable for runed values
         runedAps = self.runedAps
         base = self.baseStats.aps
         runedAps = base + (base * ((runedAps+art+buff) / 100))
         return runedAps
 
     def crit(self):
-        # Temporary placeholder variable for runed values
         runedCrit = self.runedCrit
         base = self.baseStats.crit
         return (base + runedCrit)/100
 
     def raidCrit(self, art):
-        # Temporary placeholder variable for runed values
         runedCrit = self.runedCrit
         base = self.baseStats.crit
         return (base + runedCrit + art)/100
 
     def critDmg(self):
-        # Temporary placeholder variable for runed values
         runedDmg = self.runedCritDmg
         base = self.baseStats.critDmg
         return (base + runedDmg)/100

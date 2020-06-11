@@ -81,10 +81,7 @@
         <tr>
             <th>Standard Artifacts</th>
             <th width="60">Level</th>
-            <th>Element</th>
-            <th>ATK</th>
 
-            <th>Crit DMG</th>
         </tr>
         </thead>
 
@@ -103,17 +100,15 @@
             {% endfor %}
             </td>
             <td class="{{i.artBase.element}}Rare align-middle"><input type="text" maxlength="2" class="form-control form-control-sm" id="#" value="{{ i.level }}" name="{{ i.id }}level" onkeypress="return isNumber9(event)"></td>
-            <td class="{{i.artBase.element}}Rare align-middle">{{i.artBase.element}} </td>
-            <td class="{{i.artBase.element}}Rare align-middle">{{i.artBase.atk+(i.artBase.atkLevel*(i.level-1)) }}</td>
-            <td class="{{i.artBase.element}}Rare align-middle">{{i.artBase.critDmg+(i.artBase.critDmgLevel*(i.level-1))}}</td>
+
 
         </tr>
         {% endfor %}
     </table>
     </div>
-</div>
-<div class="row pt-3">
-    <div class="col-lg-12">
+
+
+    <div class="col-lg-6">
         <table class="table table-light">
         <thead class="thead-dark">
         <tr>
@@ -137,7 +132,7 @@
             {% endfor %}
             </td>
             <td><input type="text" maxlength="2" class="form-control form-control-sm" id="#" value="{{ k.level }}" name="{{ k.id }}level" onkeypress="return isNumber9(event)"></td>
-            <td> {{ k.artBase.name }}, {{k.artBase.atk+(k.artBase.atkLevel*(k.level-1)) }}</td>
+
         </tr>
 
         {% endfor %}
