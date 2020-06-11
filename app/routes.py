@@ -211,14 +211,6 @@ def progress(username):
                            progressactive=progressactive)
 
 
-@app.route('/test/<username>')
-@login_required
-def test(username):
-    user = User.query.filter_by(username=username).first_or_404()
-    heroes = Hero.query.filter_by(player=user)
-    return render_template('test.html', user=user, heroes=heroes, title='TEST AREA')
-
-
 @app.route('/Hero/<heroid>', methods=["GET", "POST"])
 @login_required
 def hero(heroid):
@@ -323,7 +315,24 @@ def artifacts(username):
 def bossTeam(username):
     user = User.query.filter_by(username=username).first_or_404()
     heroes = Hero.query.filter_by(player=user).filter(Hero.level > 0)
-
+    heroList = list(heroes)
+    waterBuffs = user.raidbuffs(heroList, "Water")
+    fireBuffs = user.raidbuffs(heroList, "Fire")
+    earthBuffs = user.raidbuffs(heroList, "Earth")
+    lightBuffs = user.raidbuffs(heroList, "Light")
+    darkBuffs = user.raidbuffs(heroList, "Dark")
 
     return render_template('bossTeam.html', user=user, title='Boss Teams', heroes=heroes, kraken=kraken,
+                           undeadsam=undeadsam, fw=fw, heroList=heroList, earthBuffs=earthBuffs, waterBuffs=waterBuffs,
+                           fireBuffs=fireBuffs, lightBuffs=lightBuffs, darkBuffs=darkBuffs)
+
+
+@app.route('/test/<username>')
+@login_required
+def test(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    heroes = Hero.query.filter_by(player=user).filter(Hero.level > 0)
+
+    return render_template('bossTeam.html', user=user, title='TEST AREA', heroes=heroes, kraken=kraken,
                            undeadsam=undeadsam, fw=fw)
+

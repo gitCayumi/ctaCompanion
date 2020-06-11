@@ -217,8 +217,6 @@ class User(UserMixin, db.Model):
         return team
 
 
-
-
 class ArtBase(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     star = db.Column(db.Integer, index=True)
@@ -228,6 +226,7 @@ class ArtBase(db.Model):
     critDmg = db.Column(db.Integer, index=True)
     critDmgLevel = db.Column(db.Integer, index=True)
     element = db.Column(db.String(16), index=True)
+    color = db.Column(db.String(16), index=True)
     artifacts = db.relationship('Artifact', backref='artBase', lazy='dynamic')
 
     def __repr__(self):
@@ -288,8 +287,7 @@ class Hero(db.Model):
         level = self.level
         awaken = self.awaken
         atk = base * (2 ** (level - 1)) * (1.5 ** awaken)
-        atk *= self.baseStats.crusher
-        runedAtk = atk + (atk * ((runedAttack+art+buff) / 100))
+        runedAtk = (atk + (atk * ((runedAttack+art) / 100))) * self.baseStats.crusher + atk * buff / 100
         return runedAtk
 
 

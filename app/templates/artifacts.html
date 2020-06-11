@@ -76,7 +76,7 @@
 <form action="/artifacts/{{ user.username }}" method="post" novalidate>
 <div class="row pt-3">
     <div class="col-lg-6">
-    <table class="table table-light">
+    <table class="table table-light table-borderless">
         <thead class="thead-dark">
         <tr>
             <th>Standard Artifacts</th>
@@ -88,7 +88,7 @@
         {% for i in normal%}
 
         <tr class="table-sm">
-            <td class="{{i.artBase.element}}Rare align-middle"><select class="form-control form-control-sm" id="#" name="{{ i.id }}art">
+            <td class="{{i.artBase.color}}Rare align-middle"><select class="form-control form-control-sm" id="#" name="{{ i.id }}art">
             {% for j in artifactBase %}
                 {% if j.star != "Event" %}
             {% if i.artBase.name == j.name %}
@@ -99,7 +99,7 @@
                 {% endif %}
             {% endfor %}
             </td>
-            <td class="{{i.artBase.element}}Rare align-middle"><input type="text" maxlength="2" class="form-control form-control-sm" id="#" value="{{ i.level }}" name="{{ i.id }}level" onkeypress="return isNumber9(event)"></td>
+            <td class="{{i.artBase.color}}Rare align-middle"><input type="text" maxlength="2" class="form-control form-control-sm" id="#" value="{{ i.level }}" name="{{ i.id }}level" onkeypress="return isNumber9(event)"></td>
 
 
         </tr>
@@ -109,7 +109,7 @@
 
 
     <div class="col-lg-6">
-        <table class="table table-light">
+        <table class="table table-light table-borderless">
         <thead class="thead-dark">
         <tr>
             <th>Event Artifacts</th>
@@ -120,7 +120,7 @@
         {% for k in event %}
 
         <tr class="table-sm">
-            <td><select class="form-control form-control-sm" id="#" name="{{ k.id }}art">
+            <td class="{{k.artBase.color}}Rare align-middle"><select class="form-control form-control-sm" id="#" name="{{ k.id }}art">
             {% for l in artifactBase %}
                 {% if l.star == "Event" or l.star == 0 %}
             {% if k.artBase.name == l.name %}
@@ -131,7 +131,7 @@
                 {% endif %}
             {% endfor %}
             </td>
-            <td><input type="text" maxlength="2" class="form-control form-control-sm" id="#" value="{{ k.level }}" name="{{ k.id }}level" onkeypress="return isNumber9(event)"></td>
+            <td class="{{k.artBase.color}}Rare align-middle"><input type="text" maxlength="2" class="form-control form-control-sm" id="#" value="{{ k.level }}" name="{{ k.id }}level" onkeypress="return isNumber9(event)"></td>
 
         </tr>
 

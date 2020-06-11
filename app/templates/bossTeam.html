@@ -6,7 +6,7 @@
     <div class="col-lg-12">
       <h1 class="display-4">Boss Teams</h1>
       <hr>
-      <p class="instructions">These are your optimal teams for damage for each boss and mini</p>
+      <p class="instructions">These are your optimal damage teams for each boss in the Slay Boss Event.</p>
       <hr>
     </div>
  </div>
@@ -29,15 +29,15 @@
             </tr>
             </thead>
 <tr>
-                <td>{{ heroes[0].baseStats.name}}</td>
-                <td>{{ heroes[0].atk()}}</td>
-                <td>{{ heroes[0].raidAtk(user.artAtk(heroes[0].baseStats.element), 0)}}</td>
+                <td>{{ heroes[75].baseStats.name}}</td>
+                <td>{{ heroes[75].atk()}}</td>
+                <td>{{ heroes[75].raidAtk(user.artAtk(heroes[75].baseStats.element), 0)}}</td>
 
-                <td>{{ heroes[0].raidAps(user.artAps(), 20)}}</td>
+                <td>{{ heroes[75].raidAps(user.artAps(), lightBuffs['aps'])}}</td>
 
-                <td>{{ heroes[0].raidCrit(user.artCrit())}}</td>
+                <td>{{ heroes[75].raidCrit(user.artCrit())}}</td>
 
-                <td>{{ heroes[0].raidCritDmg(user.artCritDmg(heroes[0].baseStats.element), 0)}}</td>
+                <td>{{ heroes[75].raidCritDmg(user.artCritDmg(heroes[75].baseStats.element), lightBuffs['critDmg'])}}</td>
             </tr>
 
 
@@ -45,6 +45,19 @@
         </table>
     </div>
 
+ </div>
+
+
+ <div class="row pt-3">
+    <div class="col-lg-12">
+      <h1 class="display-4">Boss Teams</h1>
+        {{ heroList }}<br>
+        Water: {{ waterBuffs['atk'] }}<br>
+        Fire: {{ fireBuffs }}<br>
+        Earth: {{ earthBuffs }}<br>
+        Light: {{ lightBuffs }}<br>
+        Dark: {{ darkBuffs }}<br>
+    </div>
  </div>
 
 {% endblock %}
