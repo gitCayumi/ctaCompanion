@@ -70,9 +70,9 @@ class User(UserMixin, db.Model):
                 attack += i.artBase.atk + ((i.level - 1) * i.artBase.atkLevel)
             if i.artBase.id == 79:
                 if self.heroPower < glBreak:
-                    attack += int((0.005 + (0.001 * i.level)) * self.heroPower)
+                    attack += (0.005 + (0.001 * i.level)) * self.heroPower
                 else:
-                    attack += int((0.005 + (0.001 * i.level)) * (glBreak + ((self.heroPower - glBreak) / 2)))
+                    attack += (0.005 + (0.001 * i.level)) * (glBreak + ((self.heroPower - glBreak) / 2))
 
         Vulcan = 0  # 16, 17, 18
         Abaddon = 0  # 1, 2, 3
@@ -104,7 +104,7 @@ class User(UserMixin, db.Model):
             attack += 4000
         if Hades == 3:
             attack += 1000
-        return attack
+        return int(round(attack))
 
     def artCrit(self):
         arts = self.artifacts
@@ -288,9 +288,9 @@ class Hero(db.Model):
         base = self.baseStats.atk
         level = self.level
         awaken = self.awaken
-        atk = int(base * (2 ** (level - 1)) * (1.5 ** awaken))
+        atk = base * (2 ** (level - 1)) * (1.5 ** awaken)
         runedAtk = atk + (atk * ((runedAttack+art+buff) / 100))
-        return int(runedAtk) * self.baseStats.crusher
+        return runedAtk * self.baseStats.crusher
 
 
     def hp(self):

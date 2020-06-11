@@ -28,7 +28,17 @@
                 <th>Raid Crit DMG</th>
             </tr>
             </thead>
-
+<tr>
+                <td>{{ heroes[0].baseStats.name}}</td>
+                <td>{{ heroes[0].atk()}}</td>
+                <td>{{ heroes[0].raidAtk(user.artAtk("Light"), 0)}}</td>
+                <td>{{ heroes[0].aps() }}</td>
+                <td>{{ heroes[0].raidAps(user.artAps(), 0)}}</td>
+                <td>{{ heroes[0].crit() }}</td>
+                <td>{{ heroes[0].raidCrit(user.artCrit())}}</td>
+                <td>{{ heroes[0].critDmg() }}</td>
+                <td>{{ heroes[0].raidCritDmg(user.artCritDmg("Light"), 0)}}</td>
+            </tr>
             <tr>
                 <td>{{ heroes[10].baseStats.name}}</td>
                 <td>{{ heroes[10].atk()}}</td>
@@ -41,15 +51,15 @@
                 <td>{{ heroes[10].raidCritDmg(user.artCritDmg("Dark"), 0)}}</td>
             </tr>
             <tr>
-                <td>{{ heroes[4].baseStats.name}}</td>
+                <td>{{ heroes[4].baseStats.name}} {{ heroes[4].baseStats.id}}</td>
                 <td>{{ heroes[4].atk()}}</td>
-                <td>{{ heroes[4].raidAtk(user.artAtk("Dark"), 0)}}</td>
+                <td>{{ heroes[4].raidAtk(user.artAtk("Earth"), 0)}}</td>
                 <td>{{ heroes[4].aps() }}</td>
                 <td>{{ heroes[4].raidAps(user.artAps(), 0)}}</td>
                 <td>{{ heroes[4].crit() }}</td>
                 <td>{{ heroes[4].raidCrit(user.artCrit())}}</td>
                 <td>{{ heroes[4].critDmg() }}</td>
-                <td>{{ heroes[4].raidCritDmg(user.artCritDmg("Dark"), 0)}}</td>
+                <td>{{ heroes[4].raidCritDmg(user.artCritDmg("Earth"), 0)}}</td>
             </tr>
             <tr>
                 <td>{{ heroes[8].baseStats.name}}</td>

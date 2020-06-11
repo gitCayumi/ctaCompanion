@@ -80,14 +80,18 @@
         <thead class="thead-dark">
         <tr>
             <th>Standard Artifacts</th>
-            <th width="100">Level</th>
+            <th width="60">Level</th>
+            <th>Element</th>
+            <th>ATK</th>
+
+            <th>Crit DMG</th>
         </tr>
         </thead>
 
-        {% for i in normal|sort(reverse=True, attribute='artBase.star,artBase.name') %}
+        {% for i in normal%}
 
         <tr class="table-sm">
-            <td><select class="form-control form-control-sm" id="#" name="{{ i.id }}art">
+            <td class="{{i.artBase.element}}Rare align-middle"><select class="form-control form-control-sm" id="#" name="{{ i.id }}art">
             {% for j in artifactBase %}
                 {% if j.star != "Event" %}
             {% if i.artBase.name == j.name %}
@@ -98,16 +102,18 @@
                 {% endif %}
             {% endfor %}
             </td>
-            <td><input type="text" maxlength="2" class="form-control form-control-sm" id="#" value="{{ i.level }}" name="{{ i.id }}level" onkeypress="return isNumber9(event)"></td>
-            <td> {{ i.artBase.name }}, {{i.artBase.atk+(i.artBase.atkLevel*(i.level-1)) }}</td>
+            <td class="{{i.artBase.element}}Rare align-middle"><input type="text" maxlength="2" class="form-control form-control-sm" id="#" value="{{ i.level }}" name="{{ i.id }}level" onkeypress="return isNumber9(event)"></td>
+            <td class="{{i.artBase.element}}Rare align-middle">{{i.artBase.element}} </td>
+            <td class="{{i.artBase.element}}Rare align-middle">{{i.artBase.atk+(i.artBase.atkLevel*(i.level-1)) }}</td>
+            <td class="{{i.artBase.element}}Rare align-middle">{{i.artBase.critDmg+(i.artBase.critDmgLevel*(i.level-1))}}</td>
 
         </tr>
         {% endfor %}
     </table>
     </div>
-
-
-    <div class="col-lg-6">
+</div>
+<div class="row pt-3">
+    <div class="col-lg-12">
         <table class="table table-light">
         <thead class="thead-dark">
         <tr>
