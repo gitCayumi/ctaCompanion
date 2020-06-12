@@ -314,17 +314,26 @@ def artifacts(username):
 @login_required
 def bossTeam(username):
     user = User.query.filter_by(username=username).first_or_404()
-    heroes = Hero.query.filter_by(player=user).filter(Hero.level > 0)
-    heroList = list(heroes)
-    waterBuffs = user.raidbuffs(heroList, "Water")
-    fireBuffs = user.raidbuffs(heroList, "Fire")
-    earthBuffs = user.raidbuffs(heroList, "Earth")
-    lightBuffs = user.raidbuffs(heroList, "Light")
-    darkBuffs = user.raidbuffs(heroList, "Dark")
+    heroes = Hero.query.filter_by(player=user).filter(Hero.level > 0).all()
+    teamList = []
+    team = {}
+
+    """
+    for i in heroes:
+        if i.baseStats.name == "Furiosa":
+            test.append(i)
+            heroes.remove(i)
+    """
+
+    waterBuffs = user.raidbuffs(heroes, "Water")
+    fireBuffs = user.raidbuffs(heroes, "Fire")
+    earthBuffs = user.raidbuffs(heroes, "Earth")
+    lightBuffs = user.raidbuffs(heroes, "Light")
+    darkBuffs = user.raidbuffs(heroes, "Dark")
 
     return render_template('bossTeam.html', user=user, title='Boss Teams', heroes=heroes, kraken=kraken,
-                           undeadsam=undeadsam, fw=fw, heroList=heroList, earthBuffs=earthBuffs, waterBuffs=waterBuffs,
-                           fireBuffs=fireBuffs, lightBuffs=lightBuffs, darkBuffs=darkBuffs)
+                           undeadsam=undeadsam, fw=fw, earthBuffs=earthBuffs, waterBuffs=waterBuffs,
+                           fireBuffs=fireBuffs, lightBuffs=lightBuffs, darkBuffs=darkBuffs, teamList=teamList, team=team)
 
 
 @app.route('/test/<username>')
