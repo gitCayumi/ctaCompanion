@@ -34,37 +34,20 @@
                 <th colspan="2">DPS</th>
             </tr>
             </thead>
-            {% for key, value in user.raidteam(team, teamList, heroes, undeadsam)[0].items() %}
             <tr>
-                <td>{{ key }}</td><td>{{ value }}</td><td></td>
-            </tr>
-            {% endfor %}
-            <tr>
-                <td>Top:<br></td>
-                <td>Teamlist:<br></td>
-                <td>Heroes:<br></td>
+                <td>
+                    {{ user.raidteam(team, teamList, heroes, undeadsam, artBonus) }}
+                </td>
             </tr>
         </table>
-
     </div>
 
+
+
+
+
     <div class="col-lg-6">
-        <table class="table">
-            <thead class="thead-dark">
-            <tr>
-                <th colspan="2" class="text-center">Undead Sam incl. Weakness, Elemental Advantage, Buffs, all heroes</th>
-            </tr>
-            <tr>
-                <th>Hero</th>
-                <th>DPS</th>
-            </tr>
-            </thead>
-            {% for key, value in user.raidteam2(heroes, undeadsam).items() %}
-            <tr>
-                <td>{{ key }}</td><td>{{ value }}</td>
-            </tr>
-            {% endfor %}
-        </table>
+        &nbsp;
     </div>
  </div>
 

@@ -156,7 +156,7 @@ class User(UserMixin, db.Model):
                 critDmg += i.artBase.critDmg + ((i.level - 1) * i.artBase.critDmgLevel)
         return int(round(critDmg, 0))
 
-    def raidteam(self, team, teamList, heroes, boss):
+    def raidteam(self, team, teamList, heroes, boss, art):
 
         high = sum(team.values())
         top = ""
@@ -165,22 +165,22 @@ class User(UserMixin, db.Model):
         if len(heroes) < 10 and len(heroes) == len(teamList):
             filler = len(teamList)
             for m in teamList:
-                team[m.baseStats.name] = int(m.raidDPS(self.raidbuffs(teamList, m.baseStats.element), boss))
+                team[m.baseStats.name] = int(m.raidDPS(self.raidbuffs(teamList, m.baseStats.element), boss, art))
             for n in range(10-filler):
                 team[n] = "-"
-            return team, teamList, heroes, boss
+            return team
 
         # Break out of recursion
         if len(teamList) == 10:
             for k in teamList:
-                team[k.baseStats.name] = int(k.raidDPS(self.raidbuffs(teamList, k.baseStats.element), boss))
-            return team, teamList, heroes, boss
+                team[k.baseStats.name] = int(k.raidDPS(self.raidbuffs(teamList, k.baseStats.element), boss, art))
+            return team
 
         for i in heroes:
             if i not in teamList:
                 teamList.append(i)
                 for j in teamList:
-                    team[j.baseStats.name] = int(j.raidDPS(self.raidbuffs(teamList, j.baseStats.element), boss))
+                    team[j.baseStats.name] = int(j.raidDPS(self.raidbuffs(teamList, j.baseStats.element), boss, art))
                 if sum(team.values()) > high:
                     high = sum(team.values())
                     top = i
@@ -188,13 +188,15 @@ class User(UserMixin, db.Model):
                 del team[i.baseStats.name]
 
         teamList.append(top)
-        team[top.baseStats.name] = int(top.raidDPS(self.raidbuffs(teamList, top.baseStats.element), boss))
-        return self.raidteam(team, teamList, heroes, boss)
+        team[top.baseStats.name] = int(top.raidDPS(self.raidbuffs(teamList, top.baseStats.element), boss, art))
 
-    def raidteam2(self, heroes, boss):
+        return self.raidteam(team, teamList, heroes, boss, art)
+
+    def raidteam2(self, heroes, boss, art):
+        # previously used for debugging purpose
         team = {}
         for i in heroes:
-            team[i.baseStats.name] = int(i.raidDPS(self.raidbuffs(heroes, i.baseStats.element), boss))
+            team[i.baseStats.name] = int(i.raidDPS(self.raidbuffs(heroes, i.baseStats.element), boss, art))
 
         return team
 
@@ -372,11 +374,11 @@ class Hero(db.Model):
         dps = int(round(dps))
         return '{:,}'.format(dps).replace(',', ' ')
 
-    def raidDPS(self, buff, boss):
+    def raidDPS(self, buff, boss, art):
         # Hero values including players artifacts
         sp2 = self.baseStats.sp2
         sp2num = self.baseStats.sp2num
-        atk = self.raidAtk(self.player.artAtk(self.baseStats.element), buff['atk'])
+        atk = self.raidAtk(art['atk'][self.baseStats.element], buff['atk'])
         aps = self.raidAps(self.player.artAps(), buff['aps'])
         crit = self.raidCrit(self.player.artCrit())
         critDmg = self.raidCritDmg(self.player.artCritDmg(self.baseStats.element), buff['critDmg'])
