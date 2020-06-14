@@ -4,9 +4,9 @@
 
  <div class="row pt-3">
     <div class="col-lg-12">
-      <h1 class="display-4">TEST AREA</h1>
+      <h1 class="display-4">Boss Teams</h1>
       <hr>
-      <p class="instructions">Used to test various stuff</p>
+      <p class="instructions">These are your optimal damage teams for each boss in the Slay Boss Event.</p>
       <hr>
     </div>
  </div>
@@ -31,13 +31,13 @@
 <tr>
                 <td>{{ heroes[0].baseStats.name}}</td>
                 <td>{{ heroes[0].atk()}}</td>
-                <td>{{ heroes[0].raidAtk(user.artAtk(heroes[0].baseStats.element), 800)}}</td>
+                <td>{{ heroes[0].raidAtk(user.artAtk(heroes[0].baseStats.element), 0)}}</td>
 
-                <td>{{ heroes[0].raidAps(user.artAps(), 0)}}</td>
+                <td>{{ heroes[0].raidAps(user.artAps(), buffs["Light"]['aps'])}}</td>
 
                 <td>{{ heroes[0].raidCrit(user.artCrit())}}</td>
 
-                <td>{{ heroes[0].raidCritDmg(user.artCritDmg(heroes[0].baseStats.element), 0)}}</td>
+                <td>{{ heroes[0].raidCritDmg(user.artCritDmg(heroes[0].baseStats.element), buffs["Light"]['critDmg'])}}</td>
             </tr>
 
 
@@ -46,4 +46,67 @@
     </div>
 
  </div>
+<div class="row pt-3">
+    <div class="col-lg-12">
+      <h1 class="display-4">Testing</h1>
+        {{ test }}<br>
+
+    </div>
+ </div>
+
+ <div class="row pt-3">
+    <div class="col-lg-12">
+      <h1 class="display-4">Boss Teams</h1>
+        {{ heroes }}
+        <hr>
+        {{ buffs }}
+    </div>
+ </div>
+
+<div class="row pt-3">
+    <div class="col-lg-6">
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th colspan="3" class="text-center">Undead Sam incl. Weakness and Elemental Advantage, Buffs, real team</th>
+            </tr>
+            <tr>
+                <th>Hero</th>
+                <th colspan="2">DPS</th>
+            </tr>
+            </thead>
+            {% for key, value in user.raidteam(team, teamList, heroes, undeadsam)[0].items() %}
+            <tr>
+                <td>{{ key }}</td><td>{{ value }}</td><td></td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td>Top:<br></td>
+                <td>Teamlist:<br></td>
+                <td>Heroes:<br></td>
+            </tr>
+        </table>
+
+    </div>
+
+    <div class="col-lg-6">
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th colspan="2" class="text-center">Undead Sam incl. Weakness, Elemental Advantage, Buffs, all heroes</th>
+            </tr>
+            <tr>
+                <th>Hero</th>
+                <th>DPS</th>
+            </tr>
+            </thead>
+            {% for key, value in user.raidteam2(heroes, undeadsam).items() %}
+            <tr>
+                <td>{{ key }}</td><td>{{ value }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+ </div>
+
 {% endblock %}

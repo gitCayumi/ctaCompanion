@@ -11,59 +11,14 @@
     </div>
  </div>
 
-<div class="row pt-3">
-    <div class="col-lg-12">
-        <table class="table">
-            <thead class="thead-dark">
-
-            <tr>
-                <th>Name</th>
-                <th>Attack</th>
-                <th>Raid Attack</th>
-
-                <th>Raid APS</th>
-
-                <th>Raid Crit</th>
-
-                <th>Raid Crit DMG</th>
-            </tr>
-            </thead>
-<tr>
-                <td>{{ heroes[0].baseStats.name}}</td>
-                <td>{{ heroes[0].atk()}}</td>
-                <td>{{ heroes[0].raidAtk(user.artAtk(heroes[0].baseStats.element), 0)}}</td>
-
-                <td>{{ heroes[0].raidAps(user.artAps(), lightBuffs['aps'])}}</td>
-
-                <td>{{ heroes[0].raidCrit(user.artCrit())}}</td>
-
-                <td>{{ heroes[0].raidCritDmg(user.artCritDmg(heroes[0].baseStats.element), lightBuffs['critDmg'])}}</td>
-            </tr>
-
-
-
-        </table>
-    </div>
-
- </div>
-<div class="row pt-3">
-    <div class="col-lg-12">
-      <h1 class="display-4">Testing</h1>
-        {{ test }}<br>
-
-    </div>
- </div>
-
  <div class="row pt-3">
     <div class="col-lg-12">
-      <h1 class="display-4">Boss Teams</h1>
+      <h1 class="display-4">Testing</h1>
         {{ heroes }}
         <hr>
-        Water: {{ waterBuffs['atk'] }}<br>
-        Fire: {{ fireBuffs }}<br>
-        Earth: {{ earthBuffs }}<br>
-        Light: {{ lightBuffs }}<br>
-        Dark: {{ darkBuffs }}<br>
+        {{ buffs }}
+        <hr>
+        {{ artBonus }}
     </div>
  </div>
 
@@ -72,7 +27,7 @@
         <table class="table">
             <thead class="thead-dark">
             <tr>
-                <th colspan="3" class="text-center">Undead Sam incl. Weakness and Elemental Advantage, buff</th>
+                <th colspan="3" class="text-center">Undead Sam incl. Weakness and Elemental Advantage, Buffs, real team</th>
             </tr>
             <tr>
                 <th>Hero</th>
@@ -97,7 +52,7 @@
         <table class="table">
             <thead class="thead-dark">
             <tr>
-                <th colspan="2" class="text-center">Undead Sam incl. Weakness, Elemental Advantage, Buffs</th>
+                <th colspan="2" class="text-center">Undead Sam incl. Weakness, Elemental Advantage, Buffs, all heroes</th>
             </tr>
             <tr>
                 <th>Hero</th>

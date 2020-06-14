@@ -161,7 +161,19 @@ class User(UserMixin, db.Model):
         high = sum(team.values())
         top = ""
 
+        # Handle input of less than 10 heroes, but still with correct ranking
+        if len(heroes) < 10 and len(heroes) == len(teamList):
+            filler = len(teamList)
+            for m in teamList:
+                team[m.baseStats.name] = int(m.raidDPS(self.raidbuffs(teamList, m.baseStats.element), boss))
+            for n in range(10-filler):
+                team[n] = "-"
+            return team, teamList, heroes, boss
+
+        # Break out of recursion
         if len(teamList) == 10:
+            for k in teamList:
+                team[k.baseStats.name] = int(k.raidDPS(self.raidbuffs(teamList, k.baseStats.element), boss))
             return team, teamList, heroes, boss
 
         for i in heroes:
@@ -192,7 +204,8 @@ class User(UserMixin, db.Model):
         buffs = {
             "atk": 0,
             "aps": 0,
-            "critDmg": 0
+            "critDmg": 0,
+            "kage": 1
             }
         for i in heroes:
             if i.baseStats.buffType == 1 and i.level > 3:
@@ -375,6 +388,9 @@ class Hero(db.Model):
         # dps formula
         dps = ((atk * aps * (1-crit)) + (atk * aps * crit * (1+critDmg))) * (6 + sp2 * sp2num)/7
         dps = int(round(dps))
+
+        # Kage
+        dps *= buff["kage"]
         return dps
 
     def testing(self, user):

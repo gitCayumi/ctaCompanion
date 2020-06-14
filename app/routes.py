@@ -264,10 +264,11 @@ def artifacts(username):
     normal = Artifact.query.filter_by(owner=user, type="N")
     event = Artifact.query.filter_by(owner=user, type="E")
     artifactBase = ArtBase.query.all()
+    testArt = user.artAtk("Fire")
 
     if request.method == "GET":
         return render_template('artifacts.html', user=user, title='Artifacts', artifactBase=artifactBase, event=event,
-                               normal=normal)
+                               normal=normal, testArt=testArt)
     else:
         arts = Artifact.query.filter_by(owner=user)
         for j in arts:
@@ -318,22 +319,39 @@ def bossTeam(username):
     teamList = []
     team = {}
 
-    """
-    for i in heroes:
-        if i.baseStats.name == "Furiosa":
-            test.append(i)
-            heroes.remove(i)
-    """
+    atk = {
+        "Water": user.artAtk("Water"),
+        "Fire": user.artAtk("Fire"),
+        "Earth": user.artAtk("Earth"),
+        "Light": user.artAtk("Light"),
+        "Dark": user.artAtk("Dark")
+    }
 
-    waterBuffs = user.raidbuffs(heroes, "Water")
-    fireBuffs = user.raidbuffs(heroes, "Fire")
-    earthBuffs = user.raidbuffs(heroes, "Earth")
-    lightBuffs = user.raidbuffs(heroes, "Light")
-    darkBuffs = user.raidbuffs(heroes, "Dark")
+    critDmg = {
+        "Water": user.artCritDmg("Water"),
+        "Fire": user.artCritDmg("Fire"),
+        "Earth": user.artCritDmg("Earth"),
+        "Light": user.artCritDmg("Light"),
+        "Dark": user.artCritDmg("Dark")
+    }
+
+    artBonus = {
+        "atk": atk,
+        "aps": user.artAps(),
+        "crit": user.artCrit(),
+        "critDmg": critDmg
+    }
+
+    buffs = {
+        "Water": user.raidbuffs(heroes, "Water"),
+        "Fire": user.raidbuffs(heroes, "Fire"),
+        "Earth": user.raidbuffs(heroes, "Earth"),
+        "Light": user.raidbuffs(heroes, "Light"),
+        "Dark": user.raidbuffs(heroes, "Dark")
+    }
 
     return render_template('bossTeam.html', user=user, title='Boss Teams', heroes=heroes, kraken=kraken,
-                           undeadsam=undeadsam, fw=fw, earthBuffs=earthBuffs, waterBuffs=waterBuffs,
-                           fireBuffs=fireBuffs, lightBuffs=lightBuffs, darkBuffs=darkBuffs, teamList=teamList, team=team)
+                           undeadsam=undeadsam, fw=fw, teamList=teamList, team=team, buffs=buffs, artBonus=artBonus)
 
 
 @app.route('/test/<username>')
