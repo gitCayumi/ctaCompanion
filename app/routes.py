@@ -3,7 +3,7 @@ from app import app, db
 from app.forms import LoginForm, RegistrationForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Base, Hero, validateAwaken, validateLevel, validateWeapon, validateMedals, heroProgress, \
-    totalMedals, rarityMedals, ArtBase, Artifact, validateArt
+    totalMedals, rarityMedals, ArtBase, Artifact, validateArt, BossBase, Bossteam
 from werkzeug.urls import url_parse
 from app.heroDict import heroDict, kraken, undeadsam, fw
 

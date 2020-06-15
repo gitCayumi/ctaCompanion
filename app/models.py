@@ -24,6 +24,7 @@ class User(UserMixin, db.Model):
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     heroes = db.relationship('Hero', backref='player', lazy='dynamic')
     artifacts = db.relationship('Artifact', backref='owner', lazy='dynamic')
+    bossteams = db.relationship('Bossteam', backref='manager', lazy='dynamic')
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -231,6 +232,42 @@ class User(UserMixin, db.Model):
                     buffs[i.baseStats.buffStat] = buffs.get(i.baseStats.buffStat) + (i.baseStats.buff*(i.level-3))
 
         return buffs
+
+
+class BossBase(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(32), index=True, unique=True)
+    nameSafe = db.Column(db.String(32), index=True, unique=True)
+    bosses = db.relationship('Bossteam', backref='bossBase', lazy='dynamic')
+
+    def __repr__(self):
+        return '<{}>'.format(self.name)
+
+
+class Bossteam(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    hero1 = db.Column(db.String(16), index=True)
+    hero1dmg = db.Column(db.Integer, index=True)
+    hero2 = db.Column(db.String(16), index=True)
+    hero2dmg = db.Column(db.Integer, index=True)
+    hero3 = db.Column(db.String(16), index=True)
+    hero3dmg = db.Column(db.Integer, index=True)
+    hero4 = db.Column(db.String(16), index=True)
+    hero4dmg = db.Column(db.Integer, index=True)
+    hero5 = db.Column(db.String(16), index=True)
+    hero5dmg = db.Column(db.Integer, index=True)
+    hero6 = db.Column(db.String(16), index=True)
+    hero6dmg = db.Column(db.Integer, index=True)
+    hero7 = db.Column(db.String(16), index=True)
+    hero7dmg = db.Column(db.Integer, index=True)
+    hero8 = db.Column(db.String(16), index=True)
+    hero8dmg = db.Column(db.Integer, index=True)
+    hero9 = db.Column(db.String(16), index=True)
+    hero9dmg = db.Column(db.Integer, index=True)
+    hero10 = db.Column(db.String(16), index=True)
+    hero10dmg = db.Column(db.Integer, index=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    bossbase_id = db.Column(db.Integer, db.ForeignKey('boss_base.id'))
 
 
 class ArtBase(db.Model):
