@@ -162,7 +162,7 @@ class User(UserMixin, db.Model):
         top = ""
 
         # Handle input of less than 10 heroes, but still with correct ranking
-        if len(heroes) < 10 and len(heroes) == len(teamList):
+        if len(heroes) == 0:
             filler = len(teamList)
             for m in teamList:
                 team[m.baseStats.name] = int(m.raidDPS(self.raidbuffs(teamList, m.baseStats.element), boss, art))
@@ -177,28 +177,42 @@ class User(UserMixin, db.Model):
             return team
 
         for i in heroes:
-            if i not in teamList:
-                teamList.append(i)
-                for j in teamList:
-                    team[j.baseStats.name] = int(j.raidDPS(self.raidbuffs(teamList, j.baseStats.element), boss, art))
-                if sum(team.values()) > high:
-                    high = sum(team.values())
-                    top = i
-                teamList.remove(i)
-                del team[i.baseStats.name]
+            teamList.append(i)
+            for j in teamList:
+                team[j.baseStats.name] = int(j.raidDPS(self.raidbuffs(teamList, j.baseStats.element), boss, art))
+            if sum(team.values()) > high:
+                high = sum(team.values())
+                top = i
+            teamList.remove(i)
+            del team[i.baseStats.name]
 
         teamList.append(top)
         team[top.baseStats.name] = int(top.raidDPS(self.raidbuffs(teamList, top.baseStats.element), boss, art))
-
+        heroes.remove(top)
         return self.raidteam(team, teamList, heroes, boss, art)
 
     def raidteam2(self, heroes, boss, art):
-        # previously used for debugging purpose
+        # Filter out heroes who has no chance of making top 10, regardless of users heroes
         team = {}
-        for i in heroes:
-            team[i.baseStats.name] = int(i.raidDPS(self.raidbuffs(heroes, i.baseStats.element), boss, art))
+        keep = []
 
-        return team
+        # Populate dict with key = hero, value = max dps including all buffs
+        for i in heroes:
+            team[i] = int(i.raidDPS(self.raidbuffs(heroes, i.baseStats.element), boss, art))
+
+        # Add all heroes with a damage affecting buff
+        for i in team:
+            if i.baseStats.buffType == 1 and i.level > 3:
+                keep.append(i)
+
+        # Add additional 10 top performing heroes not included from above
+        for i in range(10):
+            x = max(team, key=team.get)
+            if x not in keep:
+                keep.append(x)
+            del team[x]
+
+        return keep
 
     def raidbuffs(self, heroes, element):
         bufftypes = []  # kept for debugging purpose

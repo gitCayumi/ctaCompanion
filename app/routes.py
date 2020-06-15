@@ -350,8 +350,16 @@ def bossTeam(username):
         "Dark": user.raidbuffs(heroes, "Dark")
     }
 
-    return render_template('bossTeam.html', user=user, title='Boss Teams', heroes=heroes, kraken=kraken,
-                           undeadsam=undeadsam, fw=fw, teamList=teamList, team=team, buffs=buffs, artBonus=artBonus)
+    filterTeam = []
+    if len(heroes) > 10:
+        filterTeam = user.raidteam2(heroes, fw, artBonus)
+        testTeam = user.raidteam(team, teamList, filterTeam, fw, artBonus)
+    else:
+        testTeam = user.raidteam(team, teamList, heroes, fw, artBonus)
+
+    return render_template('bossTeam.html', user=user, title='Boss Teams', heroes=heroes,
+                           undeadsam=undeadsam, fw=fw, teamList=teamList, team=team, buffs=buffs, artBonus=artBonus,
+                           testTeam=testTeam, filterTeam=filterTeam)
 
 
 @app.route('/test/<username>')
