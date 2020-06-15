@@ -5,7 +5,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Base, Hero, validateAwaken, validateLevel, validateWeapon, validateMedals, heroProgress, \
     totalMedals, rarityMedals, ArtBase, Artifact, validateArt, BossBase, Bossteam
 from werkzeug.urls import url_parse
-from app.heroDict import heroDict, kraken, undeadsamurai, frostwing
+from app.heroDict import heroDict, kraken, undeadsamurai, frostwing, bosses
 
 
 @app.route('/')
@@ -70,10 +70,9 @@ def register():
         # Create empty boss teams for user
         bosses = BossBase.query.all()
         for m in bosses:
-            team = Bossteam(hero1="-", hero1dmg=0, hero2="-", hero2dmg=0, hero3="-", hero3dmg=0, hero4="-", hero4dmg=0,
-                            hero5="-", hero5dmg=0, hero6="-", hero6dmg=0, hero7="-", hero7dmg=0, hero8="-", hero8dmg=0,
-                            hero9="-", hero9dmg=0, hero10="-", hero10dmg=0, manager=user, bossBase=m)
-            db.session.add(team)
+            for n in range(10):
+                x = Bossteam(hero="Slot "+str(n+1), damage=0, manager=user, bossBase=m)
+            db.session.add(x)
 
         db.session.commit()
         flash(u'Your account has been created! Login to access the features of this website.', 'info')
@@ -323,57 +322,82 @@ def artifacts(username):
 @login_required
 def bossTeam(username):
     user = User.query.filter_by(username=username).first_or_404()
-    heroes = Hero.query.filter_by(player=user).filter(Hero.level > 0).all()
-    teamList = []
-    team = {}
+    loadKraken = Bossteam.query.filter_by(bossbase_id=1, user_id=user.id).all()
+    loadDeepseaking = Bossteam.query.filter_by(bossbase_id=2, user_id=user.id).all()
+    loadFrostwing = Bossteam.query.filter_by(bossbase_id=3, user_id=user.id).all()
+    loadOdin = Bossteam.query.filter_by(bossbase_id=4, user_id=user.id).all()
+    loadLightmech = Bossteam.query.filter_by(bossbase_id=5, user_id=user.id).all()
+    loadAstrolab = Bossteam.query.filter_by(bossbase_id=6, user_id=user.id).all()
+    loadSandclaw = Bossteam.query.filter_by(bossbase_id=7, user_id=user.id).all()
+    loadVoodootank = Bossteam.query.filter_by(bossbase_id=8, user_id=user.id).all()
+    loadUndeadsamurai = Bossteam.query.filter_by(bossbase_id=9, user_id=user.id).all()
+    loadValkenbot = Bossteam.query.filter_by(bossbase_id=10, user_id=user.id).all()
+    loadFiregorge = Bossteam.query.filter_by(bossbase_id=11, user_id=user.id).all()
+    loadMadking = Bossteam.query.filter_by(bossbase_id=12, user_id=user.id).all()
+    loadBeetle = Bossteam.query.filter_by(bossbase_id=13, user_id=user.id).all()
+    loadHauntinghead = Bossteam.query.filter_by(bossbase_id=14, user_id=user.id).all()
+    loadGunlord = Bossteam.query.filter_by(bossbase_id=15, user_id=user.id).all()
 
-    atk = {
-        "Water": user.artAtk("Water"),
-        "Fire": user.artAtk("Fire"),
-        "Earth": user.artAtk("Earth"),
-        "Light": user.artAtk("Light"),
-        "Dark": user.artAtk("Dark")
-    }
+    krakenDict = {}
+    for i in loadKraken:
+        krakenDict[i.hero] = i.damage
+    deepseakingDict = {}
+    for i in loadDeepseaking:
+        deepseakingDict[i.hero] = i.damage
+    frostwingDict = {}
+    for i in loadFrostwing:
+        frostwingDict[i.hero] = i.damage
+    odinDict = {}
+    for i in loadOdin:
+        odinDict[i.hero] = i.damage
+    lightmechDict = {}
+    for i in loadLightmech:
+        lightmechDict[i.hero] = i.damage
+    astrolabDict = {}
+    for i in loadAstrolab:
+        astrolabDict[i.hero] = i.damage
+    sandclawDict = {}
+    for i in loadSandclaw:
+        sandclawDict[i.hero] = i.damage
+    voodootankDict = {}
+    for i in loadVoodootank:
+        voodootankDict[i.hero] = i.damage
+    undeadsamuraiDict = {}
+    for i in loadUndeadsamurai:
+        undeadsamuraiDict[i.hero] = i.damage
+    valkenbotDict = {}
+    for i in loadValkenbot:
+        valkenbotDict[i.hero] = i.damage
+    firegorgeDict = {}
+    for i in loadFiregorge:
+        firegorgeDict[i.hero] = i.damage
+    madkingDict = {}
+    for i in loadMadking:
+        madkingDict[i.hero] = i.damage
+    beetleDict = {}
+    for i in loadBeetle:
+        beetleDict[i.hero] = i.damage
+    hauntingheadDict = {}
+    for i in loadHauntinghead:
+        hauntingheadDict[i.hero] = i.damage
+    gunlordDict = {}
+    for i in loadGunlord:
+        gunlordDict[i.hero] = i.damage
 
-    critDmg = {
-        "Water": user.artCritDmg("Water"),
-        "Fire": user.artCritDmg("Fire"),
-        "Earth": user.artCritDmg("Earth"),
-        "Light": user.artCritDmg("Light"),
-        "Dark": user.artCritDmg("Dark")
-    }
+    return render_template('bossTeam.html', user=user, title='Boss Teams', krakenDict=krakenDict, deepseakingDict=deepseakingDict,
+                           frostwingDict=frostwingDict, odinDict=odinDict, lightmechDict=lightmechDict, astrolabDict=astrolabDict,
+                           sandclawDict=sandclawDict, voodootankDict=voodootankDict, undeadsamuraiDict=undeadsamuraiDict,
+                           valkenbotDict=valkenbotDict, firegorgeDict=firegorgeDict, madkingDict=madkingDict,
+                           beetleDict=beetleDict, hauntingheadDict=hauntingheadDict, gunlordDict=gunlordDict)
 
-    artBonus = {
-        "atk": atk,
-        "aps": user.artAps(),
-        "crit": user.artCrit(),
-        "critDmg": critDmg
-    }
 
-    buffs = {
-        "Water": user.raidbuffs(heroes, "Water"),
-        "Fire": user.raidbuffs(heroes, "Fire"),
-        "Earth": user.raidbuffs(heroes, "Earth"),
-        "Light": user.raidbuffs(heroes, "Light"),
-        "Dark": user.raidbuffs(heroes, "Dark")
-    }
-
-    filterTeam = []
-    if len(heroes) > 10:
-        filterTeam = user.raidteam2(heroes, frostwing, artBonus)
-        testTeam = user.raidteam(team, teamList, filterTeam, frostwing, artBonus)
-    else:
-        testTeam = user.raidteam(team, teamList, heroes, frostwing, artBonus)
-
-    return render_template('bossTeam.html', user=user, title='Boss Teams', heroes=heroes,
-                           undeadsamurai=undeadsamurai, frostwing=frostwing, teamList=teamList, team=team, buffs=buffs,
-                           artBonus=artBonus, testTeam=testTeam, filterTeam=filterTeam)
-
-@app.route('/undeadsam/<username>')
+@app.route('/calculate/<username>/<boss>')
 @login_required
-def undeadsam(username):
+def calculate(username, boss):
     user = User.query.filter_by(username=username).first_or_404()
     heroes = Hero.query.filter_by(player=user).filter(Hero.level > 0).all()
+    idHelp = Bossteam.query.filter_by(bossbase_id=boss, user_id=user.id).first()
+    boss = bosses[str(idHelp.bossBase.nameSafe)]
     teamList = []
     team = {}
 
@@ -400,13 +424,23 @@ def undeadsam(username):
         "critDmg": critDmg
     }
 
-    filterTeam = []
     if len(heroes) > 10:
-        filterTeam = user.raidteam2(heroes, frostwing, artBonus)
-        testTeam = user.raidteam(team, teamList, filterTeam, frostwing, artBonus)
+        filterTeam = user.raidteam2(heroes, boss, artBonus)
+        testTeam = user.raidteam(team, teamList, filterTeam, boss, artBonus)
     else:
-        testTeam = user.raidteam(team, teamList, heroes, frostwing, artBonus)
+        testTeam = user.raidteam(team, teamList, heroes, boss, artBonus)
 
+    teamID = int(idHelp.id)
+
+    for h, d in testTeam.items():
+        slot = Bossteam.query.get(teamID)
+        slot.hero = h
+        slot.damage = d
+        db.session.add(slot)
+        teamID += 1
+    db.session.commit()
+
+    flash(u'Calculation complete, your data has been saved.', 'info')
     return redirect(url_for('bossTeam', username=current_user.username))
 
 
@@ -415,6 +449,7 @@ def undeadsam(username):
 def test(username):
     user = User.query.filter_by(username=username).first_or_404()
     heroes = Hero.query.filter_by(player=user).filter(Hero.level > 0).all()
+
     teamList = []
     team = {}
 

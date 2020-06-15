@@ -246,28 +246,13 @@ class BossBase(db.Model):
 
 class Bossteam(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    hero1 = db.Column(db.String(16), index=True)
-    hero1dmg = db.Column(db.Integer, index=True)
-    hero2 = db.Column(db.String(16), index=True)
-    hero2dmg = db.Column(db.Integer, index=True)
-    hero3 = db.Column(db.String(16), index=True)
-    hero3dmg = db.Column(db.Integer, index=True)
-    hero4 = db.Column(db.String(16), index=True)
-    hero4dmg = db.Column(db.Integer, index=True)
-    hero5 = db.Column(db.String(16), index=True)
-    hero5dmg = db.Column(db.Integer, index=True)
-    hero6 = db.Column(db.String(16), index=True)
-    hero6dmg = db.Column(db.Integer, index=True)
-    hero7 = db.Column(db.String(16), index=True)
-    hero7dmg = db.Column(db.Integer, index=True)
-    hero8 = db.Column(db.String(16), index=True)
-    hero8dmg = db.Column(db.Integer, index=True)
-    hero9 = db.Column(db.String(16), index=True)
-    hero9dmg = db.Column(db.Integer, index=True)
-    hero10 = db.Column(db.String(16), index=True)
-    hero10dmg = db.Column(db.Integer, index=True)
+    hero = db.Column(db.String(16), index=True)
+    damage = db.Column(db.Integer, index=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     bossbase_id = db.Column(db.Integer, db.ForeignKey('boss_base.id'))
+
+    def __repr__(self):
+        return '<{}: {}>'.format(self.hero, self.damage)
 
 
 class ArtBase(db.Model):
@@ -669,25 +654,25 @@ def validateArt(art, level):
     three = [65, 69, 71, 72, 75, 78, 79, 80]
     four = [66, 67, 68, 70, 73, 74, 76, 77]
 
-    # Make sure 7-star artifacts don't go above 50 (45+5 enhanced)
-    if art.artBase.star == 7 and level > 50:
+    # Make sure 7-star artifacts don't go above 60 (45+15 enhanced)
+    if art.artBase.star == 7 and level > 60:
+        level = 60
+    # Same as above for 6-stars and level 55
+    elif art.artBase.star == 6 and level > 55:
+        level = 55
+    # 5-star and 50
+    elif art.artBase.star == 5 and level > 50:
         level = 50
-    # Same as above for 6-stars and level 45
-    elif art.artBase.star == 6 and level > 45:
+    # 4-star and 45
+    elif art.artBase.star == 4 and level > 45:
         level = 45
-    # 5-star and 40
-    elif art.artBase.star == 5 and level > 40:
-        level = 40
-    # 4-star and 35
-    elif art.artBase.star == 4 and level > 35:
-        level = 35
     # LEEROY
-    elif art.artBase.id == 64 and level > 25:
-        level = 25
-    elif art.artBase.id in three and level > 30:
-        level = 30
-    elif art.artBase.id in four and level > 35:
+    elif art.artBase.id == 64 and level > 35:
         level = 35
+    elif art.artBase.id in three and level > 40:
+        level = 40
+    elif art.artBase.id in four and level > 45:
+        level = 45
     return level
 
 

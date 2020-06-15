@@ -104,7 +104,7 @@ kraken = {
         "Barbarian": 2,
         "Brawler": 2,
         "Gunner": 1,
-        "Knight": 2,
+        "Knight": 3,
         "Lancer": 1,
         "Magician": 1,
         "Ranger": 1,
@@ -115,6 +115,101 @@ kraken = {
         "Water": 1,
         "Fire": 0.5,
         "Earth": 4,
+        "Light": 1,
+        "Dark": 1
+}
+
+deepseaking = {
+        "Barbarian": 1,
+        "Brawler": 2,
+        "Gunner": 1,
+        "Knight": 1,
+        "Lancer": 5,
+        "Magician": 1,
+        "Ranger": 3,
+        "Rogue": 1,
+        "Samurai": 1,
+        "Support": 1,
+        "Fly": 0,
+        "Water": 1,
+        "Fire": 0.5,
+        "Earth": 4,
+        "Light": 1,
+        "Dark": 1
+}
+
+frostwing = {
+        "Barbarian": 1,
+        "Brawler": 1,
+        "Gunner": 2,
+        "Knight": 1,
+        "Lancer": 1,
+        "Magician": 5,
+        "Ranger": 2,
+        "Rogue": 1,
+        "Samurai": 1,
+        "Support": 1,
+        "Fly": 1,
+        "Water": 1,
+        "Fire": 0.5,
+        "Earth": 4,
+        "Light": 1,
+        "Dark": 1
+}
+
+valkenbot = {
+        "Barbarian": 1,
+        "Brawler": 1,
+        "Gunner": 5,
+        "Knight": 1,
+        "Lancer": 1,
+        "Magician": 3,
+        "Ranger": 1,
+        "Rogue": 1,
+        "Samurai": 1,
+        "Support": 1,
+        "Fly": 2,
+        "Water": 4,
+        "Fire": 1,
+        "Earth": 0.5,
+        "Light": 1,
+        "Dark": 1
+}
+
+firegorge = {
+        "Barbarian": 1,
+        "Brawler": 1,
+        "Gunner": 1,
+        "Knight": 1,
+        "Lancer": 1,
+        "Magician": 1,
+        "Ranger": 1,
+        "Rogue": 3,
+        "Samurai": 5,
+        "Support": 1,
+        "Fly": 1,
+        "Water": 4,
+        "Fire": 1,
+        "Earth": 0.5,
+        "Light": 1,
+        "Dark": 1
+}
+
+madking = {
+        "Barbarian": 1,
+        "Brawler": 1,
+        "Gunner": 2,
+        "Knight": 1,
+        "Lancer": 5,
+        "Magician": 1,
+        "Ranger": 2,
+        "Rogue": 1,
+        "Samurai": 1,
+        "Support": 1,
+        "Fly": 0,
+        "Water": 4,
+        "Fire": 1,
+        "Earth": 0.5,
         "Light": 1,
         "Dark": 1
 }
@@ -138,21 +233,11 @@ undeadsamurai = {
         "Dark": 1
 }
 
-frostwing = {
-        "Barbarian": 1,
-        "Brawler": 1,
-        "Gunner": 2,
-        "Knight": 1,
-        "Lancer": 1,
-        "Magician": 5,
-        "Ranger": 2,
-        "Rogue": 1,
-        "Samurai": 1,
-        "Support": 1,
-        "Fly": 2,
-        "Water": 1,
-        "Fire": 0.5,
-        "Earth": 4,
-        "Light": 1,
-        "Dark": 1
+bosses = {
+        "kraken": kraken,
+        "deepseaking": deepseaking,
+        "frostwing": frostwing,
+        "valkenbot": valkenbot,
+        "firegorge": firegorge,
+        "madking": madking,
 }

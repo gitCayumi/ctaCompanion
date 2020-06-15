@@ -12,48 +12,167 @@
  </div>
 
  <div class="row pt-3">
-    <div class="col-lg-6">
-      <h1 class="display-4">Testing</h1>
-        <table class="table">
-            <thead class="thead-dark">
+
+     <!-- KRAKEN -->
+     <div class="col-lg-4">
+        <table class="table table-borderless table-striped">
+            <thead class="">
             <tr>
-                <th colspan="3" class="text-center">Undead Sam incl. Weakness and Elemental Advantage, Buffs, real team</th>
+                <th colspan="2" class="text-center"><img class="rounded-circle" src="{{ url_for('static', filename='kraken.png') }}" width="80"></th>
             </tr>
             <tr>
-                <th>Hero</th>
-                <th colspan="2">DPS</th>
+                <th colspan="3" class="text-center WaterRare">Kraken</th>
             </tr>
-            </thead>
-            {{ filterTeam }}
-        </table>
-    </div>
-
-
-<div class="col-lg-6">
-
-
-
-
-
-
-    <div class="col-lg-6">
-        <table class="table">
-            <thead class="thead-dark">
-            <tr>
-                <th colspan="3" class="text-center">Undead Sam incl. Weakness and Elemental Advantage, Buffs, real team</th>
-            </tr>
-            <tr>
-                <th>Hero</th>
-                <th colspan="2">DPS</th>
+            <tr class="thead-dark">
+                <th class="text-center">Hero</th>
+                <th class="text-center">DPS</th>
             </tr>
             </thead>
-            {% for key, value in testTeam.items() %}
+            {% for key, value in krakenDict.items() %}
             <tr>
-                <td>{{ key }}</td><td>{{ value }}</td><td></td>
+                <td class="text-center">{{ key }}</td><td class="text-center">{{ value }}</td>
             </tr>
             {% endfor %}
+            <tr>
+                <td colspan="2" class="text-center"><a href="{{ url_for('calculate', username=current_user.username, boss=1) }}"><button type="button" class="btn btn-primary">Calculate</button></a></td>
+            </tr>
         </table>
     </div>
+
+     <!-- DEEP SEA KING -->
+     <div class="col-lg-4">
+        <table class="table table-borderless table-striped">
+            <thead class="">
+            <tr>
+                <th colspan="2" class="text-center"><img class="rounded-circle" src="{{ url_for('static', filename='deepseaking.png') }}" width="80"></th>
+            </tr>
+            <tr>
+                <th colspan="3" class="text-center WaterRare">Deep Sea King</th>
+            </tr>
+            <tr class="thead-dark">
+                <th class="text-center">Hero</th>
+                <th class="text-center">DPS</th>
+            </tr>
+            </thead>
+            {% for key, value in deepseakingDict.items() %}
+            <tr>
+                <td class="text-center">{{ key }}</td><td class="text-center">{{ value }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="2" class="text-center"><a href="{{ url_for('calculate', username=current_user.username, boss=2) }}"><button type="button" class="btn btn-primary">Calculate</button></a></td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- FROSTWING -->
+     <div class="col-lg-4">
+        <table class="table table-borderless table-striped">
+            <thead class="">
+            <tr>
+                <th colspan="2" class="text-center"><img class="rounded-circle" src="{{ url_for('static', filename='frostwing.png') }}" width="80"></th>
+            </tr>
+            <tr>
+                <th colspan="3" class="text-center WaterEpic">Frostwing</th>
+            </tr>
+            <tr class="thead-dark">
+                <th class="text-center">Hero</th>
+                <th class="text-center">DPS</th>
+            </tr>
+            </thead>
+            {% for key, value in frostwingDict.items() %}
+            <tr>
+                <td class="text-center">{{ key }}</td><td class="text-center">{{ value }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="2" class="text-center"><a href="{{ url_for('calculate', username=current_user.username, boss=3) }}"><button type="button" class="btn btn-primary">Calculate</button></a></td>
+            </tr>
+        </table>
+    </div>
+
+ </div>
+
+<div class="row pt-3">
+
+     <!-- VALKEN BOT -->
+     <div class="col-lg-4">
+        <table class="table table-borderless table-striped">
+            <thead class="">
+            <tr>
+                <th colspan="2" class="text-center"><img class="rounded-circle" src="{{ url_for('static', filename='valkenbot.png') }}" width="80"></th>
+            </tr>
+            <tr>
+                <th colspan="3" class="text-center FireRare">Valken Bot</th>
+            </tr>
+            <tr class="thead-dark">
+                <th class="text-center">Hero</th>
+                <th class="text-center">DPS</th>
+            </tr>
+            </thead>
+            {% for key, value in valkenbotDict.items() %}
+            <tr>
+                <td class="text-center">{{ key }}</td><td class="text-center">{{ value }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="2" class="text-center"><a href="{{ url_for('calculate', username=current_user.username, boss=10) }}"><button type="button" class="btn btn-primary">Calculate</button></a></td>
+            </tr>
+        </table>
+    </div>
+
+     <!-- Fire Gorge -->
+     <div class="col-lg-4">
+        <table class="table table-borderless table-striped">
+            <thead class="">
+            <tr>
+                <th colspan="2" class="text-center"><img class="rounded-circle" src="{{ url_for('static', filename='firegorge.png') }}" width="80"></th>
+            </tr>
+            <tr>
+                <th colspan="3" class="text-center FireRare">Fire Gorge</th>
+            </tr>
+            <tr class="thead-dark">
+                <th class="text-center">Hero</th>
+                <th class="text-center">DPS</th>
+            </tr>
+            </thead>
+            {% for key, value in firegorgeDict.items() %}
+            <tr>
+                <td class="text-center">{{ key }}</td><td class="text-center">{{ value }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="2" class="text-center"><a href="{{ url_for('calculate', username=current_user.username, boss=11) }}"><button type="button" class="btn btn-primary">Calculate</button></a></td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- MAD KING -->
+     <div class="col-lg-4">
+        <table class="table table-borderless table-striped">
+            <thead class="">
+            <tr>
+                <th colspan="2" class="text-center"><img class="rounded-circle" src="{{ url_for('static', filename='madking.png') }}" width="80"></th>
+            </tr>
+            <tr>
+                <th colspan="3" class="text-center FireEpic">Mad King</th>
+            </tr>
+            <tr class="thead-dark">
+                <th class="text-center">Hero</th>
+                <th class="text-center">DPS</th>
+            </tr>
+            </thead>
+            {% for key, value in madkingDict.items() %}
+            <tr>
+                <td class="text-center">{{ key }}</td><td class="text-center">{{ value }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="2" class="text-center"><a href="{{ url_for('calculate', username=current_user.username, boss=12) }}"><button type="button" class="btn btn-primary">Calculate</button></a></td>
+            </tr>
+        </table>
+    </div>
+
  </div>
 
 {% endblock %}
