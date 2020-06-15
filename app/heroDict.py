@@ -119,7 +119,7 @@ kraken = {
         "Dark": 1
 }
 
-undeadsam = {
+undeadsamurai = {
         "Barbarian": 3,
         "Brawler": 1,
         "Gunner": 1,
@@ -138,7 +138,7 @@ undeadsam = {
         "Dark": 1
 }
 
-fw = {
+frostwing = {
         "Barbarian": 1,
         "Brawler": 1,
         "Gunner": 2,

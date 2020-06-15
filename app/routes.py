@@ -5,7 +5,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Base, Hero, validateAwaken, validateLevel, validateWeapon, validateMedals, heroProgress, \
     totalMedals, rarityMedals, ArtBase, Artifact, validateArt, BossBase, Bossteam
 from werkzeug.urls import url_parse
-from app.heroDict import heroDict, kraken, undeadsam, fw
+from app.heroDict import heroDict, kraken, undeadsamurai, frostwing
 
 
 @app.route('/')
@@ -67,6 +67,14 @@ def register():
         for k in range(17):
             eventArt = Artifact(type="E", owner=user, artBase=emptyArt)
             db.session.add(eventArt)
+        # Create empty boss teams for user
+        bosses = BossBase.query.all()
+        for m in bosses:
+            team = Bossteam(hero1="-", hero1dmg=0, hero2="-", hero2dmg=0, hero3="-", hero3dmg=0, hero4="-", hero4dmg=0,
+                            hero5="-", hero5dmg=0, hero6="-", hero6dmg=0, hero7="-", hero7dmg=0, hero8="-", hero8dmg=0,
+                            hero9="-", hero9dmg=0, hero10="-", hero10dmg=0, manager=user, bossBase=m)
+            db.session.add(team)
+
         db.session.commit()
         flash(u'Your account has been created! Login to access the features of this website.', 'info')
         return redirect(url_for('login'))
@@ -352,14 +360,14 @@ def bossTeam(username):
 
     filterTeam = []
     if len(heroes) > 10:
-        filterTeam = user.raidteam2(heroes, fw, artBonus)
-        testTeam = user.raidteam(team, teamList, filterTeam, fw, artBonus)
+        filterTeam = user.raidteam2(heroes, frostwing, artBonus)
+        testTeam = user.raidteam(team, teamList, filterTeam, frostwing, artBonus)
     else:
-        testTeam = user.raidteam(team, teamList, heroes, fw, artBonus)
+        testTeam = user.raidteam(team, teamList, heroes, frostwing, artBonus)
 
     return render_template('bossTeam.html', user=user, title='Boss Teams', heroes=heroes,
-                           undeadsam=undeadsam, fw=fw, teamList=teamList, team=team, buffs=buffs, artBonus=artBonus,
-                           testTeam=testTeam, filterTeam=filterTeam)
+                           undeadsamurai=undeadsamurai, frostwing=frostwing, teamList=teamList, team=team, buffs=buffs,
+                           artBonus=artBonus, testTeam=testTeam, filterTeam=filterTeam)
 
 @app.route('/undeadsam/<username>')
 @login_required
@@ -394,10 +402,10 @@ def undeadsam(username):
 
     filterTeam = []
     if len(heroes) > 10:
-        filterTeam = user.raidteam2(heroes, fw, artBonus)
-        testTeam = user.raidteam(team, teamList, filterTeam, fw, artBonus)
+        filterTeam = user.raidteam2(heroes, frostwing, artBonus)
+        testTeam = user.raidteam(team, teamList, filterTeam, frostwing, artBonus)
     else:
-        testTeam = user.raidteam(team, teamList, heroes, fw, artBonus)
+        testTeam = user.raidteam(team, teamList, heroes, frostwing, artBonus)
 
     return redirect(url_for('bossTeam', username=current_user.username))
 
@@ -443,12 +451,12 @@ def test(username):
 
     filterTeam = []
     if len(heroes) > 10:
-        filterTeam = user.raidteam2(heroes, fw, artBonus)
-        testTeam = user.raidteam(team, teamList, filterTeam, fw, artBonus)
+        filterTeam = user.raidteam2(heroes, frostwing, artBonus)
+        testTeam = user.raidteam(team, teamList, filterTeam, frostwing, artBonus)
     else:
-        testTeam = user.raidteam(team, teamList, heroes, fw, artBonus)
+        testTeam = user.raidteam(team, teamList, heroes, frostwing, artBonus)
 
-    return render_template('bossTeam.html', user=user, title='Boss Teams', heroes=heroes,
-                           undeadsam=undeadsam, fw=fw, teamList=teamList, team=team, buffs=buffs, artBonus=artBonus,
-                           testTeam=testTeam, filterTeam=filterTeam)
+    return render_template('test.html', user=user, title='Boss Teams', heroes=heroes,
+                           undeadsamurai=undeadsamurai, frostwing=frostwing, teamList=teamList, team=team, buffs=buffs,
+                           artBonus=artBonus, testTeam=testTeam, filterTeam=filterTeam)
 
