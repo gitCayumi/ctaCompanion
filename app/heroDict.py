@@ -149,7 +149,7 @@ fw = {
         "Rogue": 1,
         "Samurai": 1,
         "Support": 1,
-        "Fly": 1,
+        "Fly": 2,
         "Water": 1,
         "Fire": 0.5,
         "Earth": 4,

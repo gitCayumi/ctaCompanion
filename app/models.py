@@ -399,7 +399,10 @@ class Hero(db.Model):
 
         # weakness and elemental advantage, multiplicative (some claim it's multiplicative, others additive)
         atk *= boss[self.baseStats.element]
-        atk *= boss[self.baseStats.job]
+        if self.baseStats.fly == 1:
+            atk *= (boss[self.baseStats.job]+boss['Fly'])
+        else:
+            atk *= boss[self.baseStats.job]
 
         # dps formula
         dps = ((atk * aps * (1-crit)) + (atk * aps * crit * (1+critDmg))) * (6 + sp2 * sp2num)/7
