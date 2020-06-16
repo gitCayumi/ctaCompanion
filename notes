@@ -83,3 +83,5 @@ for i in base:
       {% endfor %}
 
 style="background:url('{{ url_for('static', filename='background-pattern.png') }}')"
+
+pip freeze > requirements.txt
