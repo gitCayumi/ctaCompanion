@@ -5,7 +5,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Base, Hero, validateAwaken, validateLevel, validateWeapon, validateMedals, heroProgress, \
     totalMedals, rarityMedals, ArtBase, Artifact, validateArt, BossBase, Bossteam
 from werkzeug.urls import url_parse
-from app.heroDict import heroDict, kraken, undeadsamurai, frostwing, bosses
+from app.heroDict import heroDict, frostwing, bosses
 
 
 @app.route('/')
@@ -449,7 +449,6 @@ def calculate(username, boss):
 def test(username):
     user = User.query.filter_by(username=username).first_or_404()
     heroes = Hero.query.filter_by(player=user).filter(Hero.level > 0).all()
-
     teamList = []
     team = {}
 
@@ -491,7 +490,7 @@ def test(username):
     else:
         testTeam = user.raidteam(team, teamList, heroes, frostwing, artBonus)
 
-    return render_template('test.html', user=user, title='Boss Teams', heroes=heroes,
-                           undeadsamurai=undeadsamurai, frostwing=frostwing, teamList=teamList, team=team, buffs=buffs,
-                           artBonus=artBonus, testTeam=testTeam, filterTeam=filterTeam)
+    return render_template('test.html', user=user, title='Boss Teams', heroes=heroes, frostwing=frostwing,
+                           teamList=teamList, team=team, buffs=buffs, artBonus=artBonus, testTeam=testTeam,
+                           filterTeam=filterTeam)
 

@@ -214,6 +214,44 @@ madking = {
         "Dark": 1
 }
 
+sandclaw = {
+        "Barbarian": 1,
+        "Brawler": 1,
+        "Gunner": 1,
+        "Knight": 2,
+        "Lancer": 5,
+        "Magician": 1,
+        "Ranger": 1,
+        "Rogue": 1,
+        "Samurai": 3,
+        "Support": 1,
+        "Fly": 0,
+        "Water": 0.5,
+        "Fire": 4,
+        "Earth": 1,
+        "Light": 1,
+        "Dark": 1
+}
+
+voodootank = {
+        "Barbarian": 2,
+        "Brawler": 5,
+        "Gunner": 1,
+        "Knight": 1,
+        "Lancer": 1,
+        "Magician": 1,
+        "Ranger": 1,
+        "Rogue": 3,
+        "Samurai": 1,
+        "Support": 1,
+        "Fly": 0,
+        "Water": 0.5,
+        "Fire": 4,
+        "Earth": 1,
+        "Light": 1,
+        "Dark": 1
+}
+
 undeadsamurai = {
         "Barbarian": 3,
         "Brawler": 1,
@@ -233,6 +271,120 @@ undeadsamurai = {
         "Dark": 1
 }
 
+odin = {
+        "Barbarian": 1,
+        "Brawler": 1,
+        "Gunner": 3,
+        "Knight": 1,
+        "Lancer": 1,
+        "Magician": 1,
+        "Ranger": 5,
+        "Rogue": 1,
+        "Samurai": 1,
+        "Support": 1,
+        "Fly": 1,
+        "Water": 1,
+        "Fire": 1,
+        "Earth": 1,
+        "Light": 1,
+        "Dark": 2
+}
+
+lightmech = {
+        "Barbarian": 1,
+        "Brawler": 3,
+        "Gunner": 1,
+        "Knight": 1,
+        "Lancer": 1,
+        "Magician": 5,
+        "Ranger": 1,
+        "Rogue": 1,
+        "Samurai": 1,
+        "Support": 1,
+        "Fly": 1,
+        "Water": 1,
+        "Fire": 1,
+        "Earth": 1,
+        "Light": 1,
+        "Dark": 2
+}
+
+astrolab = {
+        "Barbarian": 1,
+        "Brawler": 1,
+        "Gunner": 5,
+        "Knight": 1,
+        "Lancer": 1,
+        "Magician": 1,
+        "Ranger": 2,
+        "Rogue": 1,
+        "Samurai": 1,
+        "Support": 1,
+        "Fly": 1,
+        "Water": 1,
+        "Fire": 1,
+        "Earth": 1,
+        "Light": 1,
+        "Dark": 2
+}
+
+beetle = {
+        "Barbarian": 1,
+        "Brawler": 1,
+        "Gunner": 1,
+        "Knight": 1,
+        "Lancer": 1,
+        "Magician": 5,
+        "Ranger": 3,
+        "Rogue": 2,
+        "Samurai": 1,
+        "Support": 1,
+        "Fly": 0,
+        "Water": 1,
+        "Fire": 1,
+        "Earth": 1,
+        "Light": 2,
+        "Dark": 0
+}
+
+hauntinghead = {
+        "Barbarian": 3,
+        "Brawler": 1,
+        "Gunner": 2,
+        "Knight": 1,
+        "Lancer": 1,
+        "Magician": 1,
+        "Ranger": 5,
+        "Rogue": 1,
+        "Samurai": 1,
+        "Support": 1,
+        "Fly": 0,
+        "Water": 1,
+        "Fire": 1,
+        "Earth": 1,
+        "Light": 2,
+        "Dark": 1
+}
+
+gunlord = {
+        "Barbarian": 1,
+        "Brawler": 1,
+        "Gunner": 1,
+        "Knight": 1,
+        "Lancer": 1,
+        "Magician": 2,
+        "Ranger": 1,
+        "Rogue": 5,
+        "Samurai": 3,
+        "Support": 1,
+        "Fly": 0,
+        "Water": 1,
+        "Fire": 1,
+        "Earth": 1,
+        "Light": 2,
+        "Dark": 1
+}
+
 bosses = {
         "kraken": kraken,
         "deepseaking": deepseaking,
@@ -240,4 +392,13 @@ bosses = {
         "valkenbot": valkenbot,
         "firegorge": firegorge,
         "madking": madking,
+        "sandclaw": sandclaw,
+        "voodootank": voodootank,
+        "undeadsamurai": undeadsamurai,
+        "odin": odin,
+        "lightmech": lightmech,
+        "astrolab": astrolab,
+        "beetle": beetle,
+        "hauntinghead": hauntinghead,
+        "gunlord": gunlord
 }

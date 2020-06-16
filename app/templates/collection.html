@@ -73,7 +73,7 @@ $(document).ready(function() {
         {% if i.level > 0 %}
         <tr>
             <td class="{{i.baseStats.element}}{{i.baseStats.rarity}}" width="25"><img class="img-fluid" src="/static/{{i.baseStats.nameSafe}}.png" alt="{{i.baseStats.name}}"></td>
-            <td class="{{i.baseStats.element}}{{i.baseStats.rarity}}"><a class="text-dark" href="{{ url_for('hero', heroid=i.id) }}">{{ i.baseStats.name }}</b></td>
+            <td class="{{i.baseStats.element}}{{i.baseStats.rarity}}"><a class="text-dark" href="{{ url_for('hero', heroid=i.id) }}">{{ i.baseStats.name }}</a></td>
             <td class="{{i.baseStats.element}}{{i.baseStats.rarity}}">{{ i.baseStats.element }}</td>
             <td class="{{i.baseStats.element}}{{i.baseStats.rarity}}">{{ i.baseStats.rarity }}</td>
             <td class="{{i.baseStats.element}}{{i.baseStats.rarity}}">{{ i.baseStats.job }}</td>
@@ -122,7 +122,5 @@ $(document).ready(function() {
 </table>
     </div>
   </div>
-
-
-
+<hr><br><br>
 {% endblock %}
