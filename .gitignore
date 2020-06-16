@@ -1,8 +1,9 @@
 /venv/
-artBase.csv
+app.db
 artBase.xlsx
-grimoire.xlsx
+artBase.csv
 grimoire.csv
+grimoire.xlsx
 kodSpara.txt
 notes
 safeNames.xlsx
