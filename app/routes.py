@@ -338,6 +338,7 @@ def bossTeam(username):
     loadBeetle = Bossteam.query.filter_by(bossbase_id=13, user_id=user.id).all()
     loadHauntinghead = Bossteam.query.filter_by(bossbase_id=14, user_id=user.id).all()
     loadGunlord = Bossteam.query.filter_by(bossbase_id=15, user_id=user.id).all()
+    bossactive = 1
 
     krakenDict = {}
     for i in loadKraken:
@@ -389,7 +390,8 @@ def bossTeam(username):
                            frostwingDict=frostwingDict, odinDict=odinDict, lightmechDict=lightmechDict, astrolabDict=astrolabDict,
                            sandclawDict=sandclawDict, voodootankDict=voodootankDict, undeadsamuraiDict=undeadsamuraiDict,
                            valkenbotDict=valkenbotDict, firegorgeDict=firegorgeDict, madkingDict=madkingDict,
-                           beetleDict=beetleDict, hauntingheadDict=hauntingheadDict, gunlordDict=gunlordDict)
+                           beetleDict=beetleDict, hauntingheadDict=hauntingheadDict, gunlordDict=gunlordDict,
+                           bossactive=bossactive)
 
 
 @app.route('/calculate/<username>/<boss>')
