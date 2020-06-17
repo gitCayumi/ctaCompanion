@@ -6,6 +6,8 @@ from app.models import User, Base, Hero, validateAwaken, validateLevel, validate
     totalMedals, rarityMedals, ArtBase, Artifact, validateArt, BossBase, Bossteam, displayRaidDps
 from werkzeug.urls import url_parse
 from app.heroDict import heroDict, frostwing, bosses
+import sys
+from datetime import datetime
 
 
 @app.route('/')
@@ -428,13 +430,16 @@ def calculate(username, boss):
     }
 
     if len(heroes) > 10:
+        print(f"{datetime.now()} | RAIDTEAM2 - Calling (with {len(heroes)}) ", file=sys.stderr)
         filterTeam = user.raidteam2(heroes, boss, artBonus)
+        print(f"{datetime.now()} | RAIDTEAM - Calling (filtered, {len(filterTeam)} heroes)", file=sys.stderr)
         testTeam = user.raidteam(team, teamList, filterTeam, boss, artBonus)
     else:
+        print(f"{datetime.now()} | RAIDTEAM - Calling (unfiltered, {len(heroes)} heroes)", file=sys.stderr)
         testTeam = user.raidteam(team, teamList, heroes, boss, artBonus)
 
     teamID = int(idHelp.id)
-
+    print(f"{datetime.now()} | Adding {len(testTeam)} heroes to database", file=sys.stderr)
     for h, d in testTeam.items():
         slot = Bossteam.query.get(teamID)
         slot.hero = h
@@ -442,6 +447,7 @@ def calculate(username, boss):
         db.session.add(slot)
         teamID += 1
     db.session.commit()
+    print(f"{datetime.now()} | Commit complete", file=sys.stderr)
 
     flash(u'Calculation complete, your data has been saved.', 'info')
     return redirect(url_for('bossTeam', username=current_user.username))

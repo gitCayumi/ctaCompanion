@@ -3,7 +3,9 @@ from app import db, login
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from hashlib import md5
-from math import ceil
+import sys
+
+NOW = datetime.now()
 
 
 @login.user_loader
@@ -158,64 +160,93 @@ class User(UserMixin, db.Model):
         return int(round(critDmg, 0))
 
     def raidteam(self, team, teamList, heroes, boss, art):
-
+        print(f"{datetime.now()} | RAIDTEAM - Called", file=sys.stderr)
         high = sum(team.values())
         top = ""
 
         # Handle input of less than 10 heroes, but still with correct ranking
         if len(heroes) == 0:
+            print(f"{datetime.now()} | RAIDTEAM - Less than 10 heroes", file=sys.stderr)
             filler = len(teamList)
+            print(f"{datetime.now()} | RAIDTEAM - Populating", file=sys.stderr)
             for m in teamList:
                 team[m.baseStats.name] = int(m.raidDPS(self.raidbuffs(teamList, m.baseStats.element), boss, art))
+            print(f"{datetime.now()} | RAIDTEAM - Handling empty slots", file=sys.stderr)
             for n in range(filler+1, 11):
                 team["Slot "+str(n)] = 0
+            print(f"{datetime.now()} | RAIDTEAM - Returning {len(team)} heroes", file=sys.stderr)
             return team
 
         # Break out of recursion
         if len(teamList) == 10:
+            print(f"{datetime.now()} | BREAKING OUT OF RECURSION", file=sys.stderr)
             for k in teamList:
                 team[k.baseStats.name] = int(k.raidDPS(self.raidbuffs(teamList, k.baseStats.element), boss, art))
             return team
 
         for i in heroes:
+            # print(f"{datetime.now()} | teamList append {i}", file=sys.stderr)
             teamList.append(i)
+            # if i.baseStats.buffElement == teamList[0].baseStats.element or i.baseStats.buffElement == 'All':
             for j in teamList:
-                team[j.baseStats.name] = int(j.raidDPS(self.raidbuffs(teamList, j.baseStats.element), boss, art))
+                # print(f"{datetime.now()} | teamList working {j}", file=sys.stderr)
+                dmg = int(j.raidDPS(self.raidbuffs(teamList, j.baseStats.element), boss, art))
+                team[j.baseStats.name] = dmg
+                print(f"{datetime.now()} | Sum damage: {sum(team.values())}, {j}: {dmg}", file=sys.stderr)
             if sum(team.values()) > high:
                 high = sum(team.values())
+                print(f"{datetime.now()} | New high {high}", file=sys.stderr)
                 top = i
             teamList.remove(i)
+            # print(f"{datetime.now()} | teamList remove {i}", file=sys.stderr)
             del team[i.baseStats.name]
+            # else:
+            # teamList.remove(i)
+            # print(f"{datetime.now()} | Removing {i} from heroes", file=sys.stderr)
+            # heroes.remove(top)
 
         teamList.append(top)
         team[top.baseStats.name] = int(top.raidDPS(self.raidbuffs(teamList, top.baseStats.element), boss, art))
         heroes.remove(top)
+        print(f"{datetime.now()} | RECURSION: added {top}", file=sys.stderr)
         return self.raidteam(team, teamList, heroes, boss, art)
 
     def raidteam2(self, heroes, boss, art):
         # Filter out heroes who has no chance of making top 10, regardless of users heroes
+        print(f"{datetime.now()} | RAIDTEAM2 - Called", file=sys.stderr)
         team = {}
         keep = []
 
         # Populate dict with key = hero, value = max dps including all buffs
+        print(f"{datetime.now()} | RAIDTEAM2 - Populating dictionary", file=sys.stderr)
         for i in heroes:
+            # print(f"...{i}", file=sys.stderr)
             team[i] = int(i.raidDPS(self.raidbuffs(heroes, i.baseStats.element), boss, art))
-
+        print(f"{datetime.now()} | RAIDTEAM2 - Dictionary complete", file=sys.stderr)
         # Add all heroes with a damage affecting buff
+        print(f"{datetime.now()} | RAIDTEAM2 - Adding Rare Heroes to keep", file=sys.stderr)
         for i in team:
             if i.baseStats.buffType == 1 and i.level > 3:
+                # print(f"...adding {i}", file=sys.stderr)
+
                 keep.append(i)
 
         # Add additional 10 top performing heroes not included from above
+        print(f"{datetime.now()} | RAIDTEAM2 - Adding additional 10 heroes", file=sys.stderr)
         for i in range(10):
             x = max(team, key=team.get)
+            # print(f"...consider {x}", file=sys.stderr)
             if x not in keep:
                 keep.append(x)
+                # print(f"...added {x}", file=sys.stderr)
             del team[x]
 
+        print(f"{datetime.now()} | RAIDTEAM2 - Complete ({len(keep)} heroes added)", file=sys.stderr)
+        print(f"--------------------------------------", file=sys.stderr)
         return keep
 
     def raidbuffs(self, heroes, element):
+        # print(f"{datetime.now()} | ### RAIDBUFFS CALLED ### | {len(heroes)} heroes", file=sys.stderr)
         bufftypes = []  # kept for debugging purpose
         hero = []       # kept for debugging purpose
         buffs = {
@@ -230,7 +261,7 @@ class User(UserMixin, db.Model):
                     bufftypes.append(i.baseStats.buffType)  # kept for debugging purpose
                     hero.append(i)                          # kept for debugging purpose
                     buffs[i.baseStats.buffStat] = buffs.get(i.baseStats.buffStat) + (i.baseStats.buff*(i.level-3))
-
+        # print(f"{datetime.now()} | ### RAIDBUFFS DONE ### | {len(buffs)} buffs", file=sys.stderr)
         return buffs
 
 
@@ -411,6 +442,7 @@ class Hero(db.Model):
         return '{:,}'.format(dps).replace(',', ' ')
 
     def raidDPS(self, buff, boss, art):
+        # print(f"{datetime.now()} | ### RAIDDPS CALLED FOR {self.baseStats.name} ### |", file=sys.stderr)
         # Hero values including players artifacts
         sp2 = self.baseStats.sp2
         sp2num = self.baseStats.sp2num
@@ -432,6 +464,7 @@ class Hero(db.Model):
 
         # Kage
         dps *= buff["kage"]
+        # print(f"{datetime.now()} | ### RAIDDPS FINISHED FOR {self.baseStats.name} ### |", file=sys.stderr)
         return dps
 
     def testing(self, user):
