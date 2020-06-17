@@ -272,10 +272,11 @@ def artifacts(username):
     event = Artifact.query.filter_by(owner=user, type="E")
     artifactBase = ArtBase.query.all()
     testArt = user.artAtk("Fire")
+    artifactactive = 1
 
     if request.method == "GET":
         return render_template('artifacts.html', user=user, title='Artifacts', artifactBase=artifactBase, event=event,
-                               normal=normal, testArt=testArt)
+                               normal=normal, testArt=testArt, artifactactive=artifactactive)
     else:
         arts = Artifact.query.filter_by(owner=user)
         for j in arts:
