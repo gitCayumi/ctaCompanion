@@ -3,7 +3,7 @@ from app import app, db
 from app.forms import LoginForm, RegistrationForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Base, Hero, validateAwaken, validateLevel, validateWeapon, validateMedals, heroProgress, \
-    totalMedals, rarityMedals, ArtBase, Artifact, validateArt, BossBase, Bossteam
+    totalMedals, rarityMedals, ArtBase, Artifact, validateArt, BossBase, Bossteam, displayRaidDps
 from werkzeug.urls import url_parse
 from app.heroDict import heroDict, frostwing, bosses
 
@@ -342,49 +342,49 @@ def bossTeam(username):
 
     krakenDict = {}
     for i in loadKraken:
-        krakenDict[i.hero] = i.damage
+        krakenDict[i.hero] = displayRaidDps(i.damage)
     deepseakingDict = {}
     for i in loadDeepseaking:
-        deepseakingDict[i.hero] = i.damage
+        deepseakingDict[i.hero] = displayRaidDps(i.damage)
     frostwingDict = {}
     for i in loadFrostwing:
-        frostwingDict[i.hero] = i.damage
+        frostwingDict[i.hero] = displayRaidDps(i.damage)
     odinDict = {}
     for i in loadOdin:
-        odinDict[i.hero] = i.damage
+        odinDict[i.hero] = displayRaidDps(i.damage)
     lightmechDict = {}
     for i in loadLightmech:
-        lightmechDict[i.hero] = i.damage
+        lightmechDict[i.hero] = displayRaidDps(i.damage)
     astrolabDict = {}
     for i in loadAstrolab:
-        astrolabDict[i.hero] = i.damage
+        astrolabDict[i.hero] = displayRaidDps(i.damage)
     sandclawDict = {}
     for i in loadSandclaw:
-        sandclawDict[i.hero] = i.damage
+        sandclawDict[i.hero] = displayRaidDps(i.damage)
     voodootankDict = {}
     for i in loadVoodootank:
-        voodootankDict[i.hero] = i.damage
+        voodootankDict[i.hero] = displayRaidDps(i.damage)
     undeadsamuraiDict = {}
     for i in loadUndeadsamurai:
-        undeadsamuraiDict[i.hero] = i.damage
+        undeadsamuraiDict[i.hero] = displayRaidDps(i.damage)
     valkenbotDict = {}
     for i in loadValkenbot:
-        valkenbotDict[i.hero] = i.damage
+        valkenbotDict[i.hero] = displayRaidDps(i.damage)
     firegorgeDict = {}
     for i in loadFiregorge:
-        firegorgeDict[i.hero] = i.damage
+        firegorgeDict[i.hero] = displayRaidDps(i.damage)
     madkingDict = {}
     for i in loadMadking:
-        madkingDict[i.hero] = i.damage
+        madkingDict[i.hero] = displayRaidDps(i.damage)
     beetleDict = {}
     for i in loadBeetle:
-        beetleDict[i.hero] = i.damage
+        beetleDict[i.hero] = displayRaidDps(i.damage)
     hauntingheadDict = {}
     for i in loadHauntinghead:
-        hauntingheadDict[i.hero] = i.damage
+        hauntingheadDict[i.hero] = displayRaidDps(i.damage)
     gunlordDict = {}
     for i in loadGunlord:
-        gunlordDict[i.hero] = i.damage
+        gunlordDict[i.hero] = displayRaidDps(i.damage)
 
     return render_template('bossTeam.html', user=user, title='Boss Teams', krakenDict=krakenDict, deepseakingDict=deepseakingDict,
                            frostwingDict=frostwingDict, odinDict=odinDict, lightmechDict=lightmechDict, astrolabDict=astrolabDict,

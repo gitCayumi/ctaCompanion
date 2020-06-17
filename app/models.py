@@ -167,8 +167,8 @@ class User(UserMixin, db.Model):
             filler = len(teamList)
             for m in teamList:
                 team[m.baseStats.name] = int(m.raidDPS(self.raidbuffs(teamList, m.baseStats.element), boss, art))
-            for n in range(10-filler):
-                team[n] = "-"
+            for n in range(filler+1, 11):
+                team["Slot "+str(n)] = 0
             return team
 
         # Break out of recursion
@@ -676,7 +676,31 @@ def validateArt(art, level):
     return level
 
 
+def displayRaidDps(dmg):
+    # Format dps within the thousand range
+    if 1000 < dmg < 1000000:
+        return str(round(dmg / 1000, 2)) + "K"
+    # Format dps within the million range
+    if 1000000 < dmg < 1000000000:
+        return str(round(dmg / 1000000, 2)) + "M"
+    # Format dps within the billion range
+    elif 1000000000 < dmg < 1000000000000:
+        return str(round(dmg / 1000000000, 2)) + "B"
+    # ..within the Trillion range, you never know
+    elif dmg > 1000000000000:
+        return str(round(dmg / 1000000000000, 2)) + "T"
+    # Damage below 1000
+    return dmg
+
+
 """
+if stat < 1000:
+return str(int(round(stat, 0)))
+elif stat > 1000000:
+return str(round(stat/1000000, 2))+"M"
+else:
+return str(round(stat/1000, 2))+"K"
+        
 4
 four = [66, 67, 68, 70, 73, 74, 76, 77]
 Frosty Sword            73
