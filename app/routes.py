@@ -32,7 +32,7 @@ def login():
             next_page = url_for('index')
         flash(u'You are now logged in as {}.'.format(user.username), 'info')
         return redirect(next_page)
-    return render_template('login.html', title='Sign In', form=form, errorType=errorType)
+    return render_template('login.html', title='Sign In', form=form, errorType=errorType, loginactive=1)
 
 
 @app.route('/logout')
@@ -77,7 +77,7 @@ def register():
         db.session.commit()
         flash(u'Your account has been created! Login to access the features of this website.', 'info')
         return redirect(url_for('login'))
-    return render_template('register.html', title='Sign up', form=form, errorType=errorType)
+    return render_template('register.html', title='Sign up', form=form, errorType=errorType, registeractive=1)
 
 
 @app.route('/account/<username>', methods=['GET', 'POST'])
@@ -85,9 +85,8 @@ def register():
 def account(username):
     user = User.query.filter_by(username=username).first_or_404()
     heroes = Hero.query.filter_by(player=user)
-    useractive = 1
     if request.method == "GET":
-        return render_template('account.html', user=user, heroes=heroes, title='Account', useractive=useractive)
+        return render_template('account.html', user=user, heroes=heroes, title='Account', useractive=1)
 
     else:
         for i in heroes:
@@ -100,7 +99,7 @@ def account(username):
                 int(request.form.get(current + "medal"))
             except:
                 flash(u'Invalid input', 'error')
-                return render_template('account.html', user=user, heroes=heroes, title='Account')
+                return redirect(url_for('account'))
 
             try:
                 int(request.form.get("prismPower"))
@@ -109,7 +108,7 @@ def account(username):
                 int(request.form.get("daysPlayed"))
             except:
                 flash(u'Invalid input', 'error')
-                return render_template('account.html', user=user, heroes=heroes, title='Account')
+                return redirect(url_for('account', username=current_user.username))
 
         for j in heroes:
             current = str(j.id)
@@ -137,7 +136,7 @@ def account(username):
         db.session.commit()
 
         flash(u'Your data was updated successfully!', 'info')
-        return render_template('account.html', user=user, heroes=heroes, title='Account')
+        return redirect(url_for('account', username=current_user.username))
 
 
 @app.route('/collection/<username>')
@@ -145,8 +144,7 @@ def account(username):
 def collection(username):
     user = User.query.filter_by(username=username).first_or_404()
     heroes = Hero.query.filter_by(player=user)
-    heroactive = 1
-    return render_template('collection.html', user=user, heroes=heroes, title='Hero Collection', heroactive=heroactive)
+    return render_template('collection.html', user=user, heroes=heroes, title='Hero Collection', heroactive=1)
 
 
 # This mess needs to be refactored, I just created and kept going without thinking ahead.
@@ -194,7 +192,6 @@ def progress(username):
     darkRareMedals = rarityMedals(user, "Dark", "Rare")
     darkEpicMedals = rarityMedals(user, "Dark", "Epic")
     darkLegendaryMedals = rarityMedals(user, "Dark", "Legendary")
-    progressactive = 1
 
     return render_template('progress.html', user=user, title='Hero Progress', waterCommon=waterCommon,
                            waterRare=waterRare, waterEpic=waterEpic,
@@ -215,7 +212,7 @@ def progress(username):
                            lightEpicMedals=lightEpicMedals, lightLegendaryMedals=lightLegendaryMedals,
                            darkCommonMedals=darkCommonMedals, darkRareMedals=darkRareMedals,
                            darkEpicMedals=darkEpicMedals, darkLegendaryMedals=darkLegendaryMedals,
-                           progressactive=progressactive)
+                           progressactive=1)
 
 
 @app.route('/Hero/<heroid>', methods=["GET", "POST"])
@@ -225,7 +222,7 @@ def hero(heroid):
     selectedHero = Hero.query.get(heroid)
     if request.method == "GET":
         return render_template('hero.html', selectedHero=selectedHero, title=selectedHero.baseStats.name, user=user,
-                               heroDict=heroDict)
+                               heroDict=heroDict, heroactive=1)
     else:
         try:
             float(request.form.get(str(selectedHero.id) + "runedAtk"))
@@ -237,7 +234,7 @@ def hero(heroid):
         except:
             flash(u'Invalid input', 'error')
             return render_template('hero.html', selectedHero=selectedHero, title=selectedHero.baseStats.name, user=user,
-                                   heroDict=heroDict)
+                                   heroDict=heroDict, heroactive=1)
 
         runedAtk = float(request.form.get(str(selectedHero.id) + "runedAtk"))
         runedHp = float(request.form.get(str(selectedHero.id) + "runedHp"))
@@ -256,12 +253,17 @@ def hero(heroid):
 
         flash(u'Rune values updated!', 'info')
         return render_template('hero.html', selectedHero=selectedHero, title=selectedHero.baseStats.name, user=user,
-                               heroDict=heroDict)
+                               heroDict=heroDict, heroactive=1)
 
 
 @app.route('/contact', methods=["GET", "POST"])
 def contact():
-    return render_template('contact.html', title='Contact')
+    return render_template('contact.html', title='Contact', contactactive=1)
+
+
+@app.route('/guides')
+def guides():
+    return render_template('guides.html', title='Guides', guidesactive=1)
 
 
 @app.route('/artifacts/<username>', methods=["GET", "POST"])
@@ -272,11 +274,10 @@ def artifacts(username):
     event = Artifact.query.filter_by(owner=user, type="E")
     artifactBase = ArtBase.query.all()
     testArt = user.artAtk("Fire")
-    artifactactive = 1
 
     if request.method == "GET":
         return render_template('artifacts.html', user=user, title='Artifacts', artifactBase=artifactBase, event=event,
-                               normal=normal, testArt=testArt, artifactactive=artifactactive)
+                               normal=normal, testArt=testArt, artifactactive=1)
     else:
         arts = Artifact.query.filter_by(owner=user)
         for j in arts:
@@ -338,7 +339,6 @@ def bossTeam(username):
     loadBeetle = Bossteam.query.filter_by(bossbase_id=13, user_id=user.id).all()
     loadHauntinghead = Bossteam.query.filter_by(bossbase_id=14, user_id=user.id).all()
     loadGunlord = Bossteam.query.filter_by(bossbase_id=15, user_id=user.id).all()
-    bossactive = 1
 
     krakenDict = {}
     for i in loadKraken:
@@ -391,7 +391,7 @@ def bossTeam(username):
                            sandclawDict=sandclawDict, voodootankDict=voodootankDict, undeadsamuraiDict=undeadsamuraiDict,
                            valkenbotDict=valkenbotDict, firegorgeDict=firegorgeDict, madkingDict=madkingDict,
                            beetleDict=beetleDict, hauntingheadDict=hauntingheadDict, gunlordDict=gunlordDict,
-                           bossactive=bossactive)
+                           bossactive=1)
 
 
 @app.route('/calculate/<username>/<boss>')

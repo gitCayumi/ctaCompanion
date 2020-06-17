@@ -263,7 +263,13 @@
 -->
 
 
-<br>
+<div class="row">
+    <div class="col-lg-12 text-center">
+
+        <a href="{{ url_for('collection', username=current_user.username) }}">Back to collection</a>
+    </div>
+</div>
+<br><br>
 
 
 {% else %}
@@ -275,7 +281,7 @@
       <hr>
     </div>
  </div>
-
-
+<hr><a href="{{ url_for('collection', username=current_user.username) }}">Back to collection</a>
+<br><br>
 {% endif %}
 {% endblock %}

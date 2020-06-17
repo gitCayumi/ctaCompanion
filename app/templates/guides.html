@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row pt-3">
+    <div class="col-lg-12">
+    <h1 class="display-4">Guides</h1>
+        <hr>
+        <p class="instructions">Eventually CTA Companion may contain native guides by categories ranging from the very basics to in-depths topics. For now you will find up-to-date works of others in the table below.</p>
+        <hr>
+    </div>
+</div>
+
+<div class="row pt-3">
+    <div class="col-lg-12">
+        <table class="table table-borderless table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Guide</th>
+                    <th>Author</th>
+                    <th>Added / Updated</th>
+                </tr>
+            </thead>
+                <tr>
+                    <td><a href="https://docs.google.com/document/d/16GTEmZNpRY5huL8WSxJKhxCtSVcFNXNlOgs2gfwnW9c/edit" target="_blank">CTA - Beginner Overview</a></td>
+                    <td>MrMoogle</td>
+                    <td>2020-06-17</td>
+                </tr>
+            <tr>
+                    <td><a href="https://docs.google.com/document/d/1vqRo_Lc4B3usIxPjxn6KR9TgAJ4Y1JR4CEO7CAOLQtY/edit" target="_blank">CTA - Hero Encyclopedia</a></td>
+                    <td>MrMoogle</td>
+                    <td>2020-06-17</td>
+                </tr>
+            <tr>
+                    <td><a href="{{ url_for('static', filename='Pvp-tierlist-2020v2.png') }}" target="_blank">PVP Tier List</a></td>
+                    <td>PKIII, Medivh</td>
+                    <td>2020-06-17 (2020-04-10)</td>
+                </tr>
+            </th>
+        </table>
+    </div>
+</div>
+
+
+
+
+{% endblock %}

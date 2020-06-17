@@ -15,25 +15,25 @@
 <div class="row">
     <div class="col-lg-6 p-3">
         <h4>Data input</h4><hr>
-        <ul class="list-group">
-            <li class="list-group-item list-group-item-info">Hero details (Star Level, Awaken, Weapon Level, Medals) can be input in My Account.</li>
-            <li class="list-group-item list-group-item-info">Prism Power, Hero Power, Artifact Power and Days Played can be input in My Account.</li>
-            <li class="list-group-item list-group-item-info">Runed values can be input for each hero on its respective page.</li>
-            <li class="list-group-item list-group-item-info">Artifacts and their level can be input in Artifacts.</li>
-        </ul>
+        <div class="list-group">
+            <a href="{{ url_for('account', username=current_user.username) }}" class="list-group-item list-group-item-action list-group-item-info">Hero details (Star Level, Awaken, Weapon Level, Medals) can be input in My Account.</a>
+            <a href="{{ url_for('account', username=current_user.username) }}" class="list-group-item list-group-item-action list-group-item-info">Prism Power, Hero Power, Artifact Power and Days Played can be input in My Account.</a>
+            <a href="{{ url_for('collection', username=current_user.username) }}" class="list-group-item list-group-item-action list-group-item-info">Runed values can be input for each hero on its respective page.</a>
+            <a href="{{ url_for('artifacts', username=current_user.username) }}" class="list-group-item list-group-item-action list-group-item-info">Artifacts and their level can be input in Artifacts.</a>
+        </div>
         <hr>
     </div>
 
     <div class="col-lg-6 p-3">
         <h4>Data output</h4><hr>
-        <ul class="list-group">
-            <li class="list-group-item list-group-item-success">Hero Collection contains a sortable and searchable list of all your heroes.</li>
-            <li class="list-group-item list-group-item-success">Click on any hero to see more details such as how to rune and a hero description. This is where you input runed values.</li>
-            <li class="list-group-item list-group-item-success">Artifacts contains a table of your artifacts combined effects.</li>
-            <li class="list-group-item list-group-item-success">Progress contains visual representation of your progress by rarity within each element and overall.
-            <li class="list-group-item list-group-item-success">Progress also contains a table of percentages and maxed heroes by rarity, element, and overall.
-            <li class="list-group-item list-group-item-success">Boss Teams will automatically generate the best possible team for every boss based on your input</li>
-        </ul>
+        <div class="list-group">
+            <a href="{{ url_for('collection', username=current_user.username) }}" class="list-group-item list-group-item-action list-group-item-success">Hero Collection contains a sortable and searchable list of all your heroes.</a>
+            <a href="{{ url_for('collection', username=current_user.username) }}" class="list-group-item list-group-item-action list-group-item-success">Click on any hero to see more details such as how to rune and a hero description. This is where you input runed values.</a>
+            <a href="{{ url_for('progress', username=current_user.username) }}" class="list-group-item list-group-item-action list-group-item-success">Progress contains visual representation of your progress by rarity within each element and overall.
+            <a href="{{ url_for('progress', username=current_user.username) }}" class="list-group-item list-group-item-action list-group-item-success">Progress also contains a table of percentages and maxed heroes by rarity, element, and overall.
+            <a href="{{ url_for('artifacts', username=current_user.username) }}" class="list-group-item list-group-item-action list-group-item-success">Artifacts contains a table of your artifacts combined effects.</a>
+            <a href="{{ url_for('bossTeam', username=current_user.username) }}" class="list-group-item list-group-item-action list-group-item-success">Boss Teams will generate the best possible team for every boss based on your input.</a>
+        </div>
         <hr>
     </div>
 
@@ -54,7 +54,7 @@
     <div class="col-lg-3">
         &nbsp;
     </div>
-    <div class="col-lg-6 p-3 bg-primary text-white rounded-lg border border-white shadow">
+    <div class="col-lg-6 p-3 bg-info text-white rounded-lg border border-white shadow">
         <h2 class="text-center">CTA Companion</h2><hr>
         <p class="text-center">
             <ul>

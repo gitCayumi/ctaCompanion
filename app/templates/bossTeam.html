@@ -16,6 +16,7 @@
 
  <div class="row pt-3">
 
+
      <!-- KRAKEN -->
      <div class="col-lg-4">
         <table class="table table-borderless table-striped">
@@ -37,10 +38,47 @@
             </tr>
             {% endfor %}
             <tr>
-                <td colspan="2" class="text-center"><a href="{{ url_for('calculate', username=current_user.username, boss=1) }}"><button type="button" class="btn btn-primary">Calculate</button></a></td>
+                <td colspan="2" class="text-center"><a href="{{ url_for('calculate', username=current_user.username, boss=1) }}"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Calculate</button></a></td>
             </tr>
         </table>
     </div>
+
+<div class="modal fade" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+
+      <div class="modal-header">
+        <h4 class="modal-title">Calculating optimal team</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+
+      <div class="modal-body text-center">
+          <p>&nbsp;</p>
+        <div class="spinner-border text-muted"></div>
+          <p>&nbsp;</p>
+          <p><strong>Please note:</strong> Calculation time is dependant on amount of input, and the capacity where this web application is hosted. Time may vary from a few seconds to several minutes based on input.
+          <hr>
+          <p>If you input all heroes please allow several minutes for the algorithm to compute.
+              I'm working on making the algorithm faster and if possible upgraded hosting.</p>
+          <hr>
+          This window will automatically close when calculation is complete.
+      </div>
+
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
 
      <!-- DEEP SEA KING -->
      <div class="col-lg-4">
@@ -63,7 +101,7 @@
             </tr>
             {% endfor %}
             <tr>
-                <td colspan="2" class="text-center"><a href="{{ url_for('calculate', username=current_user.username, boss=2) }}"><button type="button" class="btn btn-primary">Calculate</button></a></td>
+                <td colspan="2" class="text-center"><a href="{{ url_for('calculate', username=current_user.username, boss=2) }}"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Calculate</button></a></td>
             </tr>
         </table>
     </div>
