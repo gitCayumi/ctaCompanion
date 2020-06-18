@@ -263,11 +263,6 @@ def contact():
     return render_template('contact.html', title='Contact', contactactive=1)
 
 
-@app.route('/guides')
-def guides():
-    return render_template('guides.html', title='Guides', guidesactive=1)
-
-
 @app.route('/artifacts/<username>', methods=["GET", "POST"])
 @login_required
 def artifacts(username):
