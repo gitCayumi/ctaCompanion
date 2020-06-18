@@ -165,6 +165,13 @@ class User(UserMixin, db.Model):
         top = ""
         bottom = ""
 
+        # Break out of recursion
+        if len(teamList) == 10:
+            print(f"{datetime.now()} | BREAKING OUT OF RECURSION", file=sys.stderr)
+            for k in teamList:
+                team[k.baseStats.name] = int(k.raidDPS(self.raidbuffs(teamList, k.baseStats.element), boss, art))
+            return team
+
         # Handle input of less than 10 heroes, but still with correct ranking
         if len(heroes) == 0:
             print(f"{datetime.now()} | RAIDTEAM - Less than 10 heroes", file=sys.stderr)
@@ -176,13 +183,6 @@ class User(UserMixin, db.Model):
             for n in range(filler+1, 11):
                 team["Slot "+str(n)] = 0
             print(f"{datetime.now()} | RAIDTEAM - Returning {len(team)} heroes", file=sys.stderr)
-            return team
-
-        # Break out of recursion
-        if len(teamList) == 10:
-            print(f"{datetime.now()} | BREAKING OUT OF RECURSION", file=sys.stderr)
-            for k in teamList:
-                team[k.baseStats.name] = int(k.raidDPS(self.raidbuffs(teamList, k.baseStats.element), boss, art))
             return team
 
         for i in heroes:
