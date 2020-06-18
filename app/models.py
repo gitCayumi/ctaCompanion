@@ -208,8 +208,8 @@ class User(UserMixin, db.Model):
         heroes.remove(top)
         if len(heroes) > 20 and len(teamList) > 0:
             heroes.remove(bottom)
+            print(f"{datetime.now()} | RECURSION: removed {bottom}", file=sys.stderr)
         print(f"{datetime.now()} | RECURSION: added {top}", file=sys.stderr)
-        print(f"{datetime.now()} | RECURSION: removed {bottom}", file=sys.stderr)
         return self.raidTeam(team, teamList, heroes, boss, art)
 
     def filterHeroes(self, heroes, boss, art):
