@@ -167,22 +167,22 @@ class User(UserMixin, db.Model):
 
         # Break out of recursion
         if len(teamList) == 10:
-            print(f"{datetime.now()} | BREAKING OUT OF RECURSION", file=sys.stderr)
+            print(f"BREAKING OUT OF RECURSION", file=sys.stderr)
             for k in teamList:
                 team[k.baseStats.name] = int(k.raidDPS(self.raidbuffs(teamList, k.baseStats.element), boss, art))
             return team
 
         # Handle input of less than 10 heroes, but still with correct ranking
         if len(heroes) == 0:
-            print(f"{datetime.now()} | RAIDTEAM - Less than 10 heroes", file=sys.stderr)
+            print(f"RAIDTEAM - Less than 10 heroes", file=sys.stderr)
             filler = len(teamList)
-            print(f"{datetime.now()} | RAIDTEAM - Populating", file=sys.stderr)
+            print(f"RAIDTEAM - Populating", file=sys.stderr)
             for m in teamList:
                 team[m.baseStats.name] = int(m.raidDPS(self.raidbuffs(teamList, m.baseStats.element), boss, art))
-            print(f"{datetime.now()} | RAIDTEAM - Handling empty slots", file=sys.stderr)
+            print(f"RAIDTEAM - Handling empty slots", file=sys.stderr)
             for n in range(filler+1, 11):
                 team["Slot "+str(n)] = 0
-            print(f"{datetime.now()} | RAIDTEAM - Returning {len(team)} heroes", file=sys.stderr)
+            print(f"RAIDTEAM - Returning {len(team)} heroes", file=sys.stderr)
             return team
 
         for i in heroes:
@@ -193,10 +193,10 @@ class User(UserMixin, db.Model):
                 team[j.baseStats.name] = dmg
             if sum(team.values()) > high:
                 high = sum(team.values())
-                print(f"{datetime.now()} | Top: {i}", file=sys.stderr)
+                print(f"> Top: {i}", file=sys.stderr)
                 top = i
             elif sum(team.values()) < low:
-                print(f"{datetime.now()} | Bottom: {i}", file=sys.stderr)
+                print(f"> Bottom: {i}", file=sys.stderr)
                 low = sum(team.values())
                 bottom = i
 
@@ -208,31 +208,31 @@ class User(UserMixin, db.Model):
         heroes.remove(top)
         if len(heroes) > 20 and len(teamList) > 0:
             heroes.remove(bottom)
-            print(f"{datetime.now()} | RECURSION: removed {bottom}", file=sys.stderr)
-        print(f"{datetime.now()} | RECURSION: added {top}", file=sys.stderr)
+            print(f"RECURSION: removed {bottom}", file=sys.stderr)
+        print(f"RECURSION: added {top}", file=sys.stderr)
         return self.raidTeam(team, teamList, heroes, boss, art)
 
     def filterHeroes(self, heroes, boss, art):
         # Filter out heroes who has no chance of making top 10, regardless of users heroes
-        print(f"{datetime.now()} | filterHeroes - Called", file=sys.stderr)
+        print(f"filterHeroes - Called", file=sys.stderr)
         team = {}
         keep = []
 
         # Populate dict with key = hero, value = max dps including all buffs
-        print(f"{datetime.now()} | filterHeroes - Populating dictionary", file=sys.stderr)
+        print(f"filterHeroes - Populating dictionary", file=sys.stderr)
         for i in heroes:
             print(f"...{i}", file=sys.stderr)
             team[i] = int(i.raidDPS(self.raidbuffs(heroes, i.baseStats.element), boss, art))
-        print(f"{datetime.now()} | filterHeroes - Dictionary complete", file=sys.stderr)
+        print(f"filterHeroes - Dictionary complete", file=sys.stderr)
         # Add all heroes with a damage affecting buff
-        print(f"{datetime.now()} | filterHeroes - Adding damage affecting heroes", file=sys.stderr)
+        print(f"filterHeroes - Adding damage affecting heroes", file=sys.stderr)
         for i in team:
             if i.baseStats.buffType == 1 and i.level > 3:
-                print(f"...adding {i}", file=sys.stderr)
+                print(f"...adding {int(i.raidDPS(self.raidbuffs(heroes, i.baseStats.element), boss, art))}, {i}", file=sys.stderr)
                 keep.append(i)
 
         # Add additional 10 top performing heroes not included from above
-        print(f"{datetime.now()} | filterHeroes - Adding 10 top performing heroes", file=sys.stderr)
+        print(f"filterHeroes - Adding 10 top performing heroes", file=sys.stderr)
         for i in range(10):
             x = max(team, key=team.get)
             print(f"...consider {x}", file=sys.stderr)
@@ -241,7 +241,7 @@ class User(UserMixin, db.Model):
                 print(f"...added {x}", file=sys.stderr)
             del team[x]
 
-        print(f"{datetime.now()} | filterTeam - Complete ({len(keep)} heroes active)", file=sys.stderr)
+        print(f"filterTeam - Complete ({len(keep)} heroes active)", file=sys.stderr)
         print(f"--------------------------------------", file=sys.stderr)
         return keep
 

@@ -84,6 +84,7 @@
         -->
 
           {% endif %}
+          <!--
         <li class="nav-item">
             {% if guidesactive == 1 %}
           <a class="nav-link active" href="{{ url_for('guides', username=current_user.username) }}">Guides</a>
@@ -91,6 +92,7 @@
             <a class="nav-link" href="{{ url_for('guides', username=current_user.username) }}">Guides</a>
             {% endif %}
         </li>
+        -->
         <li class="nav-item">
             {% if contactactive == 1 %}
           <a class="nav-link active" href="{{ url_for('contact') }}">Contact</a>

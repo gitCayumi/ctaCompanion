@@ -407,7 +407,7 @@ def calculate(username, boss):
     teamList = []
     team = {}
 
-    print(f"{datetime.now()} | bossTeam algorithm initiated; {bossName.name} for {user.username}", file=sys.stderr)
+    print(f"### bossTeam algorithm initiated; {bossName.name} for {user.username} ###", file=sys.stderr)
 
     atk = {
         "Water": user.artAtk("Water"),
@@ -433,16 +433,16 @@ def calculate(username, boss):
     }
 
     if len(heroes) > 10:
-        print(f"{datetime.now()} | {len(heroes)} heroes found; filterHeroes", file=sys.stderr)
+        print(f"{len(heroes)} heroes found; filterHeroes", file=sys.stderr)
         filterTeam = user.filterHeroes(heroes, boss, artBonus)
-        print(f"{datetime.now()} | RAIDTEAM - Calling (filtered, {len(filterTeam)} heroes)", file=sys.stderr)
+        print(f"RAIDTEAM - Calling (filtered, {len(filterTeam)} heroes)", file=sys.stderr)
         testTeam = user.raidTeam(team, teamList, filterTeam, boss, artBonus)
     else:
-        print(f"{datetime.now()} | RAIDTEAM - Calling (unfiltered, {len(heroes)} heroes)", file=sys.stderr)
+        print(f"RAIDTEAM - Calling (unfiltered, {len(heroes)} heroes)", file=sys.stderr)
         testTeam = user.raidTeam(team, teamList, heroes, boss, artBonus)
 
     teamID = int(idHelp.id)
-    print(f"{datetime.now()} | Adding {len(testTeam)} heroes to database", file=sys.stderr)
+    print(f"Adding {len(testTeam)} heroes to database", file=sys.stderr)
     for h, d in testTeam.items():
         slot = Bossteam.query.get(teamID)
         slot.hero = h
@@ -450,7 +450,8 @@ def calculate(username, boss):
         db.session.add(slot)
         teamID += 1
     db.session.commit()
-    print(f"{datetime.now()} | Commit complete", file=sys.stderr)
+    print(f"Commit complete", file=sys.stderr)
+    print(f"--------------------------------------", file=sys.stderr)
 
     flash(u'Calculation complete, your data has been saved.', 'info')
     return redirect(url_for('bossTeam', username=current_user.username))
