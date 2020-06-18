@@ -401,10 +401,13 @@ def bossTeam(username):
 def calculate(username, boss):
     user = User.query.filter_by(username=username).first_or_404()
     heroes = Hero.query.filter_by(player=user).filter(Hero.level > 0).all()
+    bossName = BossBase.query.get(boss)
     idHelp = Bossteam.query.filter_by(bossbase_id=boss, user_id=user.id).first()
     boss = bosses[str(idHelp.bossBase.nameSafe)]
     teamList = []
     team = {}
+
+    print(f"{datetime.now()} | bossTeam algorithm initiated; {bossName.name} for {user.username}", file=sys.stderr)
 
     atk = {
         "Water": user.artAtk("Water"),
@@ -430,13 +433,13 @@ def calculate(username, boss):
     }
 
     if len(heroes) > 10:
-        print(f"{datetime.now()} | RAIDTEAM2 - Calling (with {len(heroes)}) ", file=sys.stderr)
-        filterTeam = user.raidteam2(heroes, boss, artBonus)
+        print(f"{datetime.now()} | {len(heroes)} heroes found; filterHeroes", file=sys.stderr)
+        filterTeam = user.filterHeroes(heroes, boss, artBonus)
         print(f"{datetime.now()} | RAIDTEAM - Calling (filtered, {len(filterTeam)} heroes)", file=sys.stderr)
-        testTeam = user.raidteam(team, teamList, filterTeam, boss, artBonus)
+        testTeam = user.raidTeam(team, teamList, filterTeam, boss, artBonus)
     else:
         print(f"{datetime.now()} | RAIDTEAM - Calling (unfiltered, {len(heroes)} heroes)", file=sys.stderr)
-        testTeam = user.raidteam(team, teamList, heroes, boss, artBonus)
+        testTeam = user.raidTeam(team, teamList, heroes, boss, artBonus)
 
     teamID = int(idHelp.id)
     print(f"{datetime.now()} | Adding {len(testTeam)} heroes to database", file=sys.stderr)

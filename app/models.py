@@ -159,10 +159,11 @@ class User(UserMixin, db.Model):
                 critDmg += i.artBase.critDmg + ((i.level - 1) * i.artBase.critDmgLevel)
         return int(round(critDmg, 0))
 
-    def raidteam(self, team, teamList, heroes, boss, art):
-        print(f"{datetime.now()} | RAIDTEAM - Called", file=sys.stderr)
+    def raidTeam(self, team, teamList, heroes, boss, art):
         high = sum(team.values())
+        low = 1000000000000000
         top = ""
+        bottom = ""
 
         # Handle input of less than 10 heroes, but still with correct ranking
         if len(heroes) == 0:
@@ -185,63 +186,62 @@ class User(UserMixin, db.Model):
             return team
 
         for i in heroes:
-            # print(f"{datetime.now()} | teamList append {i}", file=sys.stderr)
             teamList.append(i)
-            # if i.baseStats.buffElement == teamList[0].baseStats.element or i.baseStats.buffElement == 'All':
             for j in teamList:
-                # print(f"{datetime.now()} | teamList working {j}", file=sys.stderr)
+                # print(f"{datetime.now()} | Calculating {j}", file=sys.stderr)
                 dmg = int(j.raidDPS(self.raidbuffs(teamList, j.baseStats.element), boss, art))
                 team[j.baseStats.name] = dmg
-                print(f"{datetime.now()} | Sum damage: {sum(team.values())}, {j}: {dmg}", file=sys.stderr)
             if sum(team.values()) > high:
                 high = sum(team.values())
-                print(f"{datetime.now()} | New high {high}", file=sys.stderr)
+                print(f"{datetime.now()} | Top: {i}", file=sys.stderr)
                 top = i
+            elif sum(team.values()) < low:
+                print(f"{datetime.now()} | Bottom: {i}", file=sys.stderr)
+                low = sum(team.values())
+                bottom = i
+
             teamList.remove(i)
-            # print(f"{datetime.now()} | teamList remove {i}", file=sys.stderr)
             del team[i.baseStats.name]
-            # else:
-            # teamList.remove(i)
-            # print(f"{datetime.now()} | Removing {i} from heroes", file=sys.stderr)
-            # heroes.remove(top)
 
         teamList.append(top)
         team[top.baseStats.name] = int(top.raidDPS(self.raidbuffs(teamList, top.baseStats.element), boss, art))
         heroes.remove(top)
+        if len(heroes) > 20 and len(teamList) > 0:
+            heroes.remove(bottom)
         print(f"{datetime.now()} | RECURSION: added {top}", file=sys.stderr)
-        return self.raidteam(team, teamList, heroes, boss, art)
+        print(f"{datetime.now()} | RECURSION: removed {bottom}", file=sys.stderr)
+        return self.raidTeam(team, teamList, heroes, boss, art)
 
-    def raidteam2(self, heroes, boss, art):
+    def filterHeroes(self, heroes, boss, art):
         # Filter out heroes who has no chance of making top 10, regardless of users heroes
-        print(f"{datetime.now()} | RAIDTEAM2 - Called", file=sys.stderr)
+        print(f"{datetime.now()} | filterHeroes - Called", file=sys.stderr)
         team = {}
         keep = []
 
         # Populate dict with key = hero, value = max dps including all buffs
-        print(f"{datetime.now()} | RAIDTEAM2 - Populating dictionary", file=sys.stderr)
+        print(f"{datetime.now()} | filterHeroes - Populating dictionary", file=sys.stderr)
         for i in heroes:
-            # print(f"...{i}", file=sys.stderr)
+            print(f"...{i}", file=sys.stderr)
             team[i] = int(i.raidDPS(self.raidbuffs(heroes, i.baseStats.element), boss, art))
-        print(f"{datetime.now()} | RAIDTEAM2 - Dictionary complete", file=sys.stderr)
+        print(f"{datetime.now()} | filterHeroes - Dictionary complete", file=sys.stderr)
         # Add all heroes with a damage affecting buff
-        print(f"{datetime.now()} | RAIDTEAM2 - Adding Rare Heroes to keep", file=sys.stderr)
+        print(f"{datetime.now()} | filterHeroes - Adding damage affecting heroes", file=sys.stderr)
         for i in team:
             if i.baseStats.buffType == 1 and i.level > 3:
-                # print(f"...adding {i}", file=sys.stderr)
-
+                print(f"...adding {i}", file=sys.stderr)
                 keep.append(i)
 
         # Add additional 10 top performing heroes not included from above
-        print(f"{datetime.now()} | RAIDTEAM2 - Adding additional 10 heroes", file=sys.stderr)
+        print(f"{datetime.now()} | filterHeroes - Adding 10 top performing heroes", file=sys.stderr)
         for i in range(10):
             x = max(team, key=team.get)
-            # print(f"...consider {x}", file=sys.stderr)
+            print(f"...consider {x}", file=sys.stderr)
             if x not in keep:
                 keep.append(x)
-                # print(f"...added {x}", file=sys.stderr)
+                print(f"...added {x}", file=sys.stderr)
             del team[x]
 
-        print(f"{datetime.now()} | RAIDTEAM2 - Complete ({len(keep)} heroes added)", file=sys.stderr)
+        print(f"{datetime.now()} | filterTeam - Complete ({len(keep)} heroes active)", file=sys.stderr)
         print(f"--------------------------------------", file=sys.stderr)
         return keep
 
