@@ -258,9 +258,9 @@ def hero(heroid):
                                heroDict=heroDict, heroactive=1)
 
 
-@app.route('/contact', methods=["GET", "POST"])
-def contact():
-    return render_template('contact.html', title='Contact', contactactive=1)
+@app.route('/about', methods=["GET", "POST"])
+def about():
+    return render_template('about.html', title='About', aboutactive=1)
 
 
 @app.route('/artifacts/<username>', methods=["GET", "POST"])
