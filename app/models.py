@@ -5,7 +5,7 @@ from flask_login import UserMixin
 from hashlib import md5
 import sys
 
-NOW = datetime.now()
+RAIDBUFFCOUNT = 0
 
 
 @login.user_loader
@@ -160,6 +160,7 @@ class User(UserMixin, db.Model):
         return int(round(critDmg, 0))
 
     def raidTeam(self, team, teamList, heroes, boss, art):
+        print(f"{datetime.now()} | TEAM SIZE {len(teamList)}", file=sys.stderr)
         high = sum(team.values())
         low = 1000000000000000
         top = ""
@@ -170,27 +171,26 @@ class User(UserMixin, db.Model):
             print(f"BREAKING OUT OF RECURSION", file=sys.stderr)
             for k in teamList:
                 team[k.baseStats.name] = int(k.raidDPS(self.raidbuffs(teamList, k.baseStats.element), boss, art))
+            print(f"Return {team}", file=sys.stderr)
             return team
 
         # Handle input of less than 10 heroes, but still with correct ranking
         if len(heroes) == 0:
-            print(f"RAIDTEAM - Less than 10 heroes", file=sys.stderr)
             filler = len(teamList)
-            print(f"RAIDTEAM - Populating", file=sys.stderr)
             for m in teamList:
                 team[m.baseStats.name] = int(m.raidDPS(self.raidbuffs(teamList, m.baseStats.element), boss, art))
-            print(f"RAIDTEAM - Handling empty slots", file=sys.stderr)
             for n in range(filler+1, 11):
                 team["Slot "+str(n)] = 0
-            print(f"RAIDTEAM - Returning {len(team)} heroes", file=sys.stderr)
             return team
 
         for i in heroes:
+            print(f"{datetime.now()} | CONSIDERING {i}", file=sys.stderr)
             teamList.append(i)
             for j in teamList:
-                # print(f"{datetime.now()} | Calculating {j}", file=sys.stderr)
+                print(f"{datetime.now()} | Calculating {j} with {i}", file=sys.stderr)
                 dmg = int(j.raidDPS(self.raidbuffs(teamList, j.baseStats.element), boss, art))
                 team[j.baseStats.name] = dmg
+            print(f"{datetime.now()} | CALCULATIONS WITH {i} COMPLETE", file=sys.stderr)
             if sum(team.values()) > high:
                 high = sum(team.values())
                 print(f"> Top: {i}", file=sys.stderr)
@@ -199,7 +199,6 @@ class User(UserMixin, db.Model):
                 print(f"> Bottom: {i}", file=sys.stderr)
                 low = sum(team.values())
                 bottom = i
-
             teamList.remove(i)
             del team[i.baseStats.name]
 
@@ -245,10 +244,11 @@ class User(UserMixin, db.Model):
         print(f"--------------------------------------", file=sys.stderr)
         return keep
 
+
     def raidbuffs(self, heroes, element):
         # print(f"{datetime.now()} | ### RAIDBUFFS CALLED ### | {len(heroes)} heroes", file=sys.stderr)
-        bufftypes = []  # kept for debugging purpose
-        hero = []       # kept for debugging purpose
+        # bufftypes = []  kept for debugging purpose
+        # hero = []       kept for debugging purpose
         buffs = {
             "atk": 0,
             "aps": 0,
@@ -258,10 +258,9 @@ class User(UserMixin, db.Model):
         for i in heroes:
             if i.baseStats.buffType == 1 and i.level > 3:
                 if i.baseStats.buffElement == element or i.baseStats.buffElement == 'All':
-                    bufftypes.append(i.baseStats.buffType)  # kept for debugging purpose
-                    hero.append(i)                          # kept for debugging purpose
+                    # bufftypes.append(i.baseStats.buffType)  kept for debugging purpose
+                    # hero.append(i)                          kept for debugging purpose
                     buffs[i.baseStats.buffStat] = buffs.get(i.baseStats.buffStat) + (i.baseStats.buff*(i.level-3))
-        # print(f"{datetime.now()} | ### RAIDBUFFS DONE ### | {len(buffs)} buffs", file=sys.stderr)
         return buffs
 
 
@@ -350,13 +349,13 @@ class Hero(db.Model):
         runedAtk = atk + (atk * (runedAttack / 100))
         return int(runedAtk)
 
-    def raidAtk(self, art, buff):
+    def raidAtk(self, art, buff, weakness):
         runedAttack = self.runedAtk
         base = self.baseStats.atk
         level = self.level
         awaken = self.awaken
         atk = base * (2 ** (level - 1)) * (1.5 ** awaken)
-        runedAtk = (atk + (atk * ((runedAttack+art) / 100))) * self.baseStats.crusher + atk * buff / 100
+        runedAtk = (atk + (atk * ((runedAttack+art) / 100))) * self.baseStats.crusher * weakness + atk * buff / 100
         return runedAtk
 
 
@@ -442,21 +441,18 @@ class Hero(db.Model):
         return '{:,}'.format(dps).replace(',', ' ')
 
     def raidDPS(self, buff, boss, art):
-        # print(f"{datetime.now()} | ### RAIDDPS CALLED FOR {self.baseStats.name} ### |", file=sys.stderr)
-        # Hero values including players artifacts
         sp2 = self.baseStats.sp2
         sp2num = self.baseStats.sp2num
-        atk = self.raidAtk(art['atk'][self.baseStats.element], buff['atk'])
+        if self.baseStats.fly == 1:
+            atk = self.raidAtk(art['atk'][self.baseStats.element], buff['atk'], boss[self.baseStats.job]+boss['Fly'])
+        else:
+            atk = self.raidAtk(art['atk'][self.baseStats.element], buff['atk'], boss[self.baseStats.job])
         aps = self.raidAps(self.player.artAps(), buff['aps'])
         crit = self.raidCrit(self.player.artCrit())
         critDmg = self.raidCritDmg(self.player.artCritDmg(self.baseStats.element), buff['critDmg'])
 
-        # weakness and elemental advantage, multiplicative (some claim it's multiplicative, others additive)
+        # elemental advantage, multiplicative
         atk *= boss[self.baseStats.element]
-        if self.baseStats.fly == 1:
-            atk *= (boss[self.baseStats.job]+boss['Fly'])
-        else:
-            atk *= boss[self.baseStats.job]
 
         # dps formula
         dps = ((atk * aps * (1-crit)) + (atk * aps * crit * (1+critDmg))) * (6 + sp2 * sp2num)/7

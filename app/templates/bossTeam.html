@@ -7,9 +7,14 @@
       <h1 class="display-4">Boss Teams</h1>
       <hr>
         <p class="instructions">Calculate your optimal damage teams for each boss in the Slay Boss Event.</p>
-          <p class="instructions">The algorithm adds one hero at a time selecting the one who has the greatest impact on a teams combined damage.
-          This is also the order in which heroes are sorted within each boss.
-        Please allow a few seconds for the algorithm to run.</p>
+        <p class="instructions"><strong>Recent findings within the community show that some heroes deal more or less damage than they're supposed to using their in-game data. This is currently being investigated and the base values used by this web application will be updated accordingly.</strong></p>
+        <p class="instructions">It's still safe to use this algorithm to generate your teams but their damage relations may vary greater in-game than you see here.</p>
+        <p class="instructions">Also keep in mind the nature of RNG in-game with frenzy, critical strikes and spawn order.</p>
+        <p class="instructions">The algorithm adds one hero at a time selecting the one who has the greatest impact on a teams combined damage. This is also the order in which heroes are sorted within each boss. Please allow a few seconds for the algorithm to run.</p>
+        <ul>
+            <li><a href="{{ url_for('static', filename='sampleLog1.txt') }}" target="_blank">Sample log of the algorithm at play, high level</a></li>
+            <li><a href="{{ url_for('static', filename='sampleLog2.txt') }}" target="_blank">Sample (in-depth) log of a single recursion.</a></li>
+        </ul>
       <hr>
     </div>
  </div>
