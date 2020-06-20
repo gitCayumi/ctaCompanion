@@ -5,8 +5,6 @@ from flask_login import UserMixin
 from hashlib import md5
 import sys
 
-RAIDBUFFCOUNT = 0
-
 
 @login.user_loader
 def load_user(id):

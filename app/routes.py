@@ -7,7 +7,6 @@ from app.models import User, Base, Hero, validateAwaken, validateLevel, validate
 from werkzeug.urls import url_parse
 from app.heroDict import heroDict, frostwing, bosses
 import sys
-from datetime import datetime
 
 
 @app.route('/')
