@@ -39,18 +39,18 @@ class User(UserMixin, db.Model):
         digest = md5(self.email.lower().encode('utf-8')).hexdigest()
         return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(digest, size)
 
-    def registeredProper(self, date):
+    def registered_proper(self, date):
         proper = date.strftime("%Y-%m-%d")
         return proper
 
-    def totalPower(self):
+    def total_power(self):
         prism = self.prismPower
         hero = self.heroPower
         art = self.artifactPower
         total = prism+hero+art
         return '{:,}'.format(total).replace(',', ' ')
 
-    def powerPerDay(self):
+    def power_per_day(self):
         total = int(self.prismPower + self.heroPower + self.artifactPower)
         days = self.daysPlayed
         # Avoid zero divison if days played = 0
@@ -59,7 +59,7 @@ class User(UserMixin, db.Model):
         total = int(total/days)
         return '{:,}'.format(total).replace(',', ' ')
 
-    def artDisplay(self, x):
+    def art_display(self, x):
         return '{:,}'.format(x).replace(',', ' ')
 
     def art_atk(self, element):
