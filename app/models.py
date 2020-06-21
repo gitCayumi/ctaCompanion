@@ -190,7 +190,7 @@ class User(UserMixin, db.Model):
         # Break out of recursion when team_list contain 10 heroes = team is full
         if len(team_list) == 10:
             for hero in team_list:
-                team[hero.baseStats.name] = int(hero.raidDPS(self.raidbuffs(team_list, hero.baseStats.element), boss, art))
+                team[hero.baseStats.name] = int(hero.raid_dps(self.raidbuffs(team_list, hero.baseStats.element), boss, art))
             return team
 
         # Handle input of less than 10 heroes, but still with correct ranking
@@ -198,7 +198,7 @@ class User(UserMixin, db.Model):
         if len(heroes) == 0:
             filler = len(team_list)
             for hero in team_list:
-                team[hero.baseStats.name] = int(hero.raidDPS(self.raidbuffs(team_list, hero.baseStats.element), boss, art))
+                team[hero.baseStats.name] = int(hero.raid_dps(self.raidbuffs(team_list, hero.baseStats.element), boss, art))
             for n in range(filler+1, 11):
                 team["Slot "+str(n)] = 0
             return team
@@ -210,7 +210,7 @@ class User(UserMixin, db.Model):
             # Calculate every hero in team_list in combination with the currently considered hero
             for hero in team_list:
                 print(f"{datetime.now()} | Calculating {hero} with {consider}", file=sys.stderr)
-                dmg = int(hero.raidDPS(self.raidbuffs(team_list, hero.baseStats.element), boss, art))
+                dmg = int(hero.raid_dps(self.raidbuffs(team_list, hero.baseStats.element), boss, art))
                 team[hero.baseStats.name] = dmg
             print(f"{datetime.now()} | CALCULATIONS WITH {consider} COMPLETE", file=sys.stderr)
             if sum(team.values()) > high:
@@ -225,7 +225,7 @@ class User(UserMixin, db.Model):
             del team[consider.baseStats.name]
 
         team_list.append(top)
-        team[top.baseStats.name] = int(top.raidDPS(self.raidbuffs(team_list, top.baseStats.element), boss, art))
+        team[top.baseStats.name] = int(top.raid_dps(self.raidbuffs(team_list, top.baseStats.element), boss, art))
         heroes.remove(top)
         # Remove the bottom performing hero if it's safe to do so
         # A bottom performing hero in the first recursion could hold a valuable buff (i.e. Kage)
@@ -251,7 +251,7 @@ class User(UserMixin, db.Model):
         # Populate dictionary where Key = Hero, and Value = the hero's dps including all buffs
         for hero in heroes:
             print(f"...{hero}", file=sys.stderr)
-            team[hero] = int(hero.raidDPS(self.raidbuffs(heroes, hero.baseStats.element), boss, art))
+            team[hero] = int(hero.raid_dps(self.raidbuffs(heroes, hero.baseStats.element), boss, art))
         print(f"filter_heroes - Dictionary complete", file=sys.stderr)
         # Add all heroes with a damage affecting buff
         print(f"filter_heroes - Adding damage affecting heroes", file=sys.stderr)
@@ -352,7 +352,7 @@ class Hero(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     base_id = db.Column(db.Integer, db.ForeignKey('base.id'))
 
-    def displayStat(self, stat):
+    def display_stat(self, stat):
         if stat < 1000:
             return str(int(round(stat, 0)))
         elif stat > 1000000:
@@ -360,15 +360,14 @@ class Hero(db.Model):
         else:
             return str(round(stat/1000, 2))+"K"
 
-    def displayAps(self, aps):
+    def display_aps(self, aps):
         return round(aps, 2)
 
-    # Space divide thousands for HP and ATK
-    def displayOther(self, x):
+    def display_other(self, x):
+        # Space divide thousands for HP and ATK
         return '{:,}'.format(x).replace(',', ' ')
 
     def atk(self):
-        # Temporary placeholder variable for runed values
         runedAttack = self.runedAtk
         base = self.baseStats.atk
         level = self.level
@@ -377,7 +376,7 @@ class Hero(db.Model):
         runedAtk = atk + (atk * (runedAttack / 100))
         return int(runedAtk)
 
-    def raidAtk(self, art, buff, weakness):
+    def raid_atk(self, art, buff, weakness):
         runedAttack = self.runedAtk
         base = self.baseStats.atk
         level = self.level
@@ -410,7 +409,7 @@ class Hero(db.Model):
         runedAps = base + (base * (runedAps / 100))
         return runedAps
 
-    def raidAps(self, art, buff):
+    def raid_aps(self, art, buff):
         runedAps = self.runedAps
         base = self.baseStats.aps
         runedAps = base + (base * ((runedAps+art+buff) / 100))
@@ -421,7 +420,7 @@ class Hero(db.Model):
         base = self.baseStats.crit
         return (base + runedCrit)/100
 
-    def raidCrit(self, art):
+    def raid_crit(self, art):
         runedCrit = self.runedCrit
         base = self.baseStats.crit
         return (base + runedCrit + art)/100
@@ -431,20 +430,17 @@ class Hero(db.Model):
         base = self.baseStats.critDmg
         return (base + runedDmg)/100
 
-    def raidCritDmg(self, art, buff):
-        # Temporary placeholder variable for runed values
+    def raid_crit_dmg(self, art, buff):
         runedDmg = self.runedCritDmg
         base = self.baseStats.critDmg
         return (base + runedDmg + art + buff)/100
 
-    def critDmgDisplay(self):
-        # Temporary placeholder variable for runed values
+    def crit_dmg_display(self):
         runedDmg = self.runedCritDmg
         base = self.baseStats.critDmg
         return base + runedDmg
 
     def dps(self):
-        # (atk * aps * (1-crit rate)) + (atk  * aps * critRate * critDmg)
         atk = self.atk()
         aps = self.aps()
         crit = self.crit()
@@ -452,10 +448,8 @@ class Hero(db.Model):
         dps = (atk * aps * (1-crit)) + (atk * aps * crit * critDmg)
         dps = int(round(dps))
         return atk, aps, crit, critDmg, dps
-        #return '{:,}'.format(dps).replace(',', ' ')
 
-    def dpsSP2(self):
-        # (atk * aps * (1-crit rate)) + (atk  * aps * critRate * critDmg)
+    def dps_sp2(self):
         sp2 = self.baseStats.sp2
         sp2num = self.baseStats.sp2num
         atk = self.atk()
@@ -463,20 +457,26 @@ class Hero(db.Model):
         crit = self.crit()
         critDmg = self.critDmg()
         dps = ((atk * aps * (1-crit)) + (atk * aps * crit * (1+critDmg))) * (6 + sp2 * sp2num)/7
-        #  x (6 + sp2_damage x sp2_num_attacks)/7
         dps = int(round(dps))
         return '{:,}'.format(dps).replace(',', ' ')
 
-    def raidDPS(self, buff, boss, art):
+    def raid_dps(self, buff, boss, art):
+        """ Calculate a hero's raid dps including team buffs, artifacts, boss weakness and elemental advantage
+
+        :param buff: Dictionary with active buffs for current hero within current team
+        :param boss: Dictionary with current boss's class weakness and elemental advantage
+        :param art: Dictionary with artifact bonus affecting current hero
+        :return: Current hero's dps within the set raid environment
+        """
         sp2 = self.baseStats.sp2
         sp2num = self.baseStats.sp2num
         if self.baseStats.fly == 1:
-            atk = self.raidAtk(art['atk'][self.baseStats.element], buff['atk'], boss[self.baseStats.job]+boss['Fly'])
+            atk = self.raid_atk(art['atk'][self.baseStats.element], buff['atk'], boss[self.baseStats.job] + boss['Fly'])
         else:
-            atk = self.raidAtk(art['atk'][self.baseStats.element], buff['atk'], boss[self.baseStats.job])
-        aps = self.raidAps(self.player.art_aps(), buff['aps'])
-        crit = self.raidCrit(self.player.art_crit())
-        critDmg = self.raidCritDmg(self.player.art_crit_dmg(self.baseStats.element), buff['critDmg'])
+            atk = self.raid_atk(art['atk'][self.baseStats.element], buff['atk'], boss[self.baseStats.job])
+        aps = self.raid_aps(self.player.art_aps(), buff['aps'])
+        crit = self.raid_crit(self.player.art_crit())
+        critDmg = self.raid_crit_dmg(self.player.art_crit_dmg(self.baseStats.element), buff['critDmg'])
 
         # elemental advantage, multiplicative
         atk *= boss[self.baseStats.element]
@@ -489,10 +489,6 @@ class Hero(db.Model):
         dps *= buff["kage"]
         # print(f"{datetime.now()} | ### RAIDDPS FINISHED FOR {self.baseStats.name} ### |", file=sys.stderr)
         return dps
-
-    def testing(self, user):
-        x = self.player.email
-        return x
 
     def progress(self):
         level = self.level
@@ -527,7 +523,6 @@ class Hero(db.Model):
         if total == 100:
             return int(total)
         return round(total, 2)
-
 
     def __repr__(self):
         return '{}'.format(self.baseStats.name)
@@ -593,7 +588,7 @@ class Post(db.Model):
         return '<Post {}>'.format(self.body)
 
 
-def validateLevel(level):
+def validate_level(level):
     if level < 0:
         level = 0
     elif level > 7:
@@ -601,13 +596,14 @@ def validateLevel(level):
     return level
 
 
-def validateAwaken(awaken, level):
+def validate_awaken(awaken, level):
+    # awaken cannot be greater than level
     if awaken > level:
         awaken = level
     return awaken
 
 
-def validateWeapon(wpn, prev):
+def validate_weapon(wpn, prev):
     if wpn < 0:
         wpn = prev
     elif wpn > 9:
@@ -615,7 +611,7 @@ def validateWeapon(wpn, prev):
     return wpn
 
 
-def validateMedals(medals, level):
+def validate_medals(medals, level):
     accumulated = 0     # 10, 30, 80, 280, 880, 2380, 4880
     if level == 0:
         medals = 0
@@ -641,74 +637,75 @@ def validateMedals(medals, level):
         return medals
     return medals
 
-def heroProgress(user, element, rarity):
+
+def hero_progress(user, element, rarity):
     # Query players hero based on element and rarity
     heroes = Hero.query.filter_by(player=user).join(Base).filter(Base.element==element, Base.rarity==rarity)
-    # heroes = Hero.query.filter_by(player=u).filter(Hero.level == 0)
     # Placeholder variables for count of heroes within query, total progress, and maxed heroes
     count = 0
     total = 0
     maxed = 0
-    for i in heroes:
+    for hero in heroes:
         count += 1
-        total += i.progress()
-    for i in heroes:
-        if i.level == 7:
+        total += hero.progress()
+    for hero in heroes:
+        if hero.level == 7:
             maxed += 1
     # Return average progress within element and rarity, amount of maxed heroes and count within same.
     return round(total/count, 2), maxed, count
 
-def totalMedals(user, element):
+
+def total_medals(user, element):
     heroes = Hero.query.filter_by(player=user).join(Base).filter(Base.element==element)
     total = 0
-    maxMedals = 0
-    for i in heroes:
-        if i.level == 1:
+    max_medals = 0
+    for hero in heroes:
+        if hero.level == 1:
             total += 10
-        elif i.level == 2:
+        elif hero.level == 2:
             total += 30
-        elif i.level == 3:
+        elif hero.level == 3:
             total += 80
-        elif i.level == 4:
+        elif hero.level == 4:
             total += 280
-        elif i.level == 5:
+        elif hero.level == 5:
             total += 880
-        elif i.level == 6:
+        elif hero.level == 6:
             total += 2380
-        elif i.level == 7:
+        elif hero.level == 7:
             total += 4880
-        total += i.medals
-        maxMedals += 4880
-    return total, maxMedals
+        total += hero.medals
+        max_medals += 4880
+    return total, max_medals
 
 
-def rarityMedals(user, element, rarity):
+def rarity_medals(user, element, rarity):
     heroes = Hero.query.filter_by(player=user).join(Base).filter(Base.rarity == rarity, Base.element == element)
     total = 0
-    for i in heroes:
-        if i.level == 1:
+    for hero in heroes:
+        if hero.level == 1:
             total += 10
-        elif i.level == 2:
+        elif hero.level == 2:
             total += 30
-        elif i.level == 3:
+        elif hero.level == 3:
             total += 80
-        elif i.level == 4:
+        elif hero.level == 4:
             total += 280
-        elif i.level == 5:
+        elif hero.level == 5:
             total += 880
-        elif i.level == 6:
+        elif hero.level == 6:
             total += 2380
-        elif i.level == 7:
+        elif hero.level == 7:
             total += 4880
-        total += i.medals
+        total += hero.medals
     return total
 
 
-def validateArt(art, level):
+def validate_art(art, level):
     level = int(level)
     # spaghetti code for event artifacts because of poor table design in art_base
-    three = [65, 69, 71, 72, 75, 78, 79, 80]
-    four = [66, 67, 68, 70, 73, 74, 76, 77]
+    three_star_event_art = [65, 69, 71, 72, 75, 78, 79, 80]
+    four_star_event_art = [66, 67, 68, 70, 73, 74, 76, 77]
 
     # Make sure 7-star artifacts don't go above 60 (45+15 enhanced)
     if art.artBase.star == 7 and level > 60:
@@ -725,14 +722,14 @@ def validateArt(art, level):
     # LEEROY
     elif art.artBase.id == 64 and level > 35:
         level = 35
-    elif art.artBase.id in three and level > 40:
+    elif art.artBase.id in three_star_event_art and level > 40:
         level = 40
-    elif art.artBase.id in four and level > 45:
+    elif art.artBase.id in four_star_event_art and level > 45:
         level = 45
     return level
 
 
-def displayRaidDps(dmg):
+def display_raid_dps(dmg):
     # Format dps within the thousand range
     if 1000 < dmg < 1000000:
         return str(round(dmg / 1000, 2)) + "K"
@@ -749,15 +746,8 @@ def displayRaidDps(dmg):
     return dmg
 
 
-"""
-if stat < 1000:
-return str(int(round(stat, 0)))
-elif stat > 1000000:
-return str(round(stat/1000000, 2))+"M"
-else:
-return str(round(stat/1000, 2))+"K"
-        
-4
+"""   
+4-Star
 four = [66, 67, 68, 70, 73, 74, 76, 77]
 Frosty Sword            73
 Frozen Flame            74
@@ -769,7 +759,7 @@ Astro Time Warper II    66
 Astro Head Start        67
 
 
-3
+3-Star
 three = [65, 69, 71, 72, 75, 78, 79, 80] 
 Frosty Shield           72
 Frosty Dragon           71
@@ -780,7 +770,7 @@ Soul Hand               79
 Soul Shield             80
 Soul Boots              78
 
-2
+2-Star
 Astrogem
 ----------
 Set Bonus

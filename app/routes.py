@@ -2,8 +2,8 @@ from flask import render_template, url_for, flash, redirect, request
 from app import app, db
 from app.forms import LoginForm, RegistrationForm
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User, Base, Hero, validateAwaken, validateLevel, validateWeapon, validateMedals, heroProgress, \
-    totalMedals, rarityMedals, ArtBase, Artifact, validateArt, BossBase, Bossteam, displayRaidDps
+from app.models import User, Base, Hero, validate_awaken, validate_level, validate_weapon, validate_medals, hero_progress, \
+    total_medals, rarity_medals, ArtBase, Artifact, validate_art, BossBase, Bossteam, display_raid_dps
 from werkzeug.urls import url_parse
 from app.heroDict import heroDict, frostwing, bosses
 import sys
@@ -113,10 +113,10 @@ def account(username):
 
         for j in heroes:
             current = str(j.id)
-            level = validateLevel(int(request.form.get(current + "level")))
-            awaken = validateAwaken(int(request.form.get(current + "awaken")), level)
-            wpn = validateWeapon(int(request.form.get(current + "wpn")), j.wpn)
-            medals = validateMedals(int(request.form.get(current + "medal")), level)
+            level = validate_level(int(request.form.get(current + "level")))
+            awaken = validate_awaken(int(request.form.get(current + "awaken")), level)
+            wpn = validate_weapon(int(request.form.get(current + "wpn")), j.wpn)
+            medals = validate_medals(int(request.form.get(current + "medal")), level)
 
             hero = Hero.query.get(j.id)
             hero.level = level
@@ -154,45 +154,45 @@ def collection(username):
 @login_required
 def progress(username):
     user = User.query.filter_by(username=username).first_or_404()
-    waterCommon = heroProgress(user, "Water", "Common")
-    waterRare = heroProgress(user, "Water", "Rare")
-    waterEpic = heroProgress(user, "Water", "Epic")
-    fireCommon = heroProgress(user, "Fire", "Common")
-    fireRare = heroProgress(user, "Fire", "Rare")
-    fireEpic = heroProgress(user, "Fire", "Epic")
-    earthCommon = heroProgress(user, "Earth", "Common")
-    earthRare = heroProgress(user, "Earth", "Rare")
-    earthEpic = heroProgress(user, "Earth", "Epic")
-    lightCommon = heroProgress(user, "Light", "Common")
-    lightRare = heroProgress(user, "Light", "Rare")
-    lightEpic = heroProgress(user, "Light", "Epic")
-    lightLegendary = heroProgress(user, "Light", "Legendary")
-    darkCommon = heroProgress(user, "Dark", "Common")
-    darkRare = heroProgress(user, "Dark", "Rare")
-    darkEpic = heroProgress(user, "Dark", "Epic")
-    darkLegendary = heroProgress(user, "Dark", "Legendary")
-    waterMedals = totalMedals(user, "Water")
-    fireMedals = totalMedals(user, "Fire")
-    earthMedals = totalMedals(user, "Earth")
-    lightMedals = totalMedals(user, "Light")
-    darkMedals = totalMedals(user, "Dark")
-    waterCommonMedals = rarityMedals(user, "Water", "Common")
-    waterRareMedals = rarityMedals(user, "Water", "Rare")
-    waterEpicMedals = rarityMedals(user, "Water", "Epic")
-    fireCommonMedals = rarityMedals(user, "Fire", "Common")
-    fireRareMedals = rarityMedals(user, "Fire", "Rare")
-    fireEpicMedals = rarityMedals(user, "Fire", "Epic")
-    earthCommonMedals = rarityMedals(user, "Earth", "Common")
-    earthRareMedals = rarityMedals(user, "Earth", "Rare")
-    earthEpicMedals = rarityMedals(user, "Earth", "Epic")
-    lightCommonMedals = rarityMedals(user, "Light", "Common")
-    lightRareMedals = rarityMedals(user, "Light", "Rare")
-    lightEpicMedals = rarityMedals(user, "Light", "Epic")
-    lightLegendaryMedals = rarityMedals(user, "Light", "Legendary")
-    darkCommonMedals = rarityMedals(user, "Dark", "Common")
-    darkRareMedals = rarityMedals(user, "Dark", "Rare")
-    darkEpicMedals = rarityMedals(user, "Dark", "Epic")
-    darkLegendaryMedals = rarityMedals(user, "Dark", "Legendary")
+    waterCommon = hero_progress(user, "Water", "Common")
+    waterRare = hero_progress(user, "Water", "Rare")
+    waterEpic = hero_progress(user, "Water", "Epic")
+    fireCommon = hero_progress(user, "Fire", "Common")
+    fireRare = hero_progress(user, "Fire", "Rare")
+    fireEpic = hero_progress(user, "Fire", "Epic")
+    earthCommon = hero_progress(user, "Earth", "Common")
+    earthRare = hero_progress(user, "Earth", "Rare")
+    earthEpic = hero_progress(user, "Earth", "Epic")
+    lightCommon = hero_progress(user, "Light", "Common")
+    lightRare = hero_progress(user, "Light", "Rare")
+    lightEpic = hero_progress(user, "Light", "Epic")
+    lightLegendary = hero_progress(user, "Light", "Legendary")
+    darkCommon = hero_progress(user, "Dark", "Common")
+    darkRare = hero_progress(user, "Dark", "Rare")
+    darkEpic = hero_progress(user, "Dark", "Epic")
+    darkLegendary = hero_progress(user, "Dark", "Legendary")
+    waterMedals = total_medals(user, "Water")
+    fireMedals = total_medals(user, "Fire")
+    earthMedals = total_medals(user, "Earth")
+    lightMedals = total_medals(user, "Light")
+    darkMedals = total_medals(user, "Dark")
+    waterCommonMedals = rarity_medals(user, "Water", "Common")
+    waterRareMedals = rarity_medals(user, "Water", "Rare")
+    waterEpicMedals = rarity_medals(user, "Water", "Epic")
+    fireCommonMedals = rarity_medals(user, "Fire", "Common")
+    fireRareMedals = rarity_medals(user, "Fire", "Rare")
+    fireEpicMedals = rarity_medals(user, "Fire", "Epic")
+    earthCommonMedals = rarity_medals(user, "Earth", "Common")
+    earthRareMedals = rarity_medals(user, "Earth", "Rare")
+    earthEpicMedals = rarity_medals(user, "Earth", "Epic")
+    lightCommonMedals = rarity_medals(user, "Light", "Common")
+    lightRareMedals = rarity_medals(user, "Light", "Rare")
+    lightEpicMedals = rarity_medals(user, "Light", "Epic")
+    lightLegendaryMedals = rarity_medals(user, "Light", "Legendary")
+    darkCommonMedals = rarity_medals(user, "Dark", "Common")
+    darkRareMedals = rarity_medals(user, "Dark", "Rare")
+    darkEpicMedals = rarity_medals(user, "Dark", "Epic")
+    darkLegendaryMedals = rarity_medals(user, "Dark", "Legendary")
 
     return render_template('progress.html', user=user, title='Hero Progress', waterCommon=waterCommon,
                            waterRare=waterRare, waterEpic=waterEpic,
@@ -269,11 +269,10 @@ def artifacts(username):
     normal = Artifact.query.filter_by(owner=user, type="N")
     event = Artifact.query.filter_by(owner=user, type="E")
     artifactBase = ArtBase.query.all()
-    testArt = user.art_atk("Fire")
 
     if request.method == "GET":
         return render_template('artifacts.html', user=user, title='Artifacts', artifactBase=artifactBase, event=event,
-                               normal=normal, testArt=testArt, artifactactive=1)
+                               normal=normal, artifactactive=1)
     else:
         arts = Artifact.query.filter_by(owner=user)
         for j in arts:
@@ -305,7 +304,7 @@ def artifacts(username):
             if request.form.get(current + "art") == "81":
                 art.level = 0
             else:
-                art.level = validateArt(art, request.form.get(current + "level"))
+                art.level = validate_art(art, request.form.get(current + "level"))
             art.artbase_id = request.form.get(current + "art")
 
         db.session.commit()
@@ -320,73 +319,74 @@ def artifacts(username):
 @login_required
 def bossTeam(username):
     user = User.query.filter_by(username=username).first_or_404()
-    loadKraken = Bossteam.query.filter_by(bossbase_id=1, user_id=user.id).all()
-    loadDeepseaking = Bossteam.query.filter_by(bossbase_id=2, user_id=user.id).all()
-    loadFrostwing = Bossteam.query.filter_by(bossbase_id=3, user_id=user.id).all()
-    loadOdin = Bossteam.query.filter_by(bossbase_id=4, user_id=user.id).all()
-    loadLightmech = Bossteam.query.filter_by(bossbase_id=5, user_id=user.id).all()
-    loadAstrolab = Bossteam.query.filter_by(bossbase_id=6, user_id=user.id).all()
-    loadSandclaw = Bossteam.query.filter_by(bossbase_id=7, user_id=user.id).all()
-    loadVoodootank = Bossteam.query.filter_by(bossbase_id=8, user_id=user.id).all()
-    loadUndeadsamurai = Bossteam.query.filter_by(bossbase_id=9, user_id=user.id).all()
-    loadValkenbot = Bossteam.query.filter_by(bossbase_id=10, user_id=user.id).all()
-    loadFiregorge = Bossteam.query.filter_by(bossbase_id=11, user_id=user.id).all()
-    loadMadking = Bossteam.query.filter_by(bossbase_id=12, user_id=user.id).all()
-    loadBeetle = Bossteam.query.filter_by(bossbase_id=13, user_id=user.id).all()
-    loadHauntinghead = Bossteam.query.filter_by(bossbase_id=14, user_id=user.id).all()
-    loadGunlord = Bossteam.query.filter_by(bossbase_id=15, user_id=user.id).all()
+    load_kraken = Bossteam.query.filter_by(bossbase_id=1, user_id=user.id).all()
+    load_deepseaking = Bossteam.query.filter_by(bossbase_id=2, user_id=user.id).all()
+    load_frostwing = Bossteam.query.filter_by(bossbase_id=3, user_id=user.id).all()
+    load_odin = Bossteam.query.filter_by(bossbase_id=4, user_id=user.id).all()
+    load_lightmech = Bossteam.query.filter_by(bossbase_id=5, user_id=user.id).all()
+    load_astrolab = Bossteam.query.filter_by(bossbase_id=6, user_id=user.id).all()
+    load_sandclaw = Bossteam.query.filter_by(bossbase_id=7, user_id=user.id).all()
+    load_voodootank = Bossteam.query.filter_by(bossbase_id=8, user_id=user.id).all()
+    load_undeadsamurai = Bossteam.query.filter_by(bossbase_id=9, user_id=user.id).all()
+    load_valkenbot = Bossteam.query.filter_by(bossbase_id=10, user_id=user.id).all()
+    load_firegorge = Bossteam.query.filter_by(bossbase_id=11, user_id=user.id).all()
+    load_madking = Bossteam.query.filter_by(bossbase_id=12, user_id=user.id).all()
+    load_beetle = Bossteam.query.filter_by(bossbase_id=13, user_id=user.id).all()
+    load_hauntinghead = Bossteam.query.filter_by(bossbase_id=14, user_id=user.id).all()
+    load_gunlord = Bossteam.query.filter_by(bossbase_id=15, user_id=user.id).all()
 
-    krakenDict = {}
-    for i in loadKraken:
-        krakenDict[i.hero] = displayRaidDps(i.damage)
-    deepseakingDict = {}
-    for i in loadDeepseaking:
-        deepseakingDict[i.hero] = displayRaidDps(i.damage)
-    frostwingDict = {}
-    for i in loadFrostwing:
-        frostwingDict[i.hero] = displayRaidDps(i.damage)
-    odinDict = {}
-    for i in loadOdin:
-        odinDict[i.hero] = displayRaidDps(i.damage)
-    lightmechDict = {}
-    for i in loadLightmech:
-        lightmechDict[i.hero] = displayRaidDps(i.damage)
-    astrolabDict = {}
-    for i in loadAstrolab:
-        astrolabDict[i.hero] = displayRaidDps(i.damage)
-    sandclawDict = {}
-    for i in loadSandclaw:
-        sandclawDict[i.hero] = displayRaidDps(i.damage)
-    voodootankDict = {}
-    for i in loadVoodootank:
-        voodootankDict[i.hero] = displayRaidDps(i.damage)
-    undeadsamuraiDict = {}
-    for i in loadUndeadsamurai:
-        undeadsamuraiDict[i.hero] = displayRaidDps(i.damage)
-    valkenbotDict = {}
-    for i in loadValkenbot:
-        valkenbotDict[i.hero] = displayRaidDps(i.damage)
-    firegorgeDict = {}
-    for i in loadFiregorge:
-        firegorgeDict[i.hero] = displayRaidDps(i.damage)
-    madkingDict = {}
-    for i in loadMadking:
-        madkingDict[i.hero] = displayRaidDps(i.damage)
-    beetleDict = {}
-    for i in loadBeetle:
-        beetleDict[i.hero] = displayRaidDps(i.damage)
-    hauntingheadDict = {}
-    for i in loadHauntinghead:
-        hauntingheadDict[i.hero] = displayRaidDps(i.damage)
-    gunlordDict = {}
-    for i in loadGunlord:
-        gunlordDict[i.hero] = displayRaidDps(i.damage)
+    kraken_dict = {}
+    for entry in load_kraken:
+        kraken_dict[entry.hero] = display_raid_dps(entry.damage)
+    deepseaking_dict = {}
+    for entry in load_deepseaking:
+        deepseaking_dict[entry.hero] = display_raid_dps(entry.damage)
+    frostwing_dict = {}
+    for entry in load_frostwing:
+        frostwing_dict[entry.hero] = display_raid_dps(entry.damage)
+    odin_dict = {}
+    for entry in load_odin:
+        odin_dict[entry.hero] = display_raid_dps(entry.damage)
+    lightmech_dict = {}
+    for entry in load_lightmech:
+        lightmech_dict[entry.hero] = display_raid_dps(entry.damage)
+    astrolab_dict = {}
+    for entry in load_astrolab:
+        astrolab_dict[entry.hero] = display_raid_dps(entry.damage)
+    sandclaw_dict = {}
+    for entry in load_sandclaw:
+        sandclaw_dict[entry.hero] = display_raid_dps(entry.damage)
+    voodootank_dict = {}
+    for entry in load_voodootank:
+        voodootank_dict[entry.hero] = display_raid_dps(entry.damage)
+    undeadsamurai_dict = {}
+    for entry in load_undeadsamurai:
+        undeadsamurai_dict[entry.hero] = display_raid_dps(entry.damage)
+    valkenbot_dict = {}
+    for entry in load_valkenbot:
+        valkenbot_dict[entry.hero] = display_raid_dps(entry.damage)
+    firegorge_dict = {}
+    for entry in load_firegorge:
+        firegorge_dict[entry.hero] = display_raid_dps(entry.damage)
+    madking_dict = {}
+    for entry in load_madking:
+        madking_dict[entry.hero] = display_raid_dps(entry.damage)
+    beetle_dict = {}
+    for entry in load_beetle:
+        beetle_dict[entry.hero] = display_raid_dps(entry.damage)
+    hauntinghead_dict = {}
+    for entry in load_hauntinghead:
+        hauntinghead_dict[entry.hero] = display_raid_dps(entry.damage)
+    gunlord_dict = {}
+    for entry in load_gunlord:
+        gunlord_dict[entry.hero] = display_raid_dps(entry.damage)
 
-    return render_template('bossTeam.html', user=user, title='Boss Teams', krakenDict=krakenDict, deepseakingDict=deepseakingDict,
-                           frostwingDict=frostwingDict, odinDict=odinDict, lightmechDict=lightmechDict, astrolabDict=astrolabDict,
-                           sandclawDict=sandclawDict, voodootankDict=voodootankDict, undeadsamuraiDict=undeadsamuraiDict,
-                           valkenbotDict=valkenbotDict, firegorgeDict=firegorgeDict, madkingDict=madkingDict,
-                           beetleDict=beetleDict, hauntingheadDict=hauntingheadDict, gunlordDict=gunlordDict,
+    return render_template('bossTeam.html', user=user, title='Boss Teams', kraken_dict=kraken_dict,
+                           deepseaking_dict=deepseaking_dict, frostwing_dict=frostwing_dict, odin_dict=odin_dict,
+                           lightmech_dict=lightmech_dict, astrolab_dict=astrolab_dict, sandclaw_dict=sandclaw_dict,
+                           voodootank_dict=voodootank_dict, undeadsamurai_dict=undeadsamurai_dict,
+                           valkenbot_dict=valkenbot_dict, firegorge_dict=firegorge_dict, madking_dict=madking_dict,
+                           beetle_dict=beetle_dict, hauntinghead_dict=hauntinghead_dict, gunlord_dict=gunlord_dict,
                            bossactive=1)
 
 
@@ -395,14 +395,15 @@ def bossTeam(username):
 def calculate(username, boss):
     user = User.query.filter_by(username=username).first_or_404()
     heroes = Hero.query.filter_by(player=user).filter(Hero.level > 0).all()
-    bossName = BossBase.query.get(boss)
-    idHelp = Bossteam.query.filter_by(bossbase_id=boss, user_id=user.id).first()
-    boss = bosses[str(idHelp.bossBase.nameSafe)]
-    teamList = []
+    boss_name = BossBase.query.get(boss)
+    id_help = Bossteam.query.filter_by(bossbase_id=boss, user_id=user.id).first()
+    boss = bosses[str(id_help.bossBase.nameSafe)]
+    team_list = []
     team = {}
 
-    print(f"### bossTeam algorithm initiated; {bossName.name} for {user.username} ###", file=sys.stderr)
+    print(f"### bossTeam algorithm initiated; {boss_name.name} for {user.username} ###", file=sys.stderr)
 
+    # Populate dictionary with all artifact atk bonuses by element
     atk = {
         "Water": user.art_atk("Water"),
         "Fire": user.art_atk("Fire"),
@@ -410,42 +411,39 @@ def calculate(username, boss):
         "Light": user.art_atk("Light"),
         "Dark": user.art_atk("Dark")
     }
-
-    critDmg = {
+    # Populate dictionary with all artifact critDmg bonuses by element
+    crit_dmg = {
         "Water": user.art_crit_dmg("Water"),
         "Fire": user.art_crit_dmg("Fire"),
         "Earth": user.art_crit_dmg("Earth"),
         "Light": user.art_crit_dmg("Light"),
         "Dark": user.art_crit_dmg("Dark")
     }
-
-    artBonus = {
+    # Populate dictionary with a collection of all artifact bonuses, by stat
+    art_bonus = {
         "atk": atk,
         "aps": user.art_aps(),
         "crit": user.art_crit(),
-        "critDmg": critDmg
+        "critDmg": crit_dmg
     }
 
     if len(heroes) > 10:
         print(f"{len(heroes)} heroes found; filter_heroes", file=sys.stderr)
-        filterTeam = user.filter_heroes(heroes, boss, artBonus)
-        print(f"RAIDTEAM - Calling (filtered, {len(filterTeam)} heroes)", file=sys.stderr)
-        testTeam = user.raid_team(team, teamList, filterTeam, boss, artBonus)
+        filter_team = user.filter_heroes(heroes, boss, art_bonus)
+        print(f"RAIDTEAM - Calling (filtered, {len(filter_team)} heroes)", file=sys.stderr)
+        team = user.raid_team(team, team_list, filter_team, boss, art_bonus)
     else:
         print(f"RAIDTEAM - Calling (unfiltered, {len(heroes)} heroes)", file=sys.stderr)
-        testTeam = user.raid_team(team, teamList, heroes, boss, artBonus)
+        team = user.raid_team(team, team_list, heroes, boss, art_bonus)
 
-    teamID = int(idHelp.id)
-    print(f"Adding {len(testTeam)} heroes to database", file=sys.stderr)
-    for h, d in testTeam.items():
-        slot = Bossteam.query.get(teamID)
-        slot.hero = h
-        slot.damage = d
+    team_id = int(id_help.id)
+    for hero, damage in team.items():
+        slot = Bossteam.query.get(team_id)
+        slot.hero = hero
+        slot.damage = damage
         db.session.add(slot)
-        teamID += 1
+        team_id += 1
     db.session.commit()
-    print(f"Commit complete", file=sys.stderr)
-    print(f"--------------------------------------", file=sys.stderr)
 
     flash(u'Calculation complete, your data has been saved.', 'info')
     return redirect(url_for('bossTeam', username=current_user.username))

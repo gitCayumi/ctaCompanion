@@ -30,7 +30,7 @@
         <img class="img-fluid rounded-circle" src="/static/{{selectedHero.baseStats.nameSafe}}.png" alt="{{selectedHero.baseStats.name}}"><br><br>
         {{ selectedHero.baseStats.element }} {{ selectedHero.baseStats.rarity }} {{ selectedHero.baseStats.job }}<hr>
         {% if selectedHero.level > 0 %}
-        <p class="instructions {{selectedHero.baseStats.element}}{{selectedHero.baseStats.rarity}}"><b>DPS: {{ selectedHero.dpsSP2() }}</b></p>
+        <p class="instructions {{selectedHero.baseStats.element}}{{selectedHero.baseStats.rarity}}"><b>DPS: {{ selectedHero.dps_sp2() }}</b></p>
         {% else %}
         <p class="instructions {{selectedHero.baseStats.element}}{{selectedHero.baseStats.rarity}}">Hero not collected</p>
         {% endif %}
@@ -76,8 +76,8 @@
                   <td class="align-middle text-center"><img src="{{ url_for('static', filename='atk.png') }}" width="25" alt="Attack"></td>
                   <td class="align-middle">Attack</td>
                   {% if selectedHero.level > 0 %}
-                  <td class="align-middle">{{ selectedHero.displayStat(selectedHero.atk()) }}</td>
-                  <td class="align-middle">{{ selectedHero.displayOther(selectedHero.atk()) }}</td>
+                  <td class="align-middle">{{ selectedHero.display_stat(selectedHero.atk()) }}</td>
+                  <td class="align-middle">{{ selectedHero.display_other(selectedHero.atk()) }}</td>
                   <td><input type="text" maxlength="10" class="form-control form-control-sm" id="{{ selectedHero.id }}runedAtk" value="{{ selectedHero.runedAtk }}" name="{{ selectedHero.id }}runedAtk"></td>
                   {% else %}
                   <td class="align-middle">{{ selectedHero.baseStats.atk }}</td>
@@ -89,8 +89,8 @@
                   <td class="align-middle text-center"><img src="{{ url_for('static', filename='hp.png') }}" width="25" alt="HP"></td>
                   <td class="align-middle">HP</td>
                   {% if selectedHero.level > 0 %}
-                  <td class="align-middle">{{ selectedHero.displayStat(selectedHero.hp()) }}</td>
-                  <td class="align-middle">{{ selectedHero.displayOther(selectedHero.hp()) }}</td>
+                  <td class="align-middle">{{ selectedHero.display_stat(selectedHero.hp()) }}</td>
+                  <td class="align-middle">{{ selectedHero.display_other(selectedHero.hp()) }}</td>
                   <td><input type="text" maxlength="10" class="form-control form-control-sm" id="{{ selectedHero.id }}runedHp" value="{{ selectedHero.runedHp }}" name="{{ selectedHero.id }}runedHp" onkeypress="return isNumber9(event)"></td>
                   {% else %}
                   <td class="align-middle">{{ selectedHero.baseStats.hp }}</td>
@@ -102,7 +102,7 @@
                   <td class="align-middle text-center"><img src="{{ url_for('static', filename='def.png') }}" width="25" alt="Defense"></td>
                   <td class="align-middle">Defense</td>
                   {% if selectedHero.level > 0 %}
-                  <td class="align-middle">{{ selectedHero.displayStat(selectedHero.defense()) }}</td>
+                  <td class="align-middle">{{ selectedHero.display_stat(selectedHero.defense()) }}</td>
                   <td class="align-middle">{{ selectedHero.defense() }}</td>
                   <td><input type="text" maxlength="10" class="form-control form-control-sm" id="{{ selectedHero.id }}runedDef" value="{{ selectedHero.runedDef }}" name="{{ selectedHero.id }}runedDef" onkeypress="return isNumber9(event)"></td>
                   {% else %}
