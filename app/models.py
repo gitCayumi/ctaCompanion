@@ -62,203 +62,233 @@ class User(UserMixin, db.Model):
     def artDisplay(self, x):
         return '{:,}'.format(x).replace(',', ' ')
 
-    def artAtk(self, element):
-        arts = self.artifacts
+    def art_atk(self, element):
+        """ Calculate the attack bonus from a users artifacts (including set bonus) for a given element.
+
+        :param element: Element to calculate
+        :return: An integer of attack bonus
+        """
+        artifacts = self.artifacts
         attack = 0
+        # handle the special case of Gun Lord artifacts, effect is halved above 5.000.000 power
         glBreak = 5000000
-        for i in arts:
-            if i.artBase.element == element or i.artBase.element == "All":
-                attack += i.artBase.atk + ((i.level - 1) * i.artBase.atkLevel)
-            if i.artBase.id == 79:
+
+        for artifact in artifacts:
+            if artifact.artBase.element == element or artifact.artBase.element == "All":
+                attack += artifact.artBase.atk + ((artifact.level - 1) * artifact.artBase.atkLevel)
+            # Special case of Gun Lord artifact(s), only 79 (Soul Hands) matter from a damage perspective
+            if artifact.artBase.id == 79:
                 if self.heroPower < glBreak:
-                    attack += (0.005 + (0.001 * i.level)) * self.heroPower
+                    attack += (0.005 + (0.001 * artifact.level)) * self.heroPower
                 else:
-                    attack += (0.005 + (0.001 * i.level)) * (glBreak + ((self.heroPower - glBreak) / 2))
+                    attack += (0.005 + (0.001 * artifact.level)) * (glBreak + ((self.heroPower - glBreak) / 2))
 
-        Vulcan = 0  # 16, 17, 18
-        Abaddon = 0  # 1, 2, 3
-        Phoenix = 0  # 34, 35, 36
-        Abyssal = 0  # 19, 20, 21
-        Efreeti = 0  # 37, 38, 39
-        Hades = 0  # 43, 44, 45
+        vulcan = 0  # 16, 17, 18
+        abaddon = 0  # 1, 2, 3
+        phoenix = 0  # 34, 35, 36
+        abyssal = 0  # 19, 20, 21
+        efreeti = 0  # 37, 38, 39
+        hades = 0  # 43, 44, 45
 
-        for i in arts:
-            if i.artbase_id == 16 or i.artbase_id == 17 or i.artbase_id == 18:
-                Vulcan += 1
-            elif i.artbase_id == 1 or i.artbase_id == 2 or i.artbase_id == 3:
-                Abaddon += 1
-            elif i.artbase_id == 34 or i.artbase_id == 35 or i.artbase_id == 36:
-                Phoenix += 1
-            elif i.artbase_id == 19 or i.artbase_id == 20 or i.artbase_id == 21:
-                Abyssal += 1
-            elif i.artbase_id == 37 or i.artbase_id == 38 or i.artbase_id == 39:
-                Efreeti += 1
-            elif i.artbase_id == 43 or i.artbase_id == 44 or i.artbase_id == 45:
-                Hades += 1
-        if Vulcan == 3:
+        # Calculate full sets of artifacts, adding 1 to set name per artifact, using the IDs
+        for artifact in artifacts:
+            if artifact.artbase_id == 16 or artifact.artbase_id == 17 or artifact.artbase_id == 18:
+                vulcan += 1
+            elif artifact.artbase_id == 1 or artifact.artbase_id == 2 or artifact.artbase_id == 3:
+                abaddon += 1
+            elif artifact.artbase_id == 34 or artifact.artbase_id == 35 or artifact.artbase_id == 36:
+                phoenix += 1
+            elif artifact.artbase_id == 19 or artifact.artbase_id == 20 or artifact.artbase_id == 21:
+                abyssal += 1
+            elif artifact.artbase_id == 37 or artifact.artbase_id == 38 or artifact.artbase_id == 39:
+                efreeti += 1
+            elif artifact.artbase_id == 43 or artifact.artbase_id == 44 or artifact.artbase_id == 45:
+                hades += 1
+
+        # Artifact set names, comments are their ID in ArtBase
+        if vulcan == 3:
             attack += 10000
-        if Abaddon == 3:
+        if abaddon == 3:
             attack += 10000
-        if Phoenix == 3:
+        if phoenix == 3:
             attack += 4000
-        if Abyssal == 3:
+        if abyssal == 3:
             attack += 4000
-        if Hades == 3:
+        if hades == 3:
             attack += 1000
         return int(round(attack))
 
-    def artCrit(self):
-        arts = self.artifacts
+    def art_crit(self):
+        artifacts = self.artifacts
         crit = 0
-        Phoenix = 0  # 34, 35, 36
-        Efreeti = 0  # 37, 38, 39
-        for i in arts:
-            if i.artbase_id == 34 or i.artbase_id == 35 or i.artbase_id == 36:
-                Phoenix += 1
-            elif i.artbase_id == 37 or i.artbase_id == 38 or i.artbase_id == 39:
-                Efreeti += 1
-        if Phoenix == 3:
+        phoenix = 0  # 34, 35, 36
+        efreeti = 0  # 37, 38, 39
+        for artifact in artifacts:
+            if artifact.artbase_id == 34 or artifact.artbase_id == 35 or artifact.artbase_id == 36:
+                phoenix += 1
+            elif artifact.artbase_id == 37 or artifact.artbase_id == 38 or artifact.artbase_id == 39:
+                efreeti += 1
+        if phoenix == 3:
             crit += 15
-        if Efreeti == 3:
+        if efreeti == 3:
             crit += 10
         return crit
 
-    def artAps(self):
-        arts = self.artifacts
+    def art_aps(self):
+        artifacts = self.artifacts
         aps = 0
-        Atlantis = 0  # 13, 14, 15
-        Mermaid = 0  # 31, 32, 33
-        Poseidon = 0  # 49, 50, 51
-        Zeus = 0  # 52, 53, 54
-        for i in arts:
-            if i.artbase_id == 13 or i.artbase_id == 14 or i.artbase_id == 15:
-                Atlantis += 1
-            elif i.artbase_id == 31 or i.artbase_id == 32 or i.artbase_id == 33:
-                Mermaid += 1
-            elif i.artbase_id == 49 or i.artbase_id == 50 or i.artbase_id == 51:
-                Poseidon += 1
-            elif i.artbase_id == 52 or i.artbase_id == 53 or i.artbase_id == 54:
-                Zeus += 1
-        if Atlantis == 3:
+        atlantis = 0  # 13, 14, 15
+        mermaid = 0  # 31, 32, 33
+        poseidon = 0  # 49, 50, 51
+        zeus = 0  # 52, 53, 54
+
+        # Calculate full sets of artifacts, adding 1 to set name per artifact, using the IDs
+        for artifact in artifacts:
+            if artifact.artbase_id == 13 or artifact.artbase_id == 14 or artifact.artbase_id == 15:
+                atlantis += 1
+            elif artifact.artbase_id == 31 or artifact.artbase_id == 32 or artifact.artbase_id == 33:
+                mermaid += 1
+            elif artifact.artbase_id == 49 or artifact.artbase_id == 50 or artifact.artbase_id == 51:
+                poseidon += 1
+            elif artifact.artbase_id == 52 or artifact.artbase_id == 53 or artifact.artbase_id == 54:
+                zeus += 1
+
+        if atlantis == 3:
             aps += 20
-        if Mermaid == 3:
+        if mermaid == 3:
             aps += 15
-        if Poseidon == 3:
+        if poseidon == 3:
             aps += 10
-        if Zeus == 3:
+        if zeus == 3:
             aps += 10
         return aps
 
-    def artCritDmg(self, element):
-        arts = self.artifacts
-        critDmg = 0
-        for i in arts:
-            if i.artBase.element == element or i.artBase.element == "All":
-                critDmg += i.artBase.critDmg + ((i.level - 1) * i.artBase.critDmgLevel)
-        return int(round(critDmg, 0))
+    def art_crit_dmg(self, element):
+        artifacts = self.artifacts
+        crit_dmg = 0
+        for artifact in artifacts:
+            if artifact.artBase.element == element or artifact.artBase.element == "All":
+                crit_dmg += artifact.artBase.critDmg + ((artifact.level - 1) * artifact.artBase.critDmgLevel)
+        return int(round(crit_dmg, 0))
 
-    def raidTeam(self, team, teamList, heroes, boss, art):
-        print(f"{datetime.now()} | TEAM SIZE {len(teamList)}", file=sys.stderr)
-        high = sum(team.values())
-        low = 1000000000000000
-        top = ""
-        bottom = ""
+    def raid_team(self, team, team_list, heroes, boss, art):
+        """ Calculate the optimal damage team for the current boss
 
-        # Break out of recursion
-        if len(teamList) == 10:
-            print(f"BREAKING OUT OF RECURSION", file=sys.stderr)
-            for k in teamList:
-                team[k.baseStats.name] = int(k.raidDPS(self.raidbuffs(teamList, k.baseStats.element), boss, art))
-            print(f"Return {team}", file=sys.stderr)
+        :param team: Dictionary to populate with top performing heroes, Key = hero name, Value = DPS
+        :param team_list: Empty list to fill with heroes for calculations
+        :param heroes: List of all heroes to calculate
+        :param boss: Dictionary with the current boss's class weakness and elemental advantages
+        :param art: Dictionary with the current users artifact bonus
+        :return: Dictionary with the optimal team for the current boss, Key = hero name, Value = DPS
+        """
+        print(f"{datetime.now()} | TEAM SIZE {len(team_list)}", file=sys.stderr)
+        high = sum(team.values())   # Used to calculate the top performing hero
+        low = 1000000000000000      # Used to calculate the bottom performing hero (gotta be a better way)
+        top = ""                    # Placeholder for top performing hero
+        bottom = ""                 # Placeholder for bottom performing hero
+
+        # Break out of recursion when team_list contain 10 heroes = team is full
+        if len(team_list) == 10:
+            for hero in team_list:
+                team[hero.baseStats.name] = int(hero.raidDPS(self.raidbuffs(team_list, hero.baseStats.element), boss, art))
             return team
 
         # Handle input of less than 10 heroes, but still with correct ranking
+        # At each recursion the top performing hero is removed from 'heroes', this will catch users with < 10 heroes
         if len(heroes) == 0:
-            filler = len(teamList)
-            for m in teamList:
-                team[m.baseStats.name] = int(m.raidDPS(self.raidbuffs(teamList, m.baseStats.element), boss, art))
+            filler = len(team_list)
+            for hero in team_list:
+                team[hero.baseStats.name] = int(hero.raidDPS(self.raidbuffs(team_list, hero.baseStats.element), boss, art))
             for n in range(filler+1, 11):
                 team["Slot "+str(n)] = 0
             return team
 
-        for i in heroes:
-            print(f"{datetime.now()} | CONSIDERING {i}", file=sys.stderr)
-            teamList.append(i)
-            for j in teamList:
-                print(f"{datetime.now()} | Calculating {j} with {i}", file=sys.stderr)
-                dmg = int(j.raidDPS(self.raidbuffs(teamList, j.baseStats.element), boss, art))
-                team[j.baseStats.name] = dmg
-            print(f"{datetime.now()} | CALCULATIONS WITH {i} COMPLETE", file=sys.stderr)
+        # Iterate over all the users heroes to find the top performing one
+        for consider in heroes:
+            print(f"{datetime.now()} | CONSIDERING {consider}", file=sys.stderr)
+            team_list.append(consider)
+            # Calculate every hero in team_list in combination with the currently considered hero
+            for hero in team_list:
+                print(f"{datetime.now()} | Calculating {hero} with {consider}", file=sys.stderr)
+                dmg = int(hero.raidDPS(self.raidbuffs(team_list, hero.baseStats.element), boss, art))
+                team[hero.baseStats.name] = dmg
+            print(f"{datetime.now()} | CALCULATIONS WITH {consider} COMPLETE", file=sys.stderr)
             if sum(team.values()) > high:
                 high = sum(team.values())
-                print(f"> Top: {i}", file=sys.stderr)
-                top = i
+                print(f"> Top: {consider}", file=sys.stderr)
+                top = consider
             elif sum(team.values()) < low:
-                print(f"> Bottom: {i}", file=sys.stderr)
+                print(f"> Bottom: {consider}", file=sys.stderr)
                 low = sum(team.values())
-                bottom = i
-            teamList.remove(i)
-            del team[i.baseStats.name]
+                bottom = consider
+            team_list.remove(consider)
+            del team[consider.baseStats.name]
 
-        teamList.append(top)
-        team[top.baseStats.name] = int(top.raidDPS(self.raidbuffs(teamList, top.baseStats.element), boss, art))
+        team_list.append(top)
+        team[top.baseStats.name] = int(top.raidDPS(self.raidbuffs(team_list, top.baseStats.element), boss, art))
         heroes.remove(top)
-        if len(heroes) > 20 and len(teamList) > 0:
+        # Remove the bottom performing hero if it's safe to do so
+        # A bottom performing hero in the first recursion could hold a valuable buff (i.e. Kage)
+        if len(heroes) > 20 and len(team_list) > 0:
             heroes.remove(bottom)
             print(f"RECURSION: removed {bottom}", file=sys.stderr)
         print(f"RECURSION: added {top}", file=sys.stderr)
-        return self.raidTeam(team, teamList, heroes, boss, art)
+        return self.raid_team(team, team_list, heroes, boss, art)
 
-    def filterHeroes(self, heroes, boss, art):
-        # Filter out heroes who has no chance of making top 10, regardless of users heroes
-        print(f"filterHeroes - Called", file=sys.stderr)
-        team = {}
-        keep = []
+    def filter_heroes(self, heroes, boss, art):
+        """ Filter a users heroes before the raidTeam algorithm.
+        Heroes with no chance of making a top 10 team for the current boss are ruled out.
 
-        # Populate dict with key = hero, value = max dps including all buffs
-        print(f"filterHeroes - Populating dictionary", file=sys.stderr)
-        for i in heroes:
-            print(f"...{i}", file=sys.stderr)
-            team[i] = int(i.raidDPS(self.raidbuffs(heroes, i.baseStats.element), boss, art))
-        print(f"filterHeroes - Dictionary complete", file=sys.stderr)
+        :param heroes: List of all heroes for the current user
+        :param boss: Dictionary with the current boss's class weakness and elemental advantages
+        :param art: Dictionary with the current users artifact bonus
+        :return: A filtered list of heroes, reduced to only those who could make the top 10
+        """
+
+        team = {}   # Dictionary to populate with current users hero's and their max dps including all available buffs
+        keep = []   # List to fill with heroes to keep
+
+        # Populate dictionary where Key = Hero, and Value = the hero's dps including all buffs
+        for hero in heroes:
+            print(f"...{hero}", file=sys.stderr)
+            team[hero] = int(hero.raidDPS(self.raidbuffs(heroes, hero.baseStats.element), boss, art))
+        print(f"filter_heroes - Dictionary complete", file=sys.stderr)
         # Add all heroes with a damage affecting buff
-        print(f"filterHeroes - Adding damage affecting heroes", file=sys.stderr)
-        for i in team:
-            if i.baseStats.buffType == 1 and i.level > 3:
-                print(f"...adding {int(i.raidDPS(self.raidbuffs(heroes, i.baseStats.element), boss, art))}, {i}", file=sys.stderr)
-                keep.append(i)
+        print(f"filter_heroes - Adding damage affecting heroes", file=sys.stderr)
+        for buff_hero in team:
+            if buff_hero.baseStats.buffType == 1 and buff_hero.level > 3:
+                keep.append(buff_hero)
 
         # Add additional 10 top performing heroes not included from above
-        print(f"filterHeroes - Adding 10 top performing heroes", file=sys.stderr)
+        print(f"filter_heroes - Adding 10 top performing heroes", file=sys.stderr)
         for i in range(10):
-            x = max(team, key=team.get)
-            print(f"...consider {x}", file=sys.stderr)
-            if x not in keep:
-                keep.append(x)
-                print(f"...added {x}", file=sys.stderr)
-            del team[x]
+            filler_hero = max(team, key=team.get)
+            print(f"...consider {filler_hero}", file=sys.stderr)
+            if filler_hero not in keep:
+                keep.append(filler_hero)
+                print(f"...added {filler_hero}", file=sys.stderr)
+            del team[filler_hero]
 
-        print(f"filterTeam - Complete ({len(keep)} heroes active)", file=sys.stderr)
-        print(f"--------------------------------------", file=sys.stderr)
         return keep
 
-
     def raidbuffs(self, heroes, element):
-        # print(f"{datetime.now()} | ### RAIDBUFFS CALLED ### | {len(heroes)} heroes", file=sys.stderr)
-        # bufftypes = []  kept for debugging purpose
-        # hero = []       kept for debugging purpose
+        """ Get all active buffs in the current team affecting the hero being calculated
+
+        :param heroes: Current team (1-10 heroes)
+        :param element: Element of the hero being calculated
+        :return: Dictionary of buffs affecting the hero being calculated
+        """
         buffs = {
             "atk": 0,
             "aps": 0,
             "critDmg": 0,
             "kage": 1
             }
-        for i in heroes:
-            if i.baseStats.buffType == 1 and i.level > 3:
-                if i.baseStats.buffElement == element or i.baseStats.buffElement == 'All':
-                    # bufftypes.append(i.baseStats.buffType)  kept for debugging purpose
-                    # hero.append(i)                          kept for debugging purpose
-                    buffs[i.baseStats.buffStat] = buffs.get(i.baseStats.buffStat) + (i.baseStats.buff*(i.level-3))
+        for hero in heroes:
+            if hero.baseStats.buffType == 1 and hero.level > 3:
+                # Only count buffs of the same element (and 'All') as the hero being calculated.
+                if hero.baseStats.buffElement == element or hero.baseStats.buffElement == 'All':
+                    buffs[hero.baseStats.buffStat] = buffs.get(hero.baseStats.buffStat) + (hero.baseStats.buff*(hero.level-3))
         return buffs
 
 
@@ -356,7 +386,6 @@ class Hero(db.Model):
         runedAtk = (atk + (atk * ((runedAttack+art) / 100))) * self.baseStats.crusher * weakness + atk * buff / 100
         return runedAtk
 
-
     def hp(self):
         runedHP = self.runedHp
         base = self.baseStats.hp
@@ -445,9 +474,9 @@ class Hero(db.Model):
             atk = self.raidAtk(art['atk'][self.baseStats.element], buff['atk'], boss[self.baseStats.job]+boss['Fly'])
         else:
             atk = self.raidAtk(art['atk'][self.baseStats.element], buff['atk'], boss[self.baseStats.job])
-        aps = self.raidAps(self.player.artAps(), buff['aps'])
-        crit = self.raidCrit(self.player.artCrit())
-        critDmg = self.raidCritDmg(self.player.artCritDmg(self.baseStats.element), buff['critDmg'])
+        aps = self.raidAps(self.player.art_aps(), buff['aps'])
+        crit = self.raidCrit(self.player.art_crit())
+        critDmg = self.raidCritDmg(self.player.art_crit_dmg(self.baseStats.element), buff['critDmg'])
 
         # elemental advantage, multiplicative
         atk *= boss[self.baseStats.element]

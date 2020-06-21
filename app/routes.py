@@ -269,7 +269,7 @@ def artifacts(username):
     normal = Artifact.query.filter_by(owner=user, type="N")
     event = Artifact.query.filter_by(owner=user, type="E")
     artifactBase = ArtBase.query.all()
-    testArt = user.artAtk("Fire")
+    testArt = user.art_atk("Fire")
 
     if request.method == "GET":
         return render_template('artifacts.html', user=user, title='Artifacts', artifactBase=artifactBase, event=event,
@@ -404,36 +404,36 @@ def calculate(username, boss):
     print(f"### bossTeam algorithm initiated; {bossName.name} for {user.username} ###", file=sys.stderr)
 
     atk = {
-        "Water": user.artAtk("Water"),
-        "Fire": user.artAtk("Fire"),
-        "Earth": user.artAtk("Earth"),
-        "Light": user.artAtk("Light"),
-        "Dark": user.artAtk("Dark")
+        "Water": user.art_atk("Water"),
+        "Fire": user.art_atk("Fire"),
+        "Earth": user.art_atk("Earth"),
+        "Light": user.art_atk("Light"),
+        "Dark": user.art_atk("Dark")
     }
 
     critDmg = {
-        "Water": user.artCritDmg("Water"),
-        "Fire": user.artCritDmg("Fire"),
-        "Earth": user.artCritDmg("Earth"),
-        "Light": user.artCritDmg("Light"),
-        "Dark": user.artCritDmg("Dark")
+        "Water": user.art_crit_dmg("Water"),
+        "Fire": user.art_crit_dmg("Fire"),
+        "Earth": user.art_crit_dmg("Earth"),
+        "Light": user.art_crit_dmg("Light"),
+        "Dark": user.art_crit_dmg("Dark")
     }
 
     artBonus = {
         "atk": atk,
-        "aps": user.artAps(),
-        "crit": user.artCrit(),
+        "aps": user.art_aps(),
+        "crit": user.art_crit(),
         "critDmg": critDmg
     }
 
     if len(heroes) > 10:
-        print(f"{len(heroes)} heroes found; filterHeroes", file=sys.stderr)
-        filterTeam = user.filterHeroes(heroes, boss, artBonus)
+        print(f"{len(heroes)} heroes found; filter_heroes", file=sys.stderr)
+        filterTeam = user.filter_heroes(heroes, boss, artBonus)
         print(f"RAIDTEAM - Calling (filtered, {len(filterTeam)} heroes)", file=sys.stderr)
-        testTeam = user.raidTeam(team, teamList, filterTeam, boss, artBonus)
+        testTeam = user.raid_team(team, teamList, filterTeam, boss, artBonus)
     else:
         print(f"RAIDTEAM - Calling (unfiltered, {len(heroes)} heroes)", file=sys.stderr)
-        testTeam = user.raidTeam(team, teamList, heroes, boss, artBonus)
+        testTeam = user.raid_team(team, teamList, heroes, boss, artBonus)
 
     teamID = int(idHelp.id)
     print(f"Adding {len(testTeam)} heroes to database", file=sys.stderr)
@@ -460,25 +460,25 @@ def test(username):
     team = {}
 
     atk = {
-        "Water": user.artAtk("Water"),
-        "Fire": user.artAtk("Fire"),
-        "Earth": user.artAtk("Earth"),
-        "Light": user.artAtk("Light"),
-        "Dark": user.artAtk("Dark")
+        "Water": user.art_atk("Water"),
+        "Fire": user.art_atk("Fire"),
+        "Earth": user.art_atk("Earth"),
+        "Light": user.art_atk("Light"),
+        "Dark": user.art_atk("Dark")
     }
 
     critDmg = {
-        "Water": user.artCritDmg("Water"),
-        "Fire": user.artCritDmg("Fire"),
-        "Earth": user.artCritDmg("Earth"),
-        "Light": user.artCritDmg("Light"),
-        "Dark": user.artCritDmg("Dark")
+        "Water": user.art_crit_dmg("Water"),
+        "Fire": user.art_crit_dmg("Fire"),
+        "Earth": user.art_crit_dmg("Earth"),
+        "Light": user.art_crit_dmg("Light"),
+        "Dark": user.art_crit_dmg("Dark")
     }
 
     artBonus = {
         "atk": atk,
-        "aps": user.artAps(),
-        "crit": user.artCrit(),
+        "aps": user.art_aps(),
+        "crit": user.art_crit(),
         "critDmg": critDmg
     }
 
