@@ -83,22 +83,24 @@
         <hr>
         <p><a href="{{ url_for('login') }}">Login</a> or <a href="{{ url_for('register') }}">create an account</a> to access all the features.</p>
         <hr>
-        <!--
-        <p><img src="{{ url_for('static', filename='CTA_logo.png') }}" alt="CTA" width="200"></p>
-        -->
+        <table class="table table-borderless">
+            <tr class="table-light">
+                <td class="text-left">
+                <dl>
+                        <dt class="text-secondary"><code class="text-secondary">In development:</code></dt>
+                    <dd><code class="text-secondary">- Feature to manually select heroes to calculate boss damage.</code></dd>
+                        <dd><code class="text-secondary">- Improve speed of bossTeam algorithm.</code></dd>
+                        <dd><code class="text-secondary">- Calculate and present hero investments.</code></dd>
+                </dl></td>
+            </tr>
+        </table>
     </div>
-<div class="col-lg-3 p-3 rounded-right border border-white align-middle text-center">
+<div class="col-lg-3">
    &nbsp;
     </div>
 </div>
 
 
-
-
-
-<!--
-To utilize all the features of CTA Companion you need to create an account and login. Registered users can input their hero details, runed values, artifacts and more.
--->
 
 
 {% endif %}

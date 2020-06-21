@@ -70,10 +70,10 @@ def register():
             db.session.add(eventArt)
         # Create empty boss teams for user
         bosses = BossBase.query.all()
-        for m in bosses:
+        for boss in bosses:
             for n in range(10):
-                x = Bossteam(hero="Slot "+str(n+1), damage=0, manager=user, bossBase=m)
-            db.session.add(x)
+                entry = Bossteam(hero="Slot "+str(n+1), damage=0, manager=user, bossBase=boss)
+            db.session.add(entry)
 
         db.session.commit()
         flash(u'Your account has been created! Login to access the features of this website.', 'info')
@@ -268,15 +268,15 @@ def artifacts(username):
     user = User.query.filter_by(username=username).first_or_404()
     normal = Artifact.query.filter_by(owner=user, type="N")
     event = Artifact.query.filter_by(owner=user, type="E")
-    artifactBase = ArtBase.query.all()
+    artifact_base = ArtBase.query.all()
 
     if request.method == "GET":
-        return render_template('artifacts.html', user=user, title='Artifacts', artifactBase=artifactBase, event=event,
+        return render_template('artifacts.html', user=user, title='Artifacts', artifact_base=artifact_base, event=event,
                                normal=normal, artifactactive=1)
     else:
-        arts = Artifact.query.filter_by(owner=user)
-        for j in arts:
-            current = str(j.id)
+        artifacts = Artifact.query.filter_by(owner=user)
+        for artifact in artifacts:
+            current = str(artifact.id)
             try:
                 int(request.form.get(current + "art"))
                 int(request.form.get(current + "level"))
@@ -285,19 +285,19 @@ def artifacts(username):
                 return redirect(url_for('artifacts', username=current_user.username))
 
         # Populate dictionary with artifact base_id as key, and count as value to ensure no duplicates
-        artDict = {}
-        for m in arts:
-            current = str(m.id)
+        art_dict = {}
+        for artifact in artifacts:
+            current = str(artifact.id)
             if request.form.get(current + "art") != "81":
                 # create new key with current submitted artifacts base_id, increase its value by 1 (except 'empty')
-                artDict[request.form.get(current + "art")] = artDict.get(request.form.get(current + "art"), 0) + 1
-        for n in artDict.values():
+                art_dict[request.form.get(current + "art")] = art_dict.get(request.form.get(current + "art"), 0) + 1
+        for count in art_dict.values():
             # if any artifact has a count greater than 1 we have a duplicate and generate error.
-            if n > 1:
+            if count > 1:
                 flash(u'You may not have duplicate Artifacts', 'error')
                 return redirect(url_for('artifacts', username=current_user.username))
 
-        for i in arts:
+        for i in artifacts:
             current = str(i.id)
             art = Artifact.query.get(i.id)
             # Bring empty artifacts back 0 if needed
@@ -308,8 +308,6 @@ def artifacts(username):
             art.artbase_id = request.form.get(current + "art")
 
         db.session.commit()
-        # There's got to be a better way than running all functions and re-query the database..
-        # Note to self: return redirect instead of render_template...
 
         flash(u'Artifacts updated successfully!', 'info')
         return redirect(url_for('artifacts', username=current_user.username))

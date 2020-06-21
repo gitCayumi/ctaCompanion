@@ -88,8 +88,8 @@
         {% for i in normal%}
 
         <tr class="table-sm">
-            <td class="{{i.artBase.color}}Rare align-middle"><select class="form-control form-control-sm" id="#" name="{{ i.id }}art">
-            {% for j in artifactBase %}
+            <td class="{{i.artBase.color}}Rare align-middle"><select class="form-control form-control-sm" name="{{ i.id }}art">
+            {% for j in artifact_base %}
                 {% if j.star != "Event" %}
             {% if i.artBase.name == j.name %}
             <option value="{{ j.id }}" selected>{{ j }}</option>
@@ -98,8 +98,9 @@
                 {% endif %}
                 {% endif %}
             {% endfor %}
+            </select>
             </td>
-            <td class="{{i.artBase.color}}Rare align-middle"><input type="text" maxlength="2" class="form-control form-control-sm" id="#" value="{{ i.level }}" name="{{ i.id }}level" onkeypress="return isNumber9(event)"></td>
+            <td class="{{i.artBase.color}}Rare align-middle"><input type="text" maxlength="2" class="form-control form-control-sm" value="{{ i.level }}" name="{{ i.id }}level" onkeypress="return isNumber9(event)"></td>
 
 
         </tr>
@@ -120,8 +121,8 @@
         {% for k in event %}
 
         <tr class="table-sm">
-            <td class="{{k.artBase.color}}Rare align-middle"><select class="form-control form-control-sm" id="#" name="{{ k.id }}art">
-            {% for l in artifactBase %}
+            <td class="{{k.artBase.color}}Rare align-middle"><select class="form-control form-control-sm" name="{{ k.id }}art">
+            {% for l in artifact_base %}
                 {% if l.star == "Event" or l.star == 0 %}
             {% if k.artBase.name == l.name %}
             <option value="{{ l.id }}" selected>{{ l }}</option>
@@ -130,8 +131,9 @@
                 {% endif %}
                 {% endif %}
             {% endfor %}
+            </select>
             </td>
-            <td class="{{k.artBase.color}}Rare align-middle"><input type="text" maxlength="2" class="form-control form-control-sm" id="#" value="{{ k.level }}" name="{{ k.id }}level" onkeypress="return isNumber9(event)"></td>
+            <td class="{{k.artBase.color}}Rare align-middle"><input type="text" maxlength="2" class="form-control form-control-sm" value="{{ k.level }}" name="{{ k.id }}level" onkeypress="return isNumber9(event)"></td>
 
         </tr>
 
