@@ -14,16 +14,16 @@ Players can sign up and submit the following information:
 - Artifact collection
 
 Algorithms based on input above calculate and return the following:
-- Hero information such as, but not limited to, Attack, HP, APS, Crit and DPS (including SP2's)
-- Ability to browse and sort hero collection by various stats
+- Hero Collection; browse, sort and filter your heroes by various stats
+- Ability to navigate to each hero for additional information 
 - Comprehensive progress by rarity and element
+- Summarized effects of your artifact collection
 - Optimal team composition for max damage for each boss in Slay Boss Events
 
-Additional Features:
-- Guides
-- Individual hero pages contain information of how to rune and basic hero information
-
 Possible future additions:
+- Manually select a boss and create a team to calculate its damage
+- Guides
+- Hero investments
 - Ability to compose pvp teams
 - Hero planning, goals; costs and ETA.
 - Guild features, connect with other users
@@ -37,7 +37,7 @@ Discord: Cayumi#7996
 <br><br>
 ## Authors and acknowledgment
 Fredrik Engström (www.cayumi.com)<br>
-In-game data:
+In-game data and equations: MrMoogle
 
 <br><br>
 ## License

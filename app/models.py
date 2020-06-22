@@ -377,6 +377,13 @@ class Hero(db.Model):
         return int(runedAtk)
 
     def raid_atk(self, art, buff, weakness):
+        """ Calculate a hero's attack within the current team against the current boss
+
+        :param art: Attack bonus from artifacts for the current hero
+        :param buff: Active attack team buffs affecting the current hero
+        :param weakness: Current boss weakness to current hero's class
+        :return: An integer, the hero's attack within the given raid environment
+        """
         runedAttack = self.runedAtk
         base = self.baseStats.atk
         level = self.level
