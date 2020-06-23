@@ -10,11 +10,7 @@
         <p class="instructions"><strong>Recent findings within the community show that some heroes deal more or less damage than they're supposed to using their in-game data. This is currently being investigated and the base values used by this web application will be updated accordingly.</strong></p>
         <p class="instructions">It's still safe to use this algorithm to generate your teams but their damage relations may vary greater in-game than you see here.</p>
         <p class="instructions">Also keep in mind the nature of RNG in-game with frenzy, critical strikes and spawn order.</p>
-        <p class="instructions">The algorithm adds one hero at a time selecting the one who has the greatest impact on a teams combined damage. This is also the order in which heroes are sorted within each boss. Please allow a few seconds for the algorithm to run.</p>
-        <ul>
-            <li><a href="{{ url_for('static', filename='sampleLog1.txt') }}" target="_blank">Sample log of the algorithm at play, high level</a></li>
-            <li><a href="{{ url_for('static', filename='sampleLog2.txt') }}" target="_blank">Sample (in-depth) log of a single recursion.</a></li>
-        </ul>
+        <p class="instructions">The algorithm adds one hero at a time selecting the one who has the greatest impact on a teams combined damage. This is also the order in which heroes are sorted within each boss. Please allow a second or two for the algorithm to run if you have 99 heroes.</p>
       <hr>
     </div>
  </div>
@@ -63,10 +59,9 @@
           <p>&nbsp;</p>
         <div class="spinner-border text-muted"></div>
           <p>&nbsp;</p>
-          <p><strong>Please note:</strong> Calculation time is dependant on amount of input, and the capacity where this web application is hosted. Time may vary from a few seconds to several minutes based on input.
+          <p><strong>Please note:</strong> Calculation time is dependant on amount of input.
           <hr>
-          <p>If you input all heroes please allow several minutes for the algorithm to compute.
-              I'm working on making the algorithm faster and if possible upgraded hosting.</p>
+          <p>I've made the algorithm run faster so chances are you might not even get to read this. If you do, it's almost done!</p>
           <hr>
           This window will automatically close when calculation is complete.
       </div>
