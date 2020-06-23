@@ -22,9 +22,10 @@ class User(UserMixin, db.Model):
     artifactPower = db.Column(db.Integer, default=0, index=True)
     daysPlayed = db.Column(db.Integer, default=0, index=True)
     posts = db.relationship('Post', backref='author', lazy='dynamic')
-    heroes = db.relationship('Hero', backref='player', lazy='dynamic')
-    artifacts = db.relationship('Artifact', backref='owner', lazy='dynamic')
+    heroes = db.relationship('Hero', backref='player', lazy='joined')
+    artifacts = db.relationship('Artifact', backref='owner', lazy='joined')
     bossteams = db.relationship('Bossteam', backref='manager', lazy='dynamic')
+
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -205,20 +206,20 @@ class User(UserMixin, db.Model):
 
         # Iterate over all the users heroes to find the top performing one
         for consider in heroes:
-            print(f"{datetime.now()} | CONSIDERING {consider}", file=sys.stderr)
+            # print(f"{datetime.now()} | CONSIDERING {consider}", file=sys.stderr)
             team_list.append(consider)
             # Calculate every hero in team_list in combination with the currently considered hero
             for hero in team_list:
-                print(f"{datetime.now()} | Calculating {hero} with {consider}", file=sys.stderr)
+                # print(f"{datetime.now()} | Calculating {hero} with {consider}", file=sys.stderr)
                 dmg = int(hero.raid_dps(self.raidbuffs(team_list, hero.baseStats.element), boss, art))
                 team[hero.baseStats.name] = dmg
-            print(f"{datetime.now()} | CALCULATIONS WITH {consider} COMPLETE", file=sys.stderr)
+            # print(f"{datetime.now()} | CALCULATIONS WITH {consider} COMPLETE", file=sys.stderr)
             if sum(team.values()) > high:
                 high = sum(team.values())
-                print(f"> Top: {consider}", file=sys.stderr)
+                # print(f"> Top: {consider}", file=sys.stderr)
                 top = consider
             elif sum(team.values()) < low:
-                print(f"> Bottom: {consider}", file=sys.stderr)
+                # print(f"> Bottom: {consider}", file=sys.stderr)
                 low = sum(team.values())
                 bottom = consider
             team_list.remove(consider)
@@ -245,33 +246,31 @@ class User(UserMixin, db.Model):
         :return: A filtered list of heroes, reduced to only those who could make the top 10
         """
 
+        print(f"{datetime.now()} | FILTER TEAM BEGIN", file=sys.stderr)
         team = {}   # Dictionary to populate with current users hero's and their max dps including all available buffs
         keep = []   # List to fill with heroes to keep
 
         # Populate dictionary where Key = Hero, and Value = the hero's dps including all buffs
         for hero in heroes:
-            print(f"...{hero}", file=sys.stderr)
             team[hero] = int(hero.raid_dps(self.raidbuffs(heroes, hero.baseStats.element), boss, art))
-        print(f"filter_heroes - Dictionary complete", file=sys.stderr)
+
         # Add all heroes with a damage affecting buff
-        print(f"filter_heroes - Adding damage affecting heroes", file=sys.stderr)
         for buff_hero in team:
             if buff_hero.baseStats.buffType == 1 and buff_hero.level > 3:
                 keep.append(buff_hero)
 
         # Add additional 10 top performing heroes not included from above
-        print(f"filter_heroes - Adding 10 top performing heroes", file=sys.stderr)
         for i in range(10):
             filler_hero = max(team, key=team.get)
-            print(f"...consider {filler_hero}", file=sys.stderr)
             if filler_hero not in keep:
                 keep.append(filler_hero)
-                print(f"...added {filler_hero}", file=sys.stderr)
             del team[filler_hero]
 
+        print(f"{datetime.now()} | FILTER TEAM COMPLETE", file=sys.stderr)
         return keep
 
     def raidbuffs(self, heroes, element):
+        # print(f"{datetime.now()} | raid_buffs called", file=sys.stderr)
         """ Get all active buffs in the current team affecting the hero being calculated
 
         :param heroes: Current team (1-10 heroes)
@@ -430,7 +429,8 @@ class Hero(db.Model):
     def raid_crit(self, art):
         runedCrit = self.runedCrit
         base = self.baseStats.crit
-        return (base + runedCrit + art)/100
+        runedCrit = (base + runedCrit + art)/100
+        return runedCrit
 
     def critDmg(self):
         runedDmg = self.runedCritDmg
@@ -440,7 +440,8 @@ class Hero(db.Model):
     def raid_crit_dmg(self, art, buff):
         runedDmg = self.runedCritDmg
         base = self.baseStats.critDmg
-        return (base + runedDmg + art + buff)/100
+        runedDmg = (base + runedDmg + art + buff)/100
+        return runedDmg
 
     def crit_dmg_display(self):
         runedDmg = self.runedCritDmg
@@ -487,7 +488,6 @@ class Hero(db.Model):
 
         # elemental advantage, multiplicative
         atk *= boss[self.baseStats.element]
-
         # dps formula
         dps = ((atk * aps * (1-crit)) + (atk * aps * crit * (1+critDmg))) * (6 + sp2 * sp2num)/7
         dps = int(round(dps))
@@ -578,8 +578,8 @@ class Base(db.Model):
     buffType = db.Column(db.Integer, index=True)
     buffStat = db.Column(db.String(16), index=True)
     buff = db.Column(db.Integer, index=True)
-
-    heroes = db.relationship('Hero', backref='baseStats', lazy='dynamic')
+    heroes = db.relationship('Hero', lazy='joined', backref='baseStats')
+    # heroes = db.relationship('Hero', lazy='select', backref=db.backref('baseStats', lazy='joined'))
 
     def __repr__(self):
         return '{} ({} {} {})'.format(self.name, self.rarity, self.element, self.job)

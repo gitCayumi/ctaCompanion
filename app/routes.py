@@ -6,6 +6,7 @@ from app.models import User, Base, Hero, validate_awaken, validate_level, valida
     total_medals, rarity_medals, ArtBase, Artifact, validate_art, BossBase, Bossteam, display_raid_dps
 from werkzeug.urls import url_parse
 from app.heroDict import heroDict, frostwing, bosses
+from sqlalchemy.orm import joinedload
 import sys
 
 
@@ -332,7 +333,7 @@ def bossTeam(username):
     load_beetle = Bossteam.query.filter_by(bossbase_id=13, user_id=user.id).all()
     load_hauntinghead = Bossteam.query.filter_by(bossbase_id=14, user_id=user.id).all()
     load_gunlord = Bossteam.query.filter_by(bossbase_id=15, user_id=user.id).all()
-
+    filter_team = "hej"
     kraken_dict = {}
     for entry in load_kraken:
         kraken_dict[entry.hero] = display_raid_dps(entry.damage)
@@ -385,14 +386,14 @@ def bossTeam(username):
                            voodootank_dict=voodootank_dict, undeadsamurai_dict=undeadsamurai_dict,
                            valkenbot_dict=valkenbot_dict, firegorge_dict=firegorge_dict, madking_dict=madking_dict,
                            beetle_dict=beetle_dict, hauntinghead_dict=hauntinghead_dict, gunlord_dict=gunlord_dict,
-                           bossactive=1)
+                           bossactive=1, filter_team=filter_team)
 
 
 @app.route('/calculate/<username>/<boss>')
 @login_required
 def calculate(username, boss):
     user = User.query.filter_by(username=username).first_or_404()
-    heroes = Hero.query.filter_by(player=user).filter(Hero.level > 0).all()
+    heroes = Hero.query.filter_by(player=user).filter(Hero.level > 0).options(joinedload(Hero.baseStats, innerjoin=True)).all()
     boss_name = BossBase.query.get(boss)
     id_help = Bossteam.query.filter_by(bossbase_id=boss, user_id=user.id).first()
     boss = bosses[str(id_help.bossBase.nameSafe)]
@@ -425,6 +426,8 @@ def calculate(username, boss):
         "critDmg": crit_dmg
     }
 
+    # filter_team = user.filter_heroes(heroes, boss, art_bonus)
+
     if len(heroes) > 10:
         print(f"{len(heroes)} heroes found; filter_heroes", file=sys.stderr)
         filter_team = user.filter_heroes(heroes, boss, art_bonus)
@@ -443,8 +446,10 @@ def calculate(username, boss):
         team_id += 1
     db.session.commit()
 
+
     flash(u'Calculation complete, your data has been saved.', 'info')
     return redirect(url_for('bossTeam', username=current_user.username))
+    # return render_template('test.html', user=user, title='Test', heroes=heroes, frostwing=frostwing, filter_team=filter_team)
 
 
 @app.route('/test/<username>')
