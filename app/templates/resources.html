@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row pt-3">
+    <div class="col-lg-12">
+    <h1 class="display-4">Resources</h1>
+        <hr>
+        <p class="instructions">Below is a collection of resources collectively covering pretty much everything there is to know about Crush Them All.</p>
+        <p class="instructions"><span class="font-italic">I have the intention of eventually integrating guides with this website, but there are higher priorities first.</span></p>
+        <hr>
+    </div>
+</div>
+<!--
+<div class="row pt-3">
+    <div class="col-lg-6">
+        <table class="table table-borderless table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th class="background-primary">Beginner Guides</th>
+                    <th width="225">Note</th>
+                </tr>
+            </thead>
+            <tr>
+                <td><a href="{{ url_for('quick_start') }}">Quickstart Guide v1</a></td>
+                    <td>New player? Start here!</td>
+                </tr>
+            <tr>
+                <td><span class="text-muted">Staging 101</span></td>
+                <td><span class="text-muted">Work in progress</span></td>
+                </tr>
+
+        </table>
+    </div>
+    <div class="col-lg-6">
+        <table class="table table-borderless table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>In-depth Guides</th>
+                </tr>
+            </thead>
+            <tr>
+            <td class="text-center"><span class="text-muted">(nothing yet)</span></td>
+                </tr>
+        </table>
+    </div>
+</div>
+<hr>
+-->
+<div class="row pt-3">
+    <div class="col-lg-12">
+        <table class="table table-borderless table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Resource</th>
+                    <th>Note</th>
+                </tr>
+            </thead>
+            <tr>
+                <td><a href="https://discord.com/invite/ghuA8yu" target="_blank">The Citadel</a></td>
+                <td>Discord server with plenty of information and answers to the most frequently asked questions</td>
+            </tr>
+            <tr>
+                <td><a href="https://discord.com/invite/cta" target="_blank">CTA Discord</a></td>
+                <td>Official Discord server for Crush Them All</td>
+            </tr>
+            <tr>
+                <td><a href="https://www.reddit.com/r/CrushThemAll/" target="_blank">r/CrushThemAll</a></td>
+                <td>The Crush Them All subreddit</td>
+            </tr>
+            <tr>
+                <td><a href="https://bit.ly/BeginnerOverview" target="_blank">CTA - Beginner Overview</a></td>
+                <td>Beginners guide, by MrMoogle</td>
+            </tr>
+            <tr>
+                <td><a href="https://bit.ly/CTAEncyclopedia" target="_blank">CTA - Hero Encyclopedia</a></td>
+                <td>In-depth information about every hero in the game, by MrMoogle</td>
+            </tr>
+            <tr>
+                <td><a href="{{ url_for('static', filename='Pvp-tierlist-2020v2.png') }}" target="_blank">PVP Tier List</a></td>
+                <td>Infographic by PKIII and Medivh</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+
+
+
+{% endblock %}

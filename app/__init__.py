@@ -12,4 +12,4 @@ migrate = Migrate(app, db)
 login = LoginManager(app)
 login.login_view = 'login' #force user to login before able to view a certain page
 
-from app import routes, models, errors, heroDict
+from app import routes, models, errors, heroDict, resources

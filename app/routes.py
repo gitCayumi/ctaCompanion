@@ -449,7 +449,6 @@ def calculate(username, boss):
 
     flash(u'Calculation complete, your data has been saved.', 'info')
     return redirect(url_for('bossTeam', username=current_user.username))
-    # return render_template('test.html', user=user, title='Test', heroes=heroes, frostwing=frostwing, filter_team=filter_team)
 
 
 @app.route('/test/<username>')

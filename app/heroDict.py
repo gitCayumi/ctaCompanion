@@ -344,7 +344,7 @@ beetle = {
         "Fire": 1,
         "Earth": 1,
         "Light": 2,
-        "Dark": 0
+        "Dark": 1
 }
 
 hauntinghead = {
