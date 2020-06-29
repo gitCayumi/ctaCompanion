@@ -3,6 +3,7 @@ from app import db, login
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from hashlib import md5
+from xlsxwriter import Workbook
 import sys
 
 
@@ -384,7 +385,7 @@ class Hero(db.Model):
         :return: An integer, the hero's attack within the given raid environment
         """
         runedAttack = self.runedAtk
-        base = self.baseStats.atk
+        base = self.baseStats.atk / self.baseStats.aps
         level = self.level
         awaken = self.awaken
         atk = base * (2 ** (level - 1)) * (1.5 ** awaken)
@@ -751,6 +752,18 @@ def display_raid_dps(dmg):
         return str(round(dmg / 1000000000000, 2)) + "T"
     # Damage below 1000
     return dmg
+
+
+def export_collection(file_path: str, headers: dict, items: list):
+    with Workbook(file_path) as workbook:
+        worksheet = workbook.add_worksheet()
+        worksheet.write_row(row=0, col=0, data=headers.values())
+        header_keys = list(headers.keys())
+        for index, item in enumerate(items):
+            row = map(lambda field_id: item.get(field_id, ''), header_keys)
+            worksheet.write_row(row=index + 1, col=0, data=row)
+
+
 
 
 """   

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row pt-3">
+    <div class="col-lg-12">
+    <h1 class="display-4">Raid Export</h1>
+        <hr>
+        <p class="instructions">Save your image below. It can be used as part of a guild application. It contains information about your Crusher, Support and Bubble heroes, as well as your hero power, artifacts slots and days played.</p>
+        <hr>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <img src="/static/export_png/{{ user_file }}"><br>
+    </div>
+</div>
+
+
+
+
+{% endblock %}
