@@ -7,5 +7,4 @@ grimoire.xlsx
 kodSpara.txt
 notes
 safeNames.xlsx
-.env
-testing.py
+*.env
