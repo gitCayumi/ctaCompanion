@@ -8,3 +8,7 @@ kodSpara.txt
 notes
 safeNames.xlsx
 *.env
+/app/static/sampleLog2.txt
+/app/static/sampleLog1.txt
+/app/static/Pvp-tierlist-2020v2.png
+/app/static/export_png/20200629_233213_testing_raid_export.png
