@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-
+{% if user == current_user %}
 <div class="row pt-3">
     <div class="col-lg-12">
     <h1 class="display-4">{{ user.username }}'s Account</h1>
@@ -411,4 +411,16 @@
 </div>
       </form>
 <br>
+{% else %}
+<div class="row pt-3">
+    <div class="col-lg-12">
+      <h1 class="display-4">Sneaky!</h1>
+      <hr>
+      <p class="instructions">You are not allowed to browse other peoples accounts.</p>
+      <hr>
+    </div>
+ </div>
+<br>
+{% endif %}
+
 {% endblock %}
