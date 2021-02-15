@@ -1,426 +1,250 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% if user == current_user %}
-<div class="row pt-3">
-    <div class="col-lg-12">
-    <h1 class="display-4">{{ user.username }}'s Account</h1>
-        <hr>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-lg-1">
-    <img class="rounded" src="{{ user.avatar(64) }}">
-    </div>
-    <div class="col-lg-3">
-        <table class="table table-borderless table-sm">
-            <tr>
-                <td width="150">Member since:</td><td>{{ user.registered_proper(user.registered) }}</td>
-            </tr>
-            <tr>
-                <td width="150">Total Power:</td><td>{{ user.total_power() }}</td>
-            </tr>
-            <tr>
-                <td width="150">Power per day:</td><td>{{ user.power_per_day() }}</td>
-            </tr>
-
-
-        </table>
-    </div>
-
-    <div class="col-lg-8">
-        <table class="table table-borderless table-sm">
-            <tr>
-              <td><a href="{{ url_for('export_raid', username=current_user.username) }}">Export Raid information</a></td>
-            </tr>
-          <tr>
-              <td><a href="{{ url_for('export_excel', username=current_user.username) }}">Export Hero Collection (Excel)</a></td>
-            </tr>
-        </table>
-    </div>
-
-</div>
-<div class="row">
-    <div class="col-lg-12">
-        <hr>
-    </div>
-</div>
-
-
-<div class="row pt-3">
-    <div class="col-lg-12">
-    <h1 class="display-4">Data Input</h1>
-        <hr>
-    </div>
-</div>
-<div class="row">
-    <div class="col-lg-12">
-        <p class="instructions">Prism Power, Hero Power, Artifact Power and Days Played can be found in-game at the <b>stats</b> screen. Input the values below.</p>
-      <p class="instructions">Input the Star Level, Awaken, Weapon Level and Medals for each of your heroes.</p>
-        <p class="instructions">Remember to save your changes at the bottom!</p>
-      <hr>
-
-
-
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-  Detailed input information
-</button>
-
-
-<div class="modal" id="myModal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-
-
-      <div class="modal-header">
-        <h4 class="modal-title">Input Information and Validation</h4>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-
-
-      <div class="modal-body">
-        <p>Each field expects integer inputs. Mischievous behaviour and unintended inputs are controlled to some extent on the client-side.
-          These are utilized to ensure valid parameters. Once submitted a server-side validation will process the input as well.</p>
-          <p><b>Prism Power</b> is used to calculate your Total Power and Power per day. Can be left at 0 if you do not care about this value.</p>
-          <p><b>Hero Power</b> is used to calculate Gun Lord Artifacts as well as Total Power and Power per day. It's recommended you input this value.</p>
-          <p><b>Artifact Power</b> is used to calculate your Total Power and Power per day. Can be left at 0 if you do not care about this value.</p>
-          <p><b>Days Played</b> is used to calculate your Total Power and Power per day. Can be left at 0 if you do not care about this value.</p>
-        <p><b>Star Level and Awaken</b> is used to calculate a heroes base stats. Stars are also used to track account progress while Awaken is used to calculate hero investment. Leave at 0 for heroes you have not yet unlocked.</p>
-        <p><b>Weapon Level</b> is used to calculate hero investment and possibly to determine unlocked rune slots in a future update. This can be left at 0 if you do not care about hero investments.</p>
-        <p><b>Medals</b> are used to track account progress. Can be left at 0 if you do not care about progress.</p>
-        <p>Invalid inputs will result in an error and no changes will be saved.</p>
-      </div>
-
-
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-    </div>
-  </div>
-
-
-
-  <form action="/account/{{ user.username }}" method="post" novalidate>
-
-<script>
-  function isNumber9(evt) {
-    evt = (evt) ? evt : window.event;
-    var charCode = (evt.which) ? evt.which : evt.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-        return false;
-    }
-    return true;
-}
-</script>
-
-<div class="row pt-3">
-    <div class="col-lg-3">
-        <div class="input-group mb-3">
-    <div class="input-group-prepend">
-      <span class="input-group-text">Prism Power</span>
-    </div>
-    <input type="text" class="form-control" value="{{ user.prismPower }}" name="prismPower" onkeypress="return isNumber9(event)">
-  </div>
-    </div>
-
-    <div class="col-lg-3">
-        <div class="input-group mb-3">
-    <div class="input-group-prepend">
-      <span class="input-group-text">Hero Power</span>
-    </div>
-    <input type="text" class="form-control" value="{{ user.heroPower }}" name="heroPower" onkeypress="return isNumber9(event)">
-  </div>
-    </div>
-
-    <div class="col-lg-3">
-        <div class="input-group mb-3">
-    <div class="input-group-prepend">
-      <span class="input-group-text">Artifact Power</span>
-    </div>
-    <input type="text" class="form-control" value="{{ user.artifactPower }}" name="artifactPower" onkeypress="return isNumber9(event)">
-  </div>
-    </div>
-
-    <div class="col-lg-3">
-        <div class="input-group mb-3">
-    <div class="input-group-prepend">
-      <span class="input-group-text">Days Played</span>
-    </div>
-    <input type="text" class="form-control" value="{{ user.daysPlayed }}" name="daysPlayed" onkeypress="return isNumber9(event)">
-  </div>
-    </div>
-</div>
-
-
-  <!-- WATER HEROES -->
-  <div class="row">
-    <div class="col-lg-6 pt-3">
-      <table class="table-borderless" cellpadding="0" cellspacing="0">
-        <thead>
-        <tr class="WaterHead shadow">
-          <th class="text-center WaterHead"><img src="{{ url_for('static', filename='water.png') }}" width="40" alt="Water"></th>
-          <th>&nbsp;</th>
-          <th class="text-center WaterHead"><img src="{{ url_for('static', filename='star.png') }}" width="25" alt="Star Level"></th>
-          <th class="text-center WaterHead"><img src="{{ url_for('static', filename='awaken.png') }}" width="25" alt="Awaken"></th>
-          <th class="text-center WaterHead">WPN</th>
-          <th class="text-center WaterHead"><img src="{{ url_for('static', filename='medal.png') }}" width="25" alt="Medals"></th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for i in heroes|sort(attribute='baseStats.name') %}
-        {% if i.baseStats.element == "Water" and i.baseStats.rarity == "Common" %}
-
-        <!-- WATER COMMON -->
-        {% include '_heroSetup.html' %}
-
-        {% endif %}
-        {% endfor %}
-        {% for i in heroes|sort(attribute='baseStats.name') %}
-        {% if i.baseStats.element == "Water" and i.baseStats.rarity == "Rare" %}
-
-        <!-- WATER RARE -->
-        {% include '_heroSetup.html' %}
-
-        {% endif %}
-        {% endfor %}
-        {% for i in heroes|sort(attribute='baseStats.name') %}
-        {% if i.baseStats.element == "Water" and i.baseStats.rarity == "Epic" %}
-
-        <!-- WATER EPIC -->
-        {% include '_heroSetup.html' %}
-
-        {% endif %}
-        {% endfor %}
-
-        </tbody>
-      </table>
-    </div>
-
-      <!-- FIRE HEROES -->
-    <div class="col-lg-6 pt-3">
-      <table class="table-borderless" cellpadding="0" cellspacing="0">
-        <thead>
-        <tr class="FireHead shadow">
-          <th class="text-center FireHead"><img src="{{ url_for('static', filename='fire.png') }}" width="40" alt="Fire"></th>
-          <th>&nbsp;</th>
-          <th class="text-center FireHead"><img src="{{ url_for('static', filename='star.png') }}" width="25" alt="Star Level"></th>
-          <th class="text-center FireHead"><img src="{{ url_for('static', filename='awaken.png') }}" width="25" alt="Awaken"></th>
-          <th class="text-center FireHead">WPN</th>
-          <th class="text-center FireHead"><img src="{{ url_for('static', filename='medal.png') }}" width="25" alt="Medals"></th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for i in heroes|sort(attribute='baseStats.name') %}
-        {% if i.baseStats.element == "Fire" and i.baseStats.rarity == "Common" %}
-
-        <!-- FIRE COMMON -->
-        {% include '_heroSetup.html' %}
-
-        {% endif %}
-        {% endfor %}
-        {% for i in heroes|sort(attribute='baseStats.name') %}
-        {% if i.baseStats.element == "Fire" and i.baseStats.rarity == "Rare" %}
-
-        <!-- FIRE RARE -->
-        {% include '_heroSetup.html' %}
-
-        {% endif %}
-        {% endfor %}
-        {% for i in heroes|sort(attribute='baseStats.name') %}
-        {% if i.baseStats.element == "Fire" and i.baseStats.rarity == "Epic" %}
-
-        <!-- FIRE EPIC -->
-        {% include '_heroSetup.html' %}
-
-        {% endif %}
-        {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- EARTH HEROES -->
-  <div class="row">
-    <div class="col-lg-6 pt-3">
-      <table class="table-borderless" cellpadding="0" cellspacing="0">
-        <thead>
-        <tr class="EarthHead shadow">
-          <th class="text-center EarthHead"><img src="{{ url_for('static', filename='earth.png') }}" width="40" alt="Earth"></th>
-          <th>&nbsp;</th>
-          <th class="text-center EarthHead"><img src="{{ url_for('static', filename='star.png') }}" width="25" alt="Star Level"></th>
-          <th class="text-center EarthHead"><img src="{{ url_for('static', filename='awaken.png') }}" width="25" alt="Awaken"></th>
-          <th class="text-center EarthHead">WPN</th>
-          <th class="text-center EarthHead"><img src="{{ url_for('static', filename='medal.png') }}" width="25" alt="Medals"></th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for i in heroes|sort(attribute='baseStats.name') %}
-        {% if i.baseStats.element == "Earth" and i.baseStats.rarity == "Common" %}
-
-        <!-- EARTH COMMON -->
-        {% include '_heroSetup.html' %}
-
-        {% endif %}
-        {% endfor %}
-        {% for i in heroes|sort(attribute='baseStats.name') %}
-        {% if i.baseStats.element == "Earth" and i.baseStats.rarity == "Rare" %}
-
-        <!-- EARTH RARE -->
-        {% include '_heroSetup.html' %}
-
-        {% endif %}
-        {% endfor %}
-        {% for i in heroes|sort(attribute='baseStats.name') %}
-        {% if i.baseStats.element == "Earth" and i.baseStats.rarity == "Epic" %}
-
-        <!-- EARTH EPIC -->
-        {% include '_heroSetup.html' %}
-
-        {% endif %}
-        {% endfor %}
-
-        </tbody>
-      </table>
-    </div>
-
-      <!-- LIGHT HEROES -->
-    <div class="col-lg-6 pt-3">
-      <table class="table-borderless" cellpadding="0" cellspacing="0">
-        <thead>
-        <tr class="LightHead shadow">
-          <th class="text-center LightHead"><img src="{{ url_for('static', filename='light.png') }}" width="40" alt="Light"></th>
-          <th>&nbsp;</th>
-          <th class="text-center LightHead"><img src="{{ url_for('static', filename='star.png') }}" width="25" alt="Star Level"></th>
-          <th class="text-center LightHead"><img src="{{ url_for('static', filename='awaken.png') }}" width="25" alt="Awaken"></th>
-          <th class="text-center LightHead">WPN</th>
-          <th class="text-center LightHead"><img src="{{ url_for('static', filename='medal.png') }}" width="25" alt="Medals"></th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for i in heroes|sort(attribute='baseStats.name') %}
-        {% if i.baseStats.element == "Light" and i.baseStats.rarity == "Common" %}
-
-        <!-- LIGHT COMMON -->
-        {% include '_heroSetup.html' %}
-
-        {% endif %}
-        {% endfor %}
-        {% for i in heroes|sort(attribute='baseStats.name') %}
-        {% if i.baseStats.element == "Light" and i.baseStats.rarity == "Rare" %}
-
-        <!-- LIGHT RARE -->
-        {% include '_heroSetup.html' %}
-
-        {% endif %}
-        {% endfor %}
-        {% for i in heroes|sort(attribute='baseStats.name') %}
-        {% if i.baseStats.element == "Light" and i.baseStats.rarity == "Epic" %}
-
-        <!-- LIGHT EPIC -->
-        {% include '_heroSetup.html' %}
-
-        {% endif %}
-        {% endfor %}
-        {% for i in heroes|sort(attribute='baseStats.name') %}
-        {% if i.baseStats.element == "Light" and i.baseStats.rarity == "Legendary" %}
-
-        <!-- LIGHT LEGENDARY -->
-        {% include '_heroSetup.html' %}
-
-        {% endif %}
-        {% endfor %}
-
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-      <!-- DARK HEROES -->
-  <div class="row">
-    <div class="col-lg-6 pt-3">
-      <table class="table-borderless" cellpadding="0" cellspacing="0">
-        <thead>
-        <tr class="DarkHead shadow">
-          <th class="text-center DarkHead"><img src="{{ url_for('static', filename='dark.png') }}" width="40" alt="Dark"></th>
-          <th>&nbsp;</th>
-          <th class="text-center DarkHead"><img src="{{ url_for('static', filename='star.png') }}" width="25" alt="Star Level"></th>
-          <th class="text-center DarkHead"><img src="{{ url_for('static', filename='awaken.png') }}" width="25" alt="Awaken"></th>
-          <th class="text-center DarkHead">WPN</th>
-          <th class="text-center DarkHead"><img src="{{ url_for('static', filename='medal.png') }}" width="25" alt="Medals"></th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for i in heroes|sort(attribute='baseStats.name') %}
-        {% if i.baseStats.element == "Dark" and i.baseStats.rarity == "Common" %}
-
-        <!-- DARK COMMON -->
-        {% include '_heroSetup.html' %}
-
-        {% endif %}
-        {% endfor %}
-        {% for i in heroes|sort(attribute='baseStats.name') %}
-        {% if i.baseStats.element == "Dark" and i.baseStats.rarity == "Rare" %}
-
-        <!-- DARK RARE -->
-        {% include '_heroSetup.html' %}
-
-        {% endif %}
-        {% endfor %}
-        {% for i in heroes|sort(attribute='baseStats.name') %}
-        {% if i.baseStats.element == "Dark" and i.baseStats.rarity == "Epic" %}
-
-        <!-- DARK EPIC -->
-        {% include '_heroSetup.html' %}
-
-        {% endif %}
-        {% endfor %}
-        {% for i in heroes|sort(attribute='baseStats.name') %}
-        {% if i.baseStats.element == "Dark" and i.baseStats.rarity == "Legendary" %}
-
-        <!-- DARK LEGENDARY -->
-        {% include '_heroSetup.html' %}
-
-        {% endif %}
-        {% endfor %}
-
-        </tbody>
-      </table>
-    </div>
-
-      <!-- INFO PANEL -->
-    <div class="col-lg-6 pt-3">
-&nbsp;
-
-    </div>
-  </div>
-
-
-
-
-<div class="row">
-    <div class="col-lg-12 pt-3 text-center">
-      <hr>
-      <button class="btn btn-primary btn-lg" type="submit">Save Changes</button>
-    </div>
-</div>
-      </form>
-<br>
-{% else %}
-<div class="row pt-3">
-    <div class="col-lg-12">
-      <h1 class="display-4">Sneaky!</h1>
-      <hr>
-      <p class="instructions">You are not allowed to browse other peoples accounts.</p>
-      <hr>
-    </div>
- </div>
-<br>
-{% endif %}
+    {% if user == current_user %}
+        <div class="row pt-3">
+            <div class="col-lg-12">
+                <h1 class="display-4">{{ user.username }}'s Account</h1>
+                <hr>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-1">
+                <img class="rounded" src="{{ user.avatar(64) }}">
+            </div>
+            <div class="col-lg-3">
+                <table class="table table-borderless table-sm">
+                    <tr>
+                        <td width="150">Member since:</td>
+                        <td>{{ user.registered_proper(user.registered) }}</td>
+                    </tr>
+                    <tr>
+                        <td width="150">Total Power:</td>
+                        <td>{{ user.total_power() }}</td>
+                    </tr>
+                    <tr>
+                        <td width="150">Power per day:</td>
+                        <td>{{ user.power_per_day() }}</td>
+                    </tr>
+
+
+                </table>
+            </div>
+
+            <div class="col-lg-8">
+                <table class="table table-borderless table-sm">
+                    <tr>
+                        <td><a href="{{ url_for('export_raid', username=current_user.username) }}">Export Raid
+                            information</a></td>
+                    </tr>
+                    <tr>
+                        <td><a href="{{ url_for('export_excel', username=current_user.username) }}">Export Hero
+                            Collection
+                            (Excel)</a></td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <hr>
+            </div>
+        </div>
+
+
+        <div class="row pt-3">
+            <div class="col-lg-12">
+                <h1 class="display-4">Data Input</h1>
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <p class="instructions">Prism Power, Hero Power, Artifact Power and Days Played can be found in-game at
+                    the <b>stats</b>
+                    screen. Input the values below.</p>
+                <p class="instructions">Input the Star Level, Awaken, Weapon Level and Medals for each of your
+                    heroes.</p>
+                <p class="instructions">Remember to save your changes at the bottom!</p>
+                <hr>
+
+
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                    Detailed input information
+                </button>
+
+
+                <div class="modal" id="myModal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+
+                            <div class="modal-header">
+                                <h4 class="modal-title">Input Information and Validation</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+
+
+                            <div class="modal-body">
+                                <p>Each field expects integer inputs. Mischievous behaviour and unintended inputs are
+                                    controlled to some
+                                    extent on the client-side.
+                                    These are utilized to ensure valid parameters. Once submitted a server-side
+                                    validation will process
+                                    the input as well.</p>
+                                <p><b>Prism Power</b> is used to calculate your Total Power and Power per day. Can be
+                                    left at 0 if you
+                                    do not care about this value.</p>
+                                <p><b>Hero Power</b> is used to calculate Gun Lord Artifacts as well as Total Power and
+                                    Power per day.
+                                    It's recommended you input this value.</p>
+                                <p><b>Artifact Power</b> is used to calculate your Total Power and Power per day. Can be
+                                    left at 0 if
+                                    you do not care about this value.</p>
+                                <p><b>Days Played</b> is used to calculate your Total Power and Power per day. Can be
+                                    left at 0 if you
+                                    do not care about this value.</p>
+                                <p><b>Star Level and Awaken</b> is used to calculate a heroes base stats. Stars are also
+                                    used to track
+                                    account progress while Awaken is used to calculate hero investment. Leave at 0 for
+                                    heroes you have not
+                                    yet unlocked.</p>
+                                <p><b>Weapon Level</b> is used to calculate hero investment and possibly to determine
+                                    unlocked rune
+                                    slots in a future update. This can be left at 0 if you do not care about hero
+                                    investments.</p>
+                                <p><b>Medals</b> are used to track account progress. Can be left at 0 if you do not care
+                                    about progress.
+                                </p>
+                                <p>Invalid inputs will result in an error and no changes will be saved.</p>
+                            </div>
+
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+
+        <form action="/account/{{ user.username }}" method="post" novalidate>
+
+            <script>
+                function isNumber9(evt) {
+                    evt = (evt) ? evt : window.event;
+                    var charCode = (evt.which) ? evt.which : evt.keyCode;
+                    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                        return false;
+                    }
+                    return true;
+                }
+            </script>
+
+            <div class="row pt-3">
+                <div class="col-lg-3">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Prism Power</span>
+                        </div>
+                        <input type="text" class="form-control" value="{{ user.prismPower }}" name="prismPower"
+                               onkeypress="return isNumber9(event)">
+                    </div>
+                </div>
+
+                <div class="col-lg-3">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Hero Power</span>
+                        </div>
+                        <input type="text" class="form-control" value="{{ user.heroPower }}" name="heroPower"
+                               onkeypress="return isNumber9(event)">
+                    </div>
+                </div>
+
+                <div class="col-lg-3">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Artifact Power</span>
+                        </div>
+                        <input type="text" class="form-control" value="{{ user.artifactPower }}" name="artifactPower"
+                               onkeypress="return isNumber9(event)">
+                    </div>
+                </div>
+
+                <div class="col-lg-3">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Days Played</span>
+                        </div>
+                        <input type="text" class="form-control" value="{{ user.daysPlayed }}" name="daysPlayed"
+                               onkeypress="return isNumber9(event)">
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- WATER HEROES -->
+            <div class="row">
+                {% for element in elementOrder %}
+                    <div class="col-lg-6 pt-3">
+                        <table class="table-borderless" cellpadding="0" cellspacing="0">
+                            <thead>
+                            <tr class="WaterHead shadow">
+                                <th class="text-center WaterHead"><img
+                                        src="{{ url_for('static', filename=element.lower() + '.png') }}" width="40"
+                                        alt="{{ element }}"></th>
+                                <th>&nbsp;</th>
+                                <th class="text-center WaterHead"><img
+                                        src="{{ url_for('static', filename='star.png') }}" width="25"
+                                        alt="Star Level"></th>
+                                <th class="text-center WaterHead"><img
+                                        src="{{ url_for('static', filename='awaken.png') }}" width="25"
+                                        alt="Awaken"></th>
+                                <th class="text-center WaterHead">WPN</th>
+                                <th class="text-center WaterHead"><img
+                                        src="{{ url_for('static', filename='medal.png') }}" width="25"
+                                        alt="Medals"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for rarity in rarityOrder %}
+                                {% for i in heroes|selectattr("baseStats.element", "equalto", element)|selectattr("baseStats.rarity", "equalto", rarity)|sort(attribute='baseStats.name') %}
+                                    {% include '_heroSetup.html' %}
+                                {% endfor %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endfor %}
+            </div>
+
+
+            <div class="row">
+                <div class="col-lg-12 pt-3 text-center">
+                    <hr>
+                    <button class="btn btn-primary btn-lg" type="submit">Save Changes</button>
+                </div>
+            </div>
+        </form>
+        <br>
+    {% else %}
+        <div class="row pt-3">
+            <div class="col-lg-12">
+                <h1 class="display-4">Sneaky!</h1>
+                <hr>
+                <p class="instructions">You are not allowed to browse other peoples accounts.</p>
+                <hr>
+            </div>
+        </div>
+        <br>
+    {% endif %}
 
 {% endblock %}

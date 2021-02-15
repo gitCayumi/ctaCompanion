@@ -86,9 +86,18 @@ def register():
 @login_required
 def account(username):
     user = User.query.filter_by(username=username).first_or_404()
-    heroes = Hero.query.filter_by(player=user)
+    heroes = Hero.query.options(joinedload('baseStats')).filter_by(player=user).all()
+
     if request.method == "GET":
-        return render_template('account.html', user=user, heroes=heroes, title='Account', useractive=1)
+        return render_template(
+            'account.html',
+            user=user,
+            heroes=heroes,
+            elementOrder=["Water", "Fire", "Earth", "Light", "Dark"],
+            rarityOrder = ["Common", "Rare", "Epic", "Legendary"],
+            title='Account',
+            useractive=1
+        )
 
     else:
         for i in heroes:
